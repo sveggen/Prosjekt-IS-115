@@ -1,6 +1,5 @@
-# skeleton-php-for-bacit
-A minimal skeleton for PHP development with Docker Container used at UiA BACIT
+# Prosjekt for emnet IS-115 Webprogrammering i PHP ved UiA høsten 2020. 
+Prosjektet består i å opprette et medlemssystem for en fiktiv ungdomsklubb.
 
 
 
--- test
