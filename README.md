@@ -1,4 +1,4 @@
-# Project for 'IS-115 Webprogrammering i PHP'
+# Prosjekt for 'IS-115 Webprogrammering i PHP'
 
 
 
