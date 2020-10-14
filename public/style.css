@@ -2,16 +2,17 @@ body {
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
   padding-left: 20px;
   padding-right: 20px;
-  background: #475d62 url(https://blueridgemountainlife.com/wp-content/gallery/linn-cove-viaduct/1IMG_6787.jpg);
+  background: #475d62
+    url(https://blueridgemountainlife.com/wp-content/gallery/linn-cove-viaduct/1IMG_6787.jpg);
 }
 
 .general {
-height: 1500px;
-background-size: cover;
-position: relative;
+  height: 1500px;
+  background-size: cover;
+  position: relative;
 }
 
-.gerneral form {
+.general .box {
   max-width: 600px;
   width: 70%;
   background-color: #274463;
@@ -24,7 +25,6 @@ position: relative;
   color: rgb(207, 202, 207);
   box-shadow: 4px 4px 5px rgba(23, 85, 104, 0.9);
 }
-
 
 .general form .form-control {
   background: none;

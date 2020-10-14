@@ -1,4 +1,5 @@
-<?php $title = "index"; include('header.php'); ?>
+<?php $title = "index";
+include('header.php'); ?>
 
 <h1>Homepage</h1>
 
