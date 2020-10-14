@@ -5,13 +5,13 @@ body {
   background: #475d62 url(https://blueridgemountainlife.com/wp-content/gallery/linn-cove-viaduct/1IMG_6787.jpg);
 }
 
-.registrer-medlem {
+.general {
 height: 1500px;
 background-size: cover;
 position: relative;
 }
 
-.registrer-medlem form {
+.gerneral form {
   max-width: 600px;
   width: 70%;
   background-color: #274463;
@@ -26,7 +26,7 @@ position: relative;
 }
 
 
-.registrer-medlem form .form-control {
+.general form .form-control {
   background: none;
   border: none;
   border-bottom: 1px solid #434a52;
