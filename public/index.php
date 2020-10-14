@@ -1,13 +1,17 @@
-<html>
-    <body>
-        <h2>Velkommen til Norge.no</h2>
-        <?php
-        echo "<p>Hovedstaden i Norge er: ";
-        echo "<strong>Oslo</strong>";
-        echo "<br />";
-        ?>
+<?php $title = "index"; include('header.php'); ?>
 
-        I dag er det den <?php echo date("d.m.Y");?>
-        </p>
-    </body>
-</html>
+<h1>Homepage</h1>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php include('footer.php') ?>
