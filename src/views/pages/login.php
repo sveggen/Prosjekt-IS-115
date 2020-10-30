@@ -1,5 +1,5 @@
 <?php $title = "Log in";
-include('header.php'); ?>
+include('./components/header.php') ?>
 
 
 <div class="box">
@@ -25,4 +25,4 @@ include('header.php'); ?>
 
 
 </div>
-<?php include('footer.php') ?>
+<?php include('./components/footer.php') ?>

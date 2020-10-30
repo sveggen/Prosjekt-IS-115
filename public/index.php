@@ -1,18 +1,6 @@
-<?php $title = "index";
-include('header.php'); ?>
+<?php
+declare(strict_types = 1);
+require_once __DIR__ . '/../routes.php';
+require __DIR__ . '/../src/Bootstrap.php';
 
-<h1>Homepage</h1>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<?php include('footer.php') ?>
+echo "hei";
