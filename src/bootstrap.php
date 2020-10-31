@@ -3,7 +3,6 @@
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-//require '../vendor/autoload.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $request = Request::createFromGlobals();
@@ -41,16 +40,14 @@ switch ($routeInfo[0]) {
         break;
 
     case FastRoute\Dispatcher::FOUND:
-        $response = new Response();
         $classPath = $routeInfo[1][0];
-        print_r($classPath);
         $method = $routeInfo[1][1];
         $vars = $routeInfo[2];
 
-            // Generate a response by invoking the appropriate route method in the controller
-            $response = $classPath->$method($vars);
-            if ($response instanceof Response) {
-                // Send the generated response back to the user
+        $controller = new $classPath;
+        $response = $controller->$method($vars);
+
+        if ($response instanceof Response) {
                 $response
                     ->prepare($request)
                     ->send();
