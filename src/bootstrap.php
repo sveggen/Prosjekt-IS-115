@@ -55,11 +55,9 @@ switch ($routeInfo[0]) {
 
 break;
 default:
-    // According to the dispatch(..) method's documentation this shouldn't happen.
-    // But it's here anyways just to cover all of our bases.
+
     $response = new Response('Received unexpected response from dispatcher.', Response::HTTP_INTERNAL_SERVER_ERROR);
         $response->prepare($request);
         $response->send();
     return;
 }
-?>

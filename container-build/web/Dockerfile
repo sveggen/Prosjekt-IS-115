@@ -26,7 +26,7 @@
 FROM php:7.2-apache
 
 RUN apt-get update \
- && apt-get install -y vim git zlib1g-dev mariadb-client libzip-dev \
+ && apt-get install -y vim git zlib1g-dev mariadb-client libzip-dev sendmail\
  && docker-php-ext-install zip mysqli pdo_mysql \
  && pecl install xdebug \
  && docker-php-ext-enable xdebug \
@@ -39,6 +39,11 @@ RUN apt-get update \
  && curl -sS https://getcomposer.org/installer \
   | php -- --install-dir=/usr/local/bin --filename=composer \
  && echo "AllowEncodedSlashes On" >> /etc/apache2/apache2.conf
+ && echo "sendmail_path=/usr/sbin/sendmail -t -i" >> /usr/local/etc/php/conf.d/sendmail.ini \
+ && sed --in-place '/#!\/bin\/sh/a\/etc\/init.d\/sendmail start' /usr/local/bin/docker-php-entrypoint \
+ && sed --in-place '/#!\/bin\/sh/aecho "127.0.0.1 localhost localhost.localdomain foobar" > /etc/hosts' /usr/local/bin/docker-php-entrypoint \
+ && sed --in-place '/#!\/bin\/sh/aecho $HOSTNAME' /usr/local/bin/docker-php-entrypoint \
+ && rm -rf /var/lib/apt/lists/*
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
