@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    Index
+{% endblock %}
+{% block content %}
+<h1>Index!</h1>
+<hr/>
+<h3>Sample data</h3>
+
+{% for item in name %}
+    {{ item.firstname }}
+    {{ item.lastname }}
+{% endfor %}
+
+{% endblock %}
+

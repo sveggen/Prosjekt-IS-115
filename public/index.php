@@ -1,13 +1,3 @@
-<html>
-    <body>
-        <h2>Velkommen til Norge.no</h2>
-        <?php
-        echo "<p>Hovedstaden i Norge er: ";
-        echo "<strong>Oslo</strong>";
-        echo "<br />";
-        ?>
-
-        I dag er det den <?php echo date("d.m.Y");?>
-        </p>
-    </body>
-</html>
+<?php
+declare(strict_types = 1);
+require_once __DIR__ . '/../src/bootstrap.php';
