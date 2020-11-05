@@ -7,9 +7,10 @@ The project task is to create a website for the fictional youth club 'Neo'.
 * data - mysql files
 
 * public
-  * css - css files
-  * img - image files
-  * js - JavaScript files
+  * assets 
+    * css - css files
+    * img - image files
+    * js - JavaScript files
   * index.php - public file that requires the bootstrap.ph file that redirects all requests
   * .htaccess - Apache routing file that forwards all HTTP requests to index.php
 
@@ -18,6 +19,6 @@ The project task is to create a website for the fictional youth club 'Neo'.
   * models - all files in the models layer
   * views - all files in the view layer
   * bootstrap.php - routing config 
-  * routes.php - map over all the existing routes
+  * routes.php - map of all the existing routes
 
 ---
