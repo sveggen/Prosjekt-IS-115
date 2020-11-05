@@ -4,14 +4,14 @@
 namespace App\models;
 
 
-class DatabaseTest
+class DatabaseTest extends DatabaseConnection
 {
 
 
     public function getAllMembers()
     {
-        $db = new DatabaseConn();
-        $connection = $db->getConnection();
+
+        $connection = $this->getConnection();
 
         $sql = "SELECT * FROM Members";
         $stmt = $connection->prepare($sql);

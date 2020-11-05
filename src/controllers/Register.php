@@ -5,11 +5,14 @@ namespace App\controllers;
 
 use Symfony\Component\HttpFoundation\Response;
 
-class Register
+class Register extends Base
 {
-    public function register(){
+    public function register()
+    {
 
-        return new Response("register");
+        return new Response(
+            $this->twig->render('register.html.twig')
+        );
+
     }
-
 }
