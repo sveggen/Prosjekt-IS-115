@@ -5,14 +5,14 @@ namespace App\models;
 
 use mysqli;
 
-class DatabaseConnection
+abstract class Database
 {
 
 
     protected $database;
 
     /**
-     * DatabaseConnection constructor.
+     * Database constructor.
      */
     public function __construct()
     {
