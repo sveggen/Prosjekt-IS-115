@@ -4,22 +4,26 @@
 namespace App\controllers;
 
 
+use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-abstract class Base
+abstract class BaseController
 {
 
+    protected $request;
     protected $twig;
 
     /**
-     * Base constructor.
+     * BaseController constructor.
      */
     public function __construct()
 
     {
         $loader = new FilesystemLoader(__DIR__ . '/../../src/views/pages');
         $this->twig= new Environment($loader);
+
+        $this->request = Request::createFromGlobals();
     }
 
 

@@ -8,9 +8,7 @@ use mysqli;
 abstract class Database
 {
 
-
     protected $database;
-
     /**
      * Database constructor.
      */

@@ -23,7 +23,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
 /*
  * Twig
  */
-$loader = new FilesystemLoader(__DIR__ . '/views/pages');
+$loader = new FilesystemLoader(__DIR__ . '/views');
 $twig = new Environment($loader);
 
 /*

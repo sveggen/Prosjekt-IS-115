@@ -4,10 +4,9 @@
 namespace App\controllers;
 
 use App\models\User;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class Register extends Base
+class Register extends BaseController
 {
 
     private $userModel;
@@ -32,9 +31,8 @@ class Register extends Base
     }
 
     public function newUser(){
-        $request = Request::createFromGlobals();
-        $email = $request->get('email');
-        $password = $request->get('password');
+        $email = $this->request->get('email');
+        $password = $this->request->get('password');
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
         if ($this->userModel->registerUser($email, $hashedPassword)){

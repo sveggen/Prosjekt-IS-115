@@ -2,27 +2,29 @@
 
 namespace App\controllers;
 
-use App\models\DatabaseTest;
+use App\models\User;
 use Symfony\Component\HttpFoundation\Response;
 
 
-class Index extends Base
+class Index extends BaseController
 {
+
+    private $userModel;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->userModel = new User();
+    }
 
     public function index()
     {
+        $model = new User();
+        $users = $model->getAllUsers();
 
-
-        $model = new DatabaseTest();
-        $members = $model->getAllMembers();
-
-        $item = array();
-        while ($row = $members->fetch_assoc()) {
-            array_push($item, $row);
-    }
             return new Response(
                 $this->twig->render('index.html.twig',
-                    ['name' => $item]));
+                    ['name' => $users]));
 
     }
 }

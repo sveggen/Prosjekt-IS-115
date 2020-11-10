@@ -6,9 +6,8 @@ namespace App\controllers;
 use App\models\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
 
-class Login extends Base{
+class Login extends BaseController{
 
     private $userModel;
 
@@ -27,9 +26,8 @@ class Login extends Base{
     }
 
     public function authenticate (){
-        $request = Request::createFromGlobals();
-        $email = $request->get('email');
-        $password = $request->get('password');
+        $email = $this->request->get('email');
+        $password = $this->request->get('password');
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
         if ($this->userModel->login($email)){

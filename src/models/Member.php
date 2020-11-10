@@ -4,7 +4,9 @@
 namespace App\models;
 
 
-class Member
+class Member extends Database
 {
+
+
 
 }

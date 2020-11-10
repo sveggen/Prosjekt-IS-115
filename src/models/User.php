@@ -16,18 +16,24 @@ class User extends Database
         }
     }
 
-    public function registerUser($email, $password)
+    public function registerUser($email, $password){
+        $user = $this->addUser($email, $password);
+        if ($user) {
+            return $user;
+        } else {
+            return false;
+        }
+    }
+
+    public function addUser($email, $password)
     {
         $connection = $this->getConnection();
         $sql = "INSERT INTO Users(email, password) VALUES(?, ?)";
         $stmt = $connection->prepare($sql);
         $stmt->bind_param('ss', $email,$password);
-        $result = $stmt->execute();
-        if ($result) {
-            return true;
-        } else {
-            return false;
-        }
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
     }
 
     public function getSingleUser($email){
@@ -46,7 +52,22 @@ class User extends Database
         $sql = "SELECT * FROM Users";
         $stmt = $connection->prepare($sql);
         $stmt->execute();
-        return $result = $stmt->fetch();
+        $result = $stmt->get_result();
+        $users = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($users, $row);
+        }
+        return $users;
+    }
+
+    public function removeUser($email){
+        $connection = $this->getConnection();
+        $sql = "DELETE FROM Users WHERE email = ?";
+        $stmt = $connection->prepare($sql);
+        $stmt->bind_param('s',$email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
     }
 
 }
