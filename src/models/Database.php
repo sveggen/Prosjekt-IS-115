@@ -17,7 +17,6 @@ abstract class Database
         $this->database = $this->connect();
     }
 
-
     public function connect()
     {
         define('HOST', 'db');

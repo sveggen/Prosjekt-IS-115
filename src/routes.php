@@ -8,5 +8,5 @@ return [
     ['POST', '/register', ['App\controllers\Register', 'newUser']],
     ['GET', '/dashboard', ['App\controllers\Dashboard', 'dashboard']],
     ['GET', '/profile', ['App\controllers\Profile', 'profile']],
-    ['GET', '/activities', ['App\controllers\Activities', 'activities']],
+    ['GET', '/activities', ['App\controllers\Activities', 'activities']]
 ];

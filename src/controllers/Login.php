@@ -20,7 +20,7 @@ class Login extends BaseController{
 
     public function login() {
         return new Response(
-            $this->twig->render('login.html.twig')
+            $this->twig->render('pages/user/login.html.twig')
         );
 
     }

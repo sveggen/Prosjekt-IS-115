@@ -20,7 +20,7 @@ abstract class BaseController
     public function __construct()
 
     {
-        $loader = new FilesystemLoader(__DIR__ . '/../../src/views/pages');
+        $loader = new FilesystemLoader(__DIR__ . '/../../src/views/');
         $this->twig= new Environment($loader);
 
         $this->request = Request::createFromGlobals();

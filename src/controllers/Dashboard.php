@@ -11,7 +11,7 @@ class Dashboard extends BaseController{
 
     public function dashboard() {
         return new Response(
-            $this->twig->render('dashboard.html.twig')
+            $this->twig->render('pages/member/dashboard.html.twig')
         );
 
     }

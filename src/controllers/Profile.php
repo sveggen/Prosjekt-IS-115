@@ -10,7 +10,7 @@ class Profile extends BaseController{
 
     public function profile() {
         return new Response(
-            $this->twig->render('profile.html.twig')
+            $this->twig->render('pages/user/profile.html.twig')
         );
     }
 

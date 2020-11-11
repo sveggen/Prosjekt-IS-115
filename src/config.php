@@ -23,7 +23,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
 /*
  * Twig
  */
-$loader = new FilesystemLoader(__DIR__ . '/views');
+$loader = new FilesystemLoader(__DIR__ . '/views/');
 $twig = new Environment($loader);
 
 /*
@@ -34,14 +34,14 @@ $routeInfo = $dispatcher->dispatch($request->getMethod(), $request->getPathInfo(
 switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::NOT_FOUND:
         $response = new Response(
-            $twig->render('404.html.twig'), Response::HTTP_NOT_FOUND
+            $twig->render('pages/errors/404.html.twig'), Response::HTTP_NOT_FOUND
         );
         $response->prepare($request);
         $response->send();
         break;
     case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
         $response = new Response(
-            $twig->render('405.html.twig'), Response::HTTP_METHOD_NOT_ALLOWED
+            $twig->render('/pages/errors/405.html.twig'), Response::HTTP_METHOD_NOT_ALLOWED
         );
         $response->prepare($request);
         $response->send();

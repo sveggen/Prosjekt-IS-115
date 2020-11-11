@@ -10,7 +10,7 @@ class Activities extends BaseController{
 
     public function activities() {
         return new Response(
-            $this->twig->render('activities.html.twig')
+            $this->twig->render('pages/activities/activities.html.twig')
         );
 
     }

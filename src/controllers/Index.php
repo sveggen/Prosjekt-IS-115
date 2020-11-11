@@ -23,7 +23,7 @@ class Index extends BaseController
         $users = $model->getAllUsers();
 
             return new Response(
-                $this->twig->render('index.html.twig',
+                $this->twig->render('pages/index.html.twig',
                     ['name' => $users]));
 
     }

@@ -25,7 +25,7 @@ class Register extends BaseController
     {
 
         return new Response(
-            $this->twig->render('register.html.twig')
+            $this->twig->render('pages/user/register.html.twig')
         );
 
     }
