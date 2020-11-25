@@ -7,50 +7,46 @@ namespace App\models;
 class User extends Database
 {
 
-    public function login($email){
-        $user = $this->getSingleUser($email);
-        if ($user) {
-            return $user;
+    public function login($username, $password){
+        $user = $this->getSingleUser($username);
+        if (password_verify($password, $user['password'])) {
+            return true;
         } else {
             return false;
         }
     }
 
-    public function registerUser($email, $password){
-        $user = $this->addUser($email, $password);
+
+    public function registerUser($username, $password, $memberID){
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        $user = $this->addUser($username, $hashedPassword);
         if ($user) {
-            return $user;
+            return true;
         } else {
             return false;
         }
     }
 
-    public function addUser($email, $password)
-    {
-        $connection = $this->getConnection();
-        $sql = "INSERT INTO Users(email, password) VALUES(?, ?)";
-        $stmt = $connection->prepare($sql);
-        $stmt->bind_param('ss', $email,$password);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        return $result->fetch_assoc();
+    public function addUser($username, $password){
+        $sql = "INSERT INTO user (username, password) VALUES (?, ?)";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('ss', $username,$password);
+        return $stmt->execute();
     }
 
-    public function getSingleUser($email){
-        $connection = $this->getConnection();
-        $sql = "SELECT Users.id, email, password FROM Users WHERE 
-                            Users.email = ?";
-        $stmt = $connection->prepare($sql);
-        $stmt->bind_param('s',$email);
+    public function getSingleUser($username){
+        $sql = "SELECT user.user_id, username, password FROM user WHERE 
+                            user.username = ?";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('s',$username);
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_assoc();
     }
 
     public function getAllUsers(){
-        $connection = $this->getConnection();
-        $sql = "SELECT * FROM Users";
-        $stmt = $connection->prepare($sql);
+        $sql = "SELECT * FROM user";
+        $stmt = $this->getConnection()->prepare($sql);
         $stmt->execute();
         $result = $stmt->get_result();
         $users = array();
@@ -60,11 +56,10 @@ class User extends Database
         return $users;
     }
 
-    public function removeUser($email){
-        $connection = $this->getConnection();
-        $sql = "DELETE FROM Users WHERE email = ?";
-        $stmt = $connection->prepare($sql);
-        $stmt->bind_param('s',$email);
+    public function removeUser($username){
+        $sql = "DELETE FROM user WHERE username = ?";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('s',$username);
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_assoc();

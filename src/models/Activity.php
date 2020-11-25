@@ -4,7 +4,7 @@
 namespace App\models;
 
 
-class Activities extends Database
+class Activity extends Database
 {
 
 }

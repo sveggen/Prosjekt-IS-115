@@ -18,24 +18,23 @@ class Login extends BaseController{
 
     }
 
-    public function login() {
+    public function index() {
         return new Response(
             $this->twig->render('pages/user/login.html.twig')
         );
 
     }
 
-    public function authenticate (){
+    public function login (){
         $email = $this->request->get('email');
         $password = $this->request->get('password');
-        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        if ($this->userModel->login($email)){
+        if ($this->userModel->login($email, $password)){
             //set cookie
             return new RedirectResponse('http://localhost:8081');
         } else {
             return new Response(
-                $this->twig->render('login.html.twig')
+                $this->twig->render('/pages/user/login.html.twig')
             );
         }
     }

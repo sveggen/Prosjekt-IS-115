@@ -4,6 +4,7 @@
 namespace App\controllers;
 
 use App\models\User;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class Register extends BaseController
@@ -23,7 +24,6 @@ class Register extends BaseController
 
     public function register()
     {
-
         return new Response(
             $this->twig->render('pages/user/register.html.twig')
         );
@@ -33,15 +33,12 @@ class Register extends BaseController
     public function newUser(){
         $email = $this->request->get('email');
         $password = $this->request->get('password');
-        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        if ($this->userModel->registerUser($email, $hashedPassword)){
-            return new Response(
-                $this->twig->render('index.html.twig')
-            );
+        if ($this->userModel->registerUser($email, $password)){
+            return new RedirectResponse('http://localhost:8081');
         } else {
             return new Response(
-                $this->twig->render('register.html.twig')
+                $this->twig->render('pages/user/register.html.twig')
             );
         }
     }
