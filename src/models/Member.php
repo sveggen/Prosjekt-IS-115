@@ -1,0 +1,90 @@
+<?php
+
+
+namespace App\models;
+
+
+class Member extends Database {
+
+    /**
+     * @param $memberData mixed all fields of from the member registration
+     * @return bool
+     */
+    public function registerMember($memberData) {
+        try {
+            $addressID = (new Address)->addAddress($memberData['streetAddress'], $memberData['zipCode']);
+            $memberID = $this->addMember($memberData['firstName'], $memberData['lastName'],
+                $memberData['email'], $memberData['phoneNumber'], $addressID);
+            // adds user if registration has has been done by member self
+            if ($memberData['password']) {
+                (new User)->registerUser($memberData['email'], $memberData['password'], $memberID);
+                throw new \Exception("User could not be created.");
+            }
+            $this->addMemberInterests($memberID, $memberData['interests']);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Adds a members interests to the DB.
+     */
+    public function addMemberInterests($memberID, $interests) {
+        $sql = "INSERT INTO member_interest (fk_member_id, fk_interest_id) VALUES (?, ?)";
+        $this->getConnection()->begin_transaction();
+        foreach ($interests as $interest) {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->bind_param('ss', $memberID, $interest);
+            $stmt->execute();
+            $stmt->close();
+        }
+        if ($this->getConnection()->commit()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @return false|\mysqli_result Returns all members.
+     */
+    public function getAllMembers() {
+        $sql = "SELECT * FROM member";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
+    }
+
+    /**
+     * @return array containing all members with
+     * their corresponding interests.
+     */
+    public function getAllMemberInterests() {
+        $sql = "SELECT * FROM member_interest
+    JOIN interest i on member_interest.fk_interest_id = i.interest_id
+    JOIN member m on member_interest.fk_member_id = m.member_id ORDER BY I.type";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result->fetch_assoc();
+    }
+
+    /**
+     * Adds a member to the DB.
+     */
+    private function addMember($firstName, $lastName, $email, $phoneNumber, $addressID) {
+        $sql = "INSERT INTO member (first_name, last_name, email, 
+                     phone_number, subscription_status, fk_address_id) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param("ssssii", $firstName, $lastName, $email,
+            $phoneNumber, $paid, $addressID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
+    }
+}

@@ -5,22 +5,19 @@ namespace App\models;
 
 use mysqli;
 
-class DatabaseConnection
+abstract class Database
 {
 
-
-    protected $database;
-
+    private $database;
     /**
-     * DatabaseConnection constructor.
+     * Database constructor.
      */
     public function __construct()
     {
         $this->database = $this->connect();
     }
 
-
-    public function connect()
+    private function connect()
     {
         define('HOST', 'db');
         define('USER', 'root');
@@ -36,8 +33,10 @@ class DatabaseConnection
         return $this->database;
     }
 
-
-    public function getConnection()
+    /**
+     * @return mysqli which acts as an entrypoint to the DB.
+     */
+    protected function getConnection()
     {
         return $this->database;
     }

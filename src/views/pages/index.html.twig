@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends './includes/base.html.twig' %}
 {% block title %}
     Index
 {% endblock %}
@@ -7,10 +7,15 @@
 <hr/>
 <h3>Sample data</h3>
 
-{% for item in name %}
-    {{ item.firstname }}
-    {{ item.lastname }}
-{% endfor %}
+{# Retrieves a variable stored inside the session object #}
+   <h1> {{ session.get('hei') }}</h1>
+
+{# Retrieves all users in users-array  #}
+    {% for item in users %}
+    {{ item.username }}
+    {% endfor %}
+
+
 
 {% endblock %}
 
