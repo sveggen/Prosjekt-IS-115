@@ -6,13 +6,13 @@ namespace App\controllers;
 use App\models\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
-class Login extends BaseController{
+class Login extends BaseController {
 
     private $userModel;
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->userModel = new User();
 
@@ -25,12 +25,16 @@ class Login extends BaseController{
 
     }
 
-    public function login (){
+    public function login() {
         $email = $this->request->get('email');
         $password = $this->request->get('password');
+        $credentials = $this->userModel->login($email, $password);
 
-        if ($this->userModel->login($email, $password)){
-            //set cookie
+        if ($credentials) {
+            $session = new Session();
+            $session->set('userID', $credentials['userID']);
+            $session->set('memberId', $credentials['memberID']);
+
             return new RedirectResponse('http://localhost:8081');
         } else {
             return new Response(

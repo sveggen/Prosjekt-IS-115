@@ -6,4 +6,27 @@
     <h1>Activities</h1>
     <hr/>
 
+    <table class="table table-dark">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Title</th>
+        <th scope="col">Start Time</th>
+        <th scope="col">End Time</th>
+        <th scope="col">Leader</th>
+    </tr>
+    </thead>
+    <tbody>
+<tr>
+    {% for activity in activities %}
+        <th scope="row">{{ activity.activity_id }}</th>
+        <td>{{ activity.title }}</td>
+        <td>{{ activity.start_time }}</td>
+        <td>{{ activity.end_time }}</td>
+        <td>{{ activity.first_name }}</td>
+        </tr>
+        </tbody>
+        </table>
+    {% endfor %}
+
 {% endblock %}

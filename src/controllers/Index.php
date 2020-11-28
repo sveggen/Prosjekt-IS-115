@@ -4,6 +4,7 @@ namespace App\controllers;
 
 use App\models\User;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 
 class Index extends BaseController
@@ -22,9 +23,13 @@ class Index extends BaseController
         $model = new User();
         $users = $model->getAllUsers();
 
+        $session = new Session();
+        $session->start();
+        $session->set('hei', 'heiaaaa');
+
             return new Response(
                 $this->twig->render('pages/index.html.twig',
-                    ['name' => $users]));
+                    ['users' => $users, 'session' => $session]));
 
     }
 }

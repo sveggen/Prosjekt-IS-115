@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Activities extends BaseController{
 
-    public function activities() {
+    public function activity() {
         return new Response(
             $this->twig->render('pages/activity/activity.html.twig')
         );

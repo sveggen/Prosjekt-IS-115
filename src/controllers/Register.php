@@ -34,7 +34,7 @@ class Register extends BaseController
         $email = $this->request->get('email');
         $password = $this->request->get('password');
 
-        if ($this->userModel->registerUser($email, $password)){
+        if ($this->userModel->registerUser($email, $password, 4)){
             return new RedirectResponse('http://localhost:8081');
         } else {
             return new Response(

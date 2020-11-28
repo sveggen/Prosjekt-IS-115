@@ -7,10 +7,15 @@
 <hr/>
 <h3>Sample data</h3>
 
-{% for item in name %}
-    {{ item.email }}
-    {{ item.id }}
-{% endfor %}
+{# Retrieves a variable stored inside the session object #}
+   <h1> {{ session.get('hei') }}</h1>
+
+{# Retrieves all users in users-array  #}
+    {% for item in users %}
+    {{ item.username }}
+    {% endfor %}
+
+
 
 {% endblock %}
 

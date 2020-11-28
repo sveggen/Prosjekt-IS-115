@@ -8,7 +8,7 @@ use mysqli;
 abstract class Database
 {
 
-    protected $database;
+    private $database;
     /**
      * Database constructor.
      */
@@ -17,7 +17,7 @@ abstract class Database
         $this->database = $this->connect();
     }
 
-    public function connect()
+    private function connect()
     {
         define('HOST', 'db');
         define('USER', 'root');
@@ -33,8 +33,10 @@ abstract class Database
         return $this->database;
     }
 
-
-    public function getConnection()
+    /**
+     * @return mysqli which acts as an entrypoint to the DB.
+     */
+    protected function getConnection()
     {
         return $this->database;
     }
