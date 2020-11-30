@@ -6,7 +6,7 @@
     {% for activity in activity %}
         <div class="jumbotron" xmlns="http://www.w3.org/1999/html">
         <h1 class="display-6">{{ activity.title }}</h1>
-        <p class="lead">{{ activity.start_time|date("l d. M. H:i") }} - {{ x.end_time|date("l d. M. Y. H:i") }}</p>
+        <p class="lead">{{ activity.start_time|date("l d. M. H:i") }} - {{ activity.end_time|date("l d. M. Y. H:i") }}</p>
         <span><b>Leader: </b>{{ activity.first_name }} {{ activity.last_name }} - {{ activity.email }} </span>
             <hr class="my-4">
         <p>{{ activity.description }}</p>
@@ -14,7 +14,8 @@
             <br>
             <hr>
         <span class="lead">
-            <button class="btn btn-primary btn-success" type="submit">Join</button>
+            <a href="/activities/{{activity.activity_id}}/join" class="btn btn-primary btn-success" onclick="return confirm('Are you sure you want to join this event?');"> Join </a>
+        </a>
         </span>
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                 Attendees
@@ -24,7 +25,7 @@
         <div class="collapse" id="collapseExample">
                 <ul class="list-group">
                     {% for attendee in attendees %}
-                    <li class="list-group-item"> {{ attendee.first_name}} </li>
+                    <li class="list-group-item"> {{ attendee.first_name}} {{ attendee.last_name}}</li>
                     {% endfor %}
                 </ul>
             </div>

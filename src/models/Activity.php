@@ -24,19 +24,20 @@ class Activity extends Database {
         return $result;
     }
 
-    public function addActivity($title, $startTime, $endTime, $description, $memberID){
-        $sql = "INSERT INTO activity (title, start_time, end_time, description, fk_member_id) 
-                VALUES (?, ?, ?, ?, ?)";
+    public function addActivity($title, $startTime, $endTime, $description, $memberID, $maxAttendees){
+        $sql = "INSERT INTO activity (title, start_time, end_time, description, fk_member_id, max_attendees) 
+                VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bind_param('ssssi', $title, $startTime, $endTime, $description, $memberID);
+        $stmt->bind_param('ssssii', $title, $startTime, $endTime, $description, $memberID, $maxAttendees);
         $stmt->execute();
-        $result = $stmt->affected_rows;
+        $result = $stmt->get_result();
         $stmt->close();
         return $result;
     }
 
     public function addActivityMember($memberID, $activityID){
-        $sql = "INSERT INTO member_activity (fk_member_id, fk_activity_id) 
+        //CHECK if max_attendees treshold has been met
+        $sql = "INSERT INTO member_activity (fk_member_id, fk_activity_id)
                 VALUES (?, ?)";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bind_param('ii', $memberID, $activityID);
@@ -69,5 +70,13 @@ class Activity extends Database {
         $stmt->close();
         return $result;
     }
+
+    public function getEmptySlotsInActivity($id){
+        $attendees = $this->getActivityAttendees($id)->num_rows;
+        $activity = $this->getActivity($id)->fetch_assoc();
+        $maxAttendees = (int)$activity['max_attendees'];
+        return $maxAttendees - $attendees;
+    }
+
 
 }

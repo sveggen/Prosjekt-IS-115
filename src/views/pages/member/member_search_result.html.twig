@@ -1,0 +1,14 @@
+{% extends './includes/base.html.twig' %}
+{% block title %}
+    Member search result
+{% endblock %}
+{% block content %}
+    <h1>Member search result</h1>
+    <hr/>
+    <ul class="list-group">
+    {% for member in members %}
+        <li class="list-group-item">{member.first_name} {member.last_name}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}
+
