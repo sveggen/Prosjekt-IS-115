@@ -8,5 +8,8 @@ return [
     ['POST', '/register', ['App\controllers\Register', 'newUser']],
     ['GET', '/dashboard', ['App\controllers\Dashboard', 'dashboard']],
     ['GET', '/profile', ['App\controllers\Profile', 'profile']],
-    ['GET', '/activity', ['App\controllers\Activities', 'activity']]
+    ['GET', '/activities', ['App\controllers\Activities', 'renderAllActivities']],
+    ['POST', '/activities', ['App\controllers\Activities', 'newActivity']],
+    ['GET', '/activities/{id:\d+}', ['App\controllers\Activities', 'renderSingleActivity']],
+    ['GET', '/activities/{id:\d+}/{join}', ['App\controllers\Activities', 'joinActivity']],
 ];

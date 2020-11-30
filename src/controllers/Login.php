@@ -22,7 +22,6 @@ class Login extends BaseController {
         return new Response(
             $this->twig->render('pages/user/login.html.twig')
         );
-
     }
 
     public function login() {
@@ -32,9 +31,8 @@ class Login extends BaseController {
 
         if ($credentials) {
             $session = new Session();
-            $session->set('userID', $credentials['userID']);
-            $session->set('memberId', $credentials['memberID']);
-
+            $session->set('userID', $credentials['user_id']);
+            $session->set('memberID', $credentials['fk_member_id']);
             return new RedirectResponse('http://localhost:8081');
         } else {
             return new Response(
