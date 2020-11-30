@@ -5,31 +5,27 @@
 {% block content %}
     <h1>Activities</h1>
     <hr/>
-
     <table class="table table-dark table-hover">
     <thead>
     <tr>
         <th scope="col">ID</th>
         <th scope="col">Title</th>
-        <th scope="col">Start Time</th>
-        <th scope="col">End Time</th>
+        <th scope="col">Start time</th>
         <th scope="col">Leader</th>
-        <th scope="col"></th>
     </tr>
     </thead>
     <tbody>
 <tr>
     {% for activity in activities %}
         <th scope="row">{{ activity.activity_id }}</th>
-        <td><a href="http://localhost:8081">{{ activity.title }}</a></td>
-        <td>{{ activity.start_time|date("H:i - d.m.Y") }}</td>
-        <td>{{ activity.end_time|date("H:i - d.m.Y") }}</td>
+        <td><a href="http://localhost:8081/activities/{{ activity.activity_id }}">{{ activity.title }}</a></td>
+        <td>{{ activity.start_time|date("l d. M. Y. H:i") }}</td>
         <td>{{ activity.first_name }}</td>
-        <td><a href="http://localhost:8081" class="text-success"> Join </a></td>
         </tr>
-        </tbody>
-        </table>
     {% endfor %}
+    </tbody>
+    </table>
+
   {% if session.get('userID') %}
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add activity</button>
 
@@ -46,15 +42,24 @@
                       <form action="" id="add-activity" method="post">
                           <div class="form-group">
                               <label for="title" class="col-form-label">Title:</label>
-                              <input type="text" class="form-control" id="title">
+                              <input type="text" class="form-control" name="title" id="title">
                           </div>
                           <div class="form-group">
                               <label for="start-time" class="col-form-label">Start time:</label>
-                              <input type="datetime-local" class="form-control" id="start-time">
+                              <input type="datetime-local" class="form-control" name="start-time" id="start-time">
                           </div>
                           <div class="form-group">
                               <label for="end-time" class="col-form-label">End time:</label>
-                              <input type="datetime-local" class="form-control" id="end-time">
+                              <input type="datetime-local" class="form-control" name="end-time" id="end-time">
+                          </div>
+                          <div class="form-group">
+                              <label for="leader" class="col-form-label">Leader:</label>
+                              <input class="form-control" name="leader" id="leader"
+                                     placeholder="You" readonly>
+                          </div>
+                          <div class="form-group">
+                              <label for="description" class="col-form-label">Description:</label>
+                              <textarea class="form-control" name="description" rows="4" id="description"></textarea>
                           </div>
                       </form>
                   </div>
@@ -66,6 +71,4 @@
           </div>
       </div>
     {% endif %}
-
-
 {% endblock %}

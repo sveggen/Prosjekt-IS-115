@@ -1,0 +1,33 @@
+{% extends './includes/base.html.twig' %}
+{% block title %}
+    Activities
+{% endblock %}
+{% block content %}
+    {% for activity in activity %}
+        <div class="jumbotron" xmlns="http://www.w3.org/1999/html">
+        <h1 class="display-6">{{ activity.title }}</h1>
+        <p class="lead">{{ activity.start_time|date("l d. M. H:i") }} - {{ x.end_time|date("l d. M. Y. H:i") }}</p>
+        <span><b>Leader: </b>{{ activity.first_name }} {{ activity.last_name }} - {{ activity.email }} </span>
+            <hr class="my-4">
+        <p>{{ activity.description }}</p>
+        <p>
+            <br>
+            <hr>
+        <span class="lead">
+            <button class="btn btn-primary btn-success" type="submit">Join</button>
+        </span>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                Attendees
+                <span class="badge badge-light">{{ attendeesCount }} / {{ activity.max_attendees }}</span>
+            </button>
+        </p>
+        <div class="collapse" id="collapseExample">
+                <ul class="list-group">
+                    {% for attendee in attendees %}
+                    <li class="list-group-item"> {{ attendee.first_name}} </li>
+                    {% endfor %}
+                </ul>
+            </div>
+    </div>
+    {% endfor %}
+{% endblock %}

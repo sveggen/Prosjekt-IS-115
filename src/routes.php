@@ -9,5 +9,7 @@ return [
     ['GET', '/dashboard', ['App\controllers\Dashboard', 'dashboard']],
     ['GET', '/profile', ['App\controllers\Profile', 'profile']],
     ['GET', '/activities', ['App\controllers\Activities', 'activities']],
-    ['POST', '/activities', ['App\controllers\Activities', 'newActivity']]
+    ['POST', '/activities', ['App\controllers\Activities', 'newActivity']],
+    ['GET', '/activities/{id:\d+}', ['App\controllers\Activities', 'handleUsers']],
+
 ];

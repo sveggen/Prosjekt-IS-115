@@ -18,7 +18,7 @@ class Dashboard extends BaseController{
     }
 
     public function listMembers(){
-        return (new Member)->getAllMembers();
+        return (new Member)->getAllMembersAndMemberData();
     }
 
 }

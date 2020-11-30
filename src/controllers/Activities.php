@@ -16,33 +16,53 @@ class Activities extends BaseController{
         $activityModel = new Activity();
         $allActivities = $activityModel->getAllFutureActivities();
 
-        $session = new Session();
-        $session->start();
 
         return new Response(
             $this->twig->render('pages/activity/activities.html.twig',
             ['activities' => $allActivities,
-            'session' => $session])
+            'session' => (new Session)])
         );
-
     }
 
-    public function newActivity(){
+    public function newActivity() {
         $session = new Session();
         $session->start();
 
         $title = $this->request->get('title');
-        $startTime = $this->request->get('start-time');
-        $endTime = $this->request->get('end-time');
-        $leader = $session->get('memberID');
+        $startTime = (string)$this->request->get('start-time');
+        $endTime = (string)$this->request->get('end-time');
+        $description = (string)$this->request->get('description');
+        $leader= (int)$session->get('memberID');
 
         $activityModel = new Activity();
 
-        if ( $activityModel->addActivity($title, $startTime, $endTime, $leader)) {
-            return new RedirectResponse('http://localhost:8081');
+        if ($activityModel->addActivity($title, $startTime, $endTime, $description, $leader)) {
+            return $this->activities();
         } else {
-            $this->activities();
+            return $this->activities();
         }
+    }
+
+    public function joinActivity($id, $activity){
+        $activityModel = new Activity();
+        $activityModel->addActivityMember($id['id'], $activity['activity']);
+        return $this->handleUsers($id);
+    }
+
+    public function handleUsers($id){
+        $activityModel = new Activity();
+        $activity = $activityModel->getActivity($id['id']);
+        $attendees = $activityModel->getActivityAttendees($id['id']);
+        $attendeesCount = $attendees->num_rows;
+
+        return new Response(
+            $this->twig->render('pages/activity/activity.html.twig',
+                ['session' => (new Session),
+                    'activity' => $activity,
+                    'attendees' => $attendees,
+                    'attendeesCount' => $attendeesCount,
+                    'id' => $id['id']])
+        );
     }
 
 }
