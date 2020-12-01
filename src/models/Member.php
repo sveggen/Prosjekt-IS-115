@@ -42,6 +42,19 @@ class Member extends Database {
         return $result;
     }
 
+    public function getSingleMemberAndMemberData($memberID){
+        $sql = "SELECT * FROM member
+                LEFT JOIN address a on member.fk_address_id = a.address_id
+                LEFT JOIN zip_code_register zcr on a.fk_zip_code_register = zcr.zip_code
+                WHERE member_id = (?)";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('i', $memberID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
+    }
+
     /**
      * Adds a members interests to the DB.
      */
@@ -101,5 +114,14 @@ class Member extends Database {
         $result = $stmt->get_result();
         $stmt->close();
         return $result;
+    }
+
+    public function getTotalMembers(){
+        $sql = "SELECT COUNT(*) AS SUM FROM member";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return (int)$result['SUM'];
     }
 }

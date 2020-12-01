@@ -6,6 +6,7 @@ namespace App\controllers;
 use App\models\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use App\helpers\UploadFile;
 
 class Register extends BaseController
 {
@@ -31,10 +32,12 @@ class Register extends BaseController
     }
 
     public function newUser(){
+        $image = $this->request->files->get('image');
         $email = $this->request->get('email');
         $password = $this->request->get('password');
 
         if ($this->userModel->registerUser($email, $password, 4)){
+            (new UploadFile)->uploadFile($image);
             return new RedirectResponse('http://localhost:8081');
         } else {
             return new Response(

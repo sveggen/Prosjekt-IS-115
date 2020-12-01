@@ -33,6 +33,8 @@ class Login extends BaseController {
             $session = new Session();
             $session->set('userID', $credentials['user_id']);
             $session->set('memberID', $credentials['fk_member_id']);
+            $session->set('userID', $credentials['user_id']);
+            $session->set('username', $credentials['username']);
             return new RedirectResponse('http://localhost:8081');
         } else {
             return new Response(
