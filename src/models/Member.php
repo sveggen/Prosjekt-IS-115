@@ -117,7 +117,18 @@ class Member extends Database {
     }
 
     public function getTotalMembers(){
-        $sql = "SELECT COUNT(*) AS SUM FROM member";
+        $sql = "SELECT COUNT(*) AS SUM FROM member_role 
+                WHERE fk_role_id = 1";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return (int)$result['SUM'];
+    }
+
+    public function getTotalLeaders(){
+        $sql = "SELECT COUNT(*) AS SUM FROM member_role 
+                WHERE fk_role_id = 4";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->execute();
         $result = $stmt->get_result()->fetch_assoc();

@@ -24,6 +24,16 @@ class Activity extends Database {
         return $result;
     }
 
+    public function getTotalFutureActivities() {
+        $sql = "SELECT COUNT(*) AS SUM FROM activity
+                WHERE start_time >= CURTIME()";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return (int)$result['SUM'];
+    }
+
     public function addActivity($title, $startTime, $endTime, $description, $memberID, $maxAttendees){
         $sql = "INSERT INTO activity (title, start_time, end_time, description, fk_member_id, max_attendees) 
                 VALUES (?, ?, ?, ?, ?, ?)";

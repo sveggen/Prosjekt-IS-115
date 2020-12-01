@@ -2,6 +2,7 @@
 
 namespace App\controllers;
 
+use App\models\Activity;
 use App\models\Member;
 use App\models\User;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,14 +25,16 @@ class Index extends BaseController
         $totalMembers = $this->getCurrentMemberTotal();
         $totalLeaders = $this->getCurrentLeaderTotal();
         $totalActivities = $this->getUpcomingActivitiesTotal();
+        $signedInMembers = $this->getSignedInUsers();
 
             return new Response(
                 $this->twig->render('pages/index.html.twig',
                     ['session' => (new Session),
                         'totalMembers' => $totalMembers,
                         'totalLeaders' => $totalLeaders,
-                        'totalActivities' => $totalActivities]));
-
+                        'totalActivities' => $totalActivities,
+                        'signedInMembers' => $signedInMembers])
+            );
     }
 
     private function getCurrentMemberTotal(){
@@ -40,12 +43,18 @@ class Index extends BaseController
     }
 
     private function getUpcomingActivitiesTotal(){
+        $activityModel = new Activity();
+        return $activityModel->getTotalFutureActivities();
 
     }
 
     private function getCurrentLeaderTotal(){
+        $memberModel = new Member();
+        return $memberModel->getTotalLeaders();
+    }
 
-        //return int
+    private function getSignedInUsers(){
+        //TO DO
     }
 
 
