@@ -15,6 +15,14 @@
             <input type="password" name="password" placeholder="*******">
         </div>
         <button class="ui blue submit button" name="submit" type="submit">Log in</button>
+        <div class="ui stackable menu">
+            <a href="/register" class="item">
+                Not yet registered in Neo Youthclub?
+            </a>
+            <a href="/retrieve-user" class="item">
+                Already a member of Neo Youthclub, <br> but do not have your log-in credentials?
+            </a>
+        </div>
         <div class="ui error message" id="error-register"></div>
     </form>
     {% if session.getFlashbag().has('loginError') %}
@@ -26,6 +34,7 @@
             </ul>
         </div>
     {% endif %}
+
 </section>
 
     <script>

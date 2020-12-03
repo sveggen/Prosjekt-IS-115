@@ -10,16 +10,17 @@ class Member extends Database {
      * @param $memberData mixed all fields of from the member registration
      * @return bool
      */
-    public function registerMember($memberData) {
+    public function registerMember($memberData, $role) {
         try {
             $addressID = (new Address)->addAddress($memberData['streetAddress'], $memberData['zipCode']);
             $memberID = $this->addMember($memberData['firstName'], $memberData['lastName'],
                 $memberData['email'], $memberData['phoneNumber'], $addressID);
             // adds user if registration has has been done by member self
+
             if ($memberData['password']) {
                 (new User)->registerUser($memberData['email'], $memberData['password'], $memberID);
-                throw new \Exception("User could not be created.");
             }
+            $this->addMemberRoles($memberID, $role);
             $this->addMemberInterests($memberID, $memberData['interests']);
             return true;
         } catch (\Exception $e) {
@@ -63,7 +64,7 @@ class Member extends Database {
         $this->getConnection()->begin_transaction();
         foreach ($interests as $interest) {
             $stmt = $this->getConnection()->prepare($sql);
-            $stmt->bind_param('ss', $memberID, $interest);
+            $stmt->bind_param('is', $memberID, $interest);
             $stmt->execute();
             $stmt->close();
         }
@@ -105,20 +106,21 @@ class Member extends Database {
      * Adds a member to the DB.
      */
     private function addMember($firstName, $lastName, $email, $phoneNumber, $addressID) {
+        $paid = 0;
         $sql = "INSERT INTO member (first_name, last_name, email, 
                      phone_number, subscription_status, fk_address_id) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bind_param("ssssii", $firstName, $lastName, $email,
             $phoneNumber, $paid, $addressID);
         $stmt->execute();
-        $result = $stmt->get_result();
+        $insertId = $this->getConnection()->insert_id;
         $stmt->close();
-        return $result;
+        return $insertId;
     }
 
     public function getTotalMembers(){
         $sql = "SELECT COUNT(*) AS SUM FROM member_role 
-                WHERE fk_role_id = 1";
+                WHERE fk_role_id = 3";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->execute();
         $result = $stmt->get_result()->fetch_assoc();
@@ -142,6 +144,17 @@ public function getSingleMemberID($email){
                 WHERE email = ?";
     $stmt = $this->getConnection()->prepare($sql);
     $stmt->bind_param('s', $email);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+    return $result['member_id'];
+}
+
+
+public function addMemberRoles($memberID, $roleID){
+    $sql = "INSERT INTO member_role (fk_member_id, fk_role_id) VALUES (?, ?)";
+    $stmt = $this->getConnection()->prepare($sql);
+    $stmt->bind_param("ii", $memberID, $roleID);
     $stmt->execute();
     $result = $stmt->get_result();
     $stmt->close();

@@ -12,17 +12,12 @@ class PasswordGenerator {
      *
      * @return false|string
      */
-    function generatePassword()
-    {
-        $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-        $hash = md5();
-        $passwordLength = 8;
-        $hashLength = strlen($hash);
-
-         //Starting point in hashed value
-        $start = rand(0, ($hashLength - $passwordLength - 1));
-        $temporaryPassword = substr($hash, $start, $passwordLength);
-        return $temporaryPassword;
+    function generatePassword() {
+        $alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        $seed = substr(str_shuffle($alphabet), 0, 8);
+        return $seed;
     }
+
+
 
 }

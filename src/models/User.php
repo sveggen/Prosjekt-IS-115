@@ -106,12 +106,14 @@ class User extends Database {
     }
 
     public function checkUserExistence($memberID){
-        $sql = "SELECT * FROM user WHERE fk_member_id = ?";
+        $sql = "SELECT COUNT(1) AS SUM
+                FROM user 
+                WHERE fk_member_id = ?";
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bind_param('s', $memberID);
+        $stmt->bind_param('i', $memberID);
         $stmt->execute();
-        $result = $stmt->affected_rows;
+        $result = $stmt->get_result()->fetch_assoc();
         $stmt->close();
-        return $result;
+        return (int)$result['SUM'];
     }
 }
