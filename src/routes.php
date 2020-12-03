@@ -2,9 +2,9 @@
 
 return [
     ['GET', '/', ['App\controllers\Index', 'renderStartPage']],
-    ['GET', '/login', ['App\controllers\Login', 'index']],
+    ['GET', '/login', ['App\controllers\Login', 'renderLoginPage']],
     ['POST', '/login', ['App\controllers\Login', 'login']],
-    ['GET', '/register', ['App\controllers\Register', 'register']],
+    ['GET', '/register', ['App\controllers\Register', 'renderRegisterPage']],
     ['POST', '/register', ['App\controllers\Register', 'newUser']],
     ['GET', '/dashboard', ['App\controllers\Dashboard', 'dashboard']],
     ['GET', '/profile', ['App\controllers\Profile', 'renderMyProfile']],

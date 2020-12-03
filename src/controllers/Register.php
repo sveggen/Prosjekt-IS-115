@@ -22,7 +22,7 @@ class Register extends BaseController {
 
     }
 
-    public function register() {
+    public function renderRegisterPage() {
         return new Response(
             $this->twig->render('pages/user/register.html.twig')
         );

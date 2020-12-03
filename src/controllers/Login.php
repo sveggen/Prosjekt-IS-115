@@ -18,7 +18,7 @@ class Login extends BaseController {
 
     }
 
-    public function index() {
+    public function renderLoginPage() {
         return new Response(
             $this->twig->render('pages/user/login.html.twig')
         );
