@@ -59,18 +59,33 @@ class Activities extends BaseController {
 
     }
 
+    public function leaveActivity($activityID) {
+        $session = new Session();
+        $session->start();
+        $memberID = $session->get('memberID');
+
+        $activityModel = new Activity();
+        $activityModel->leaveActivity($memberID, $activityID['id']);
+
+        return $this->renderSingleActivity($activityID);
+        }
+
     public function renderSingleActivity($id) {
         $activityModel = new Activity();
         $activity = $activityModel->getActivity($id['id']);
         $attendees = $activityModel->getActivityAttendees($id['id']);
         $attendeesCount = $attendees->num_rows;
 
+        $memberID = (new Session)->get('memberID');
+        $attendanceStatus = $activityModel->getMemberActivityAttendanceStatus($memberID, $id['id']);
+
+
         return new Response(
             $this->twig->render('pages/activity/activity.html.twig',
-                ['session' => (new Session),
-                    'activity' => $activity,
+                ['activity' => $activity,
                     'attendees' => $attendees,
                     'attendeesCount' => $attendeesCount,
+                    'attendanceStatus' => $attendanceStatus,
                     'id' => $id['id']])
         );
     }

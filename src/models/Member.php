@@ -107,11 +107,12 @@ class Member extends Database {
      */
     private function addMember($firstName, $lastName, $email, $phoneNumber, $addressID) {
         $paid = 0;
+        $timeOfRegistration = date('Y-m-d H:i:s');
         $sql = "INSERT INTO member (first_name, last_name, email, 
-                     phone_number, subscription_status, fk_address_id) VALUES (?, ?, ?, ?, ?, ?)";
+                     phone_number, subscription_status, fk_address_id, time_of_registration) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bind_param("ssssii", $firstName, $lastName, $email,
-            $phoneNumber, $paid, $addressID);
+        $stmt->bind_param("ssssiis", $firstName, $lastName, $email,
+            $phoneNumber, $paid, $addressID, $timeOfRegistration);
         $stmt->execute();
         $insertId = $this->getConnection()->insert_id;
         $stmt->close();

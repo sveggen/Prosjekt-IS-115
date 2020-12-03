@@ -88,5 +88,28 @@ class Activity extends Database {
         return $maxAttendees - $attendees;
     }
 
+    public function leaveActivity($memberID, $activityID){
+        $sql = "DELETE FROM member_activity WHERE fk_member_id = ? AND fk_activity_id = ?";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('ii', $memberID, $activityID);
+        $stmt->execute();
+        $result = $stmt->affected_rows;
+        $stmt->close();
+        return $result;
+    }
+
+    public function getMemberActivityAttendanceStatus($memberID, $activityID){
+        $sql = "SELECT COUNT(1) AS SUM
+                FROM member_activity 
+                WHERE fk_member_id = ?
+                AND fk_activity_id = ?";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('ii', $memberID, $activityID);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return (int)$result['SUM'];
+    }
+
 
 }
