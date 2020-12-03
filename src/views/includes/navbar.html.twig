@@ -1,27 +1,15 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/">Neo Youthclub</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/dashboard">Members <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/profile">Profile</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/activities">Activities</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/">Log out</a>
-            </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Member search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+<div class="ui stackable menu">
+    <header class="ui header item"> <a href="/"> Neo Youthclub </a></header>
+        <a id="profile" class="item" href="/profile"> Profile </a>
+        <a id="activities" class="item" href="/activities"> Activities </a>
+        <a id="members" class="item" href="/dashboard"> Members </a>
+    <div class="right menu">
+        <div class="item">
+            <div class="ui icon input">
+                <input type="text" placeholder="Search...">
+                <i class="search link icon"></i>
+            </div>
+        </div>
+        <a class="ui item" id="about" href="/logout"> Logout </a>
     </div>
-</nav>
+</div>

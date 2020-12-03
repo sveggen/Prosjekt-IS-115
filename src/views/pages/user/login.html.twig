@@ -3,24 +3,32 @@
     Login
 {% endblock %}
 {% block content %}
-
-    <div class="box">
-        <form action="" method="post">
-            <div class="form-group">
-                <h3>Log in</h3>
+<section class="ui segment">
+    <form class="ui form" action="" method="post">
+        <h4 class="ui dividing header">Log in</h4>
+        <div class="field">
+            <label>Username</label>
+            <input type="text" name="email" placeholder="mike.pence">
+        </div>
+        <div class="field">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="*******">
+        </div>
+        <button class="ui blue submit button" name="submit" type="submit">Log in</button>
+    </form>
+    {% if session.getFlashbag().has('loginError') %}
+        <div class="ui error message">
+            <i class="close icon"></i>
+            <div class="header">
+                Login failed
             </div>
-            <div class="form-group">
-                <label for="email">Email: </label>
-                <input type="text" class="form-control" name="email" placeholder="email@email.com">
-            </div>
-            <div class="form-group ">
-                <label for="password">Password: </label>
-                <input type="password" class="form-control" name="password" placeholder="*******">
-            </div>
-            <div class="form-group">
-                <button class="btn btn-primary btn-block" name="submit" type="submit">Log in</button>
-            </div>
-        </form>
-    </div>
+            <ul class="list">
+                {% for message in session.getFlashbag().get('loginError') %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</section>
 
 {% endblock %}

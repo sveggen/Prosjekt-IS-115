@@ -45,12 +45,12 @@ class Activity extends Database {
         return $result;
     }
 
-    public function addActivityMember($memberID, $activityID){
+    public function addActivityMember($memberID, $activityID, $joinTime){
         //CHECK if max_attendees treshold has been met
-        $sql = "INSERT INTO member_activity (fk_member_id, fk_activity_id)
-                VALUES (?, ?)";
+        $sql = "INSERT INTO member_activity (fk_member_id, fk_activity_id, join_time)
+                VALUES (?, ?, ?)";
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bind_param('ii', $memberID, $activityID);
+        $stmt->bind_param('iis', $memberID, $activityID, $joinTime);
         $stmt->execute();
         $result = $stmt->affected_rows;
         $stmt->close();

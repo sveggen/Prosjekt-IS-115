@@ -3,35 +3,38 @@
     Dashboard
 {% endblock %}
 {% block content %}
-    <h1>Members</h1>
-    <hr/>
-
-    <table class="table table-dark">
+<section class="ui center aligned middle aligned segment">
+    <h1 class="ui header">
+        <i class="users icon"></i>
+        Members
+    </h1>
+    <table class="ui selectable celled table">
         <thead>
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">First name</th>
-            <th scope="col">Last name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Street Address</th>
-            <th scope="col">Zip code</th>
-            <th scope="col">City</th>
-        </tr>
+            <tr>
+                <th>ID</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Email</th>
+                <th>Street Address</th>
+                <th>Zip code</th>
+                <th>City</th>
+            </tr>
         </thead>
         <tbody>
-        <tr>
-            {% for member in members %}
-            <th scope="row">{{ member.member_id }}</th>
-            <td>{{ member.first_name }}</td>
-            <td>{{ member.last_name }}</td>
-            <td>{{ member.email }}</td>
-            <td>{{ member.street_address }}</td>
-            <td>{{ member.zip_code }}</td>
-            <td>{{ member.city }}</td>
-        </tr>
-    {% endfor %}
+            <tr>
+                {% for member in members %}
+                <td data-label="ID">{{ member.member_id }}</td>
+                <td data-label="First name">{{ member.first_name }}</td>
+                <td data-label="Last name">{{ member.last_name }}</td>
+                <td data-label="Email">{{ member.email }}</td>
+                <td data-label="Street Address">{{ member.street_address }}</td>
+                <td data-label="Zip code">{{ member.zip_code }}</td>
+                <td data-label="City">{{ member.city }}</td>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
+</section>
 
 {% endblock %}
 

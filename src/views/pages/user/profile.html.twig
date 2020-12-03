@@ -3,20 +3,37 @@
     Profile
 {% endblock %}
 {% block content %}
-    {% for trait in member %}
-        <h1>{{ trait.first_name }} {{ trait.last_name }}</h1>
-        <hr/>
-    <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src="..." alt="Card image cap">
-        <div class="card-body">
-            <h5 class="card-title">{{ trait.first_name }} {{ trait.last_name }}</h5>
-            <p class="card-text">{{ trait.email }}</p>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
+    <section class="ui center aligned middle aligned segment">
 
+        {% for trait in member %}
+            <div class="ui centered card">
+                <div class="image">
+                    <img src="/assets/img/profile/placeholder.png">
+                </div>
+                <div class="content">
+                    <a class="header">{{ trait.first_name }} {{ trait.last_name }}</a>
+                    <div class="meta">
+                        <span class="date">Joined in 2013</span>
+                    </div>
+                    <div class="description">
+                        {{ trait.email }}
+                    </div>
+                </div>
+                <div class="extra content">
+                    <a>
+                        <i class="futbol icon"></i>
+                        Attending 25 activities
+                    </a>
+                </div>
+                <div class="extra content">
+                <a>
+                    <i class="futbol icon"></i>
+                    Have 25 interests
+                </a>
+                </div>
+            </div>
+        {% endfor %}
 
-    {% endfor %}
+    </section>
 
 {% endblock %}

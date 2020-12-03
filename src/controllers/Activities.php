@@ -26,6 +26,7 @@ class Activities extends BaseController {
         if ($newActivity) {
             return $this->renderAllActivities();
         } else {
+            $session->getFlashBag()->add('error', 'Activity could not be created.');
             return $this->renderAllActivities();
         }
     }
@@ -36,8 +37,7 @@ class Activities extends BaseController {
 
         return new Response(
             $this->twig->render('pages/activity/activities.html.twig',
-                ['activities' => $allActivities,
-                    'session' => (new Session)])
+                ['activities' => $allActivities])
         );
     }
 
@@ -45,10 +45,11 @@ class Activities extends BaseController {
         $session = new Session();
         $session->start();
         $memberID = $session->get('memberID');
+        $joinTime = date('Y-m-d H:i:s');
         $activityModel = new Activity();
 
         //$emptyActivitySlots = $activityModel->getEmptySlotsInActivity($activityID);
-        $joinActivity = $activityModel->addActivityMember($memberID, $activityID['id']);
+        $joinActivity = $activityModel->addActivityMember($memberID, $activityID['id'], $joinTime);
 
         if ($joinActivity) {
             return $this->renderSingleActivity($activityID);

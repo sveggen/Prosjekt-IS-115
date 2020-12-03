@@ -25,18 +25,29 @@ class Login extends BaseController {
     }
 
     public function login() {
+        $session = new Session();
         $email = $this->request->get('email');
         $password = $this->request->get('password');
-        $credentials = $this->userModel->login($email, $password);
 
-        if ($credentials) {
-            $session = new Session();
-            $session->set('userID', $credentials['user_id']);
-            $session->set('memberID', $credentials['fk_member_id']);
-            $session->set('userID', $credentials['user_id']);
-            $session->set('username', $credentials['username']);
-            return new RedirectResponse('http://localhost:8081');
-        } else {
+        if ($email && $password){
+            $credentials = $this->userModel->login($email, $password);
+
+            if ($credentials) {
+                $session->set('userID', $credentials['user_id']);
+                $session->set('memberID', $credentials['fk_member_id']);
+                $session->set('userID', $credentials['user_id']);
+                $session->set('username', $credentials['username']);
+
+                return new RedirectResponse('http://localhost:8081');
+
+            } else {
+                $session->getFlashBag()->add('loginError', 'Wrong password or username');
+                return new Response(
+                    $this->twig->render('/pages/user/login.html.twig')
+                );
+            }
+        } else{
+            $session->getFlashBag()->add('loginError', 'Password or username is missing.');
             return new Response(
                 $this->twig->render('/pages/user/login.html.twig')
             );

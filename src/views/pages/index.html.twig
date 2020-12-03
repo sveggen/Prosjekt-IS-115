@@ -3,12 +3,47 @@
     Index
 {% endblock %}
 {% block content %}
-<h1>Homepage</h1>
-<hr/>
+<section class="ui center aligned middle aligned segment">
+<h1>Neo Youthclub</h1>
+<div class="ui divider"></div>
 
-    <p>Total members: {{ totalMembers }}</p>
-    <p>Total leaders: {{ totalLeaders }}</p>
-    <p>Total upcoming activities: {{ totalActivities }}</p>
+    <div class="ui segment middle aligned">
+        Welcome to Neo Youthclub!
+    </div>
+    <div class="ui two statistics">
+    <div class="ui statistic">
+        <div class="value">
+            <i class="small users icon"></i>
+            {{ totalMembers }}
+        </div>
+        <div class="label">
+            total members
+        </div>
+    </div>
+
+    <div class="ui statistic">
+        <div class="value">
+            <i class="small user outline plus icon"></i>
+            {{ totalLeaders }}
+        </div>
+        <div class="label">
+            total leaders
+        </div>
+    </div>
+    </div>
+
+    <div class="ui one statistics">
+    <div class="ui statistic">
+        <div class="value">
+            <i class="small futbol outline plus icon"></i>
+            {{ totalActivities }}
+        </div>
+        <div class="label">
+            total upcoming activities
+        </div>
+    </div>
+    </div>
+
+</section>
 
 {% endblock %}
-

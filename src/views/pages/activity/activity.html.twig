@@ -3,32 +3,50 @@
     Activities
 {% endblock %}
 {% block content %}
-    {% for activity in activity %}
+    <section class="ui center aligned middle aligned segment">
+        {% for activity in activity %}
         <div class="jumbotron" xmlns="http://www.w3.org/1999/html">
-        <h1 class="display-6">{{ activity.title }}</h1>
-        <p class="lead">{{ activity.start_time|date("l d. M. H:i") }} - {{ activity.end_time|date("l d. M. Y. H:i") }}</p>
-        <span><b>Leader: </b>{{ activity.first_name }} {{ activity.last_name }} - {{ activity.email }} </span>
-            <hr class="my-4">
-        <p>{{ activity.description }}</p>
-        <p>
+            <h1 class="display-6">{{ activity.title }}</h1>
+            <p class="lead">{{ activity.start_time|date("l d. M. H:i") }}
+                - {{ activity.end_time|date("l d. M. Y. H:i") }}</p>
+            <div><b>Leader: </b>{{ activity.first_name }} {{ activity.last_name }} - {{ activity.email }} </div>
             <br>
-            <hr>
-        <span class="lead">
-            <a href="/activities/{{activity.activity_id}}/join" class="btn btn-primary btn-success" onclick="return confirm('Are you sure you want to join this event?');"> Join </a>
-        </a>
-        </span>
-            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                Attendees
-                <span class="badge badge-light">{{ attendeesCount }} / {{ activity.max_attendees }}</span>
-            </button>
-        </p>
-        <div class="collapse" id="collapseExample">
-                <ul class="list-group">
-                    {% for attendee in attendees %}
-                    <li class="list-group-item"> {{ attendee.first_name}} {{ attendee.last_name}}</li>
-                    {% endfor %}
-                </ul>
+            <a href="/activities/{{ activity.activity_id }}/join" class="positive ui button"
+               onclick="return confirm('Are you sure you want to join this activity?');">Join</a>
+            <div class="ui center aligned middle aligned segment">
+            <p>{{ activity.description }}</p>
             </div>
-    </div>
+            <div class="ui segment middle aligned">
+
+                <div class="ui accordion">
+                    <div class="title">
+                        <i class="dropdown icon"></i>
+                        <span class="ui label">
+            <i class="user icon"></i>Attending {{ attendeesCount }} / {{ activity.max_attendees }}</span>
+                    </div>
+                    <div class="content">
+                        <div class="ui relaxed divided list center">
+                            <div class="item">
+                                <i class="large user middle aligned icon"></i>
+                                <div class="content">
+                                    {% for attendee in attendees %}
+                                        <a class="header"
+                                           href="/profile/{{ attendee.member_id }}">{{ attendee.first_name }} {{ attendee.last_name }}</a>
+                                        <div class="description">
+                                            Joined {{ attendee.join_time|date("d. M. Y. H:i") }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        $('.ui.accordion')
+            .accordion();
+    </script>
     {% endfor %}
 {% endblock %}
+

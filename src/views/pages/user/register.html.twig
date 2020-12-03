@@ -4,27 +4,35 @@
 {% endblock %}
 {% block content %}
 
-<div class="box">
-    <form action="" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <h3>Register</h3>
-        </div>
-        <div class="form-group">
-            <label for="email">Email: </label>
-            <input type="text" class="form-control" name="email" placeholder="email@email.com">
-        </div>
-        <div class="form-group ">
-            <label for="password">Password: </label>
-            <input type="password" class="form-control" name="password" placeholder="*******">
-        </div>
-        <div class="form-group">
-            <label for="image"></label>
-            <input type="file" class="form-control-file" id="image" name="image">
-        </div>
-        <div class="form-group">
-            <button class="btn btn-primary btn-block" name="submit" type="submit">Register</button>
-        </div>
-    </form>
-</div>
-
+    <section class="ui segment">
+        <form class="ui form" action="" method="post" enctype="multipart/form-data">
+            <h4 class="ui dividing header">Register</h4>
+            <div class="field">
+                <label>Username</label>
+                <input type="text" name="email" placeholder="mike.pence">
+            </div>
+            <div class="field">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="*******">
+            </div>
+            <div class="field">
+                <label>Profile image</label>
+                <input type="file" name="image">
+            </div>
+            <button class="ui blue submit button" name="submit" type="submit">Log in</button>
+        </form>
+        {% if session.getFlashbag().has('registrationError') %}
+            <div class="ui error message">
+                <i class="close icon"></i>
+                <div class="header">
+                    Registration failed
+                </div>
+                <ul class="list">
+                    {% for message in session.getFlashbag().get('registrationError') %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </section>
 {% endblock %}

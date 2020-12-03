@@ -14,14 +14,14 @@ class Profile extends BaseController{
         $session = new Session();
         $session->start();
         $memberID = $session->get('memberID');
+        $session->getFlashBag()->add('error', 'Error !!!');
 
         $memberModel = new Member();
         $member = $memberModel->getSingleMemberAndMemberData($memberID);
 
         return new Response(
             $this->twig->render('pages/user/my_profile.html.twig',
-                ['session' => $session,
-                    'member' => $member])
+                ['member' => $member])
         );
     }
 
@@ -31,8 +31,7 @@ class Profile extends BaseController{
 
         return new Response(
             $this->twig->render('pages/user/profile.html.twig',
-                ['session' => (new Session),
-                    'member' => $member])
+                ['member' => $member])
         );
     }
 
