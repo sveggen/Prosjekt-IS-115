@@ -3,6 +3,8 @@
 return [
     ['GET', '/', ['App\controllers\Index', 'renderStartPage']],
     ['GET', '/login', ['App\controllers\Login', 'renderLoginPage']],
+    ['GET', '/retrieve-user', ['App\controllers\RetrieveUser', 'renderRetrieveUserPage']],
+    ['POST', '/retrieve-user', ['App\controllers\RetrieveUser', 'retrieveUser']],
     ['POST', '/login', ['App\controllers\Login', 'login']],
     ['GET', '/register', ['App\controllers\Register', 'renderRegisterPage']],
     ['POST', '/register', ['App\controllers\Register', 'newUser']],

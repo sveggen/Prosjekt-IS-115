@@ -32,6 +32,14 @@ class Register extends BaseController {
         $image = $this->request->files->get('image');
         $email = $this->request->get('email');
         $password = $this->request->get('password');
+        $image = $this->request->files->get('image');
+        $email = $this->request->get('email');
+        $phoneNumber = $this->request->get('phone-number');
+        $birthDate = $this->request->get('birth-date');
+        $gender = $this->request->get('gender');
+        $streetAddress = $this->request->get('street-address');
+        $zipCode = $this->request->get('zip-code');
+        $interests = $this->request->get('interests[]');
 
         if ($this->userModel->registerUser($email, $password, 4)) {
             (new UploadFile)->uploadFile($image);

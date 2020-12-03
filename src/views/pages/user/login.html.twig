@@ -15,13 +15,10 @@
             <input type="password" name="password" placeholder="*******">
         </div>
         <button class="ui blue submit button" name="submit" type="submit">Log in</button>
+        <div class="ui error message" id="error-register"></div>
     </form>
     {% if session.getFlashbag().has('loginError') %}
         <div class="ui error message">
-            <i class="close icon"></i>
-            <div class="header">
-                Login failed
-            </div>
             <ul class="list">
                 {% for message in session.getFlashbag().get('loginError') %}
                 <li>{{ message }}</li>
@@ -30,5 +27,35 @@
         </div>
     {% endif %}
 </section>
+
+    <script>
+        // form validation
+        // ---------------------------------------
+        $('.ui.form')
+            .form({
+                fields: {
+                    username: {
+                        identifier: 'email',
+                        rules: [
+                            {
+                                type: 'empty',
+                                prompt: 'Please enter a username'
+                            }
+                        ]
+                    },
+                    password: {
+                        identifier: 'password',
+                        rules: [
+                            {
+                                type: 'empty',
+                                prompt: 'Please enter a password'
+                            },
+                        ]
+                    },
+                }
+            })
+        ;
+    </script>
+
 
 {% endblock %}

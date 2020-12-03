@@ -1,0 +1,32 @@
+{% extends './includes/base.html.twig' %}
+{% block title %}
+    Login
+{% endblock %}
+{% block content %}
+    <section class="ui segment">
+        <form class="ui form" action="" method="post">
+            <h4 class="ui dividing header">Reset Password</h4>
+            <div class="ui paragraph">
+                If you are a member of Neo Youthclub
+                but have not accessed your account yet, we can send a temporary password
+                to your email.
+            </div>
+            <div class="ui divider"> </div>
+            <div class="field">
+                <label>Email</label>
+                <input type="text" name="email" placeholder="name@email.com">
+            </div>
+            <button class="ui blue submit button" name="submit" type="submit">Retrieve account</button>
+            <div class="ui error message" id="error-register"></div>
+        </form>
+        {% if session.getFlashbag().has('retrieveUserSuccess') %}
+            <div class="ui success message">
+                    {% for message in session.getFlashbag().get('retrieveUserSuccess') %}
+                        {{ message }}
+                    {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+
+
+{% endblock %}

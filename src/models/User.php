@@ -104,4 +104,14 @@ class User extends Database {
         $stmt->close();
         return $result;
     }
+
+    public function checkUserExistence($memberID){
+        $sql = "SELECT * FROM user WHERE fk_member_id = ?";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('s', $memberID);
+        $stmt->execute();
+        $result = $stmt->affected_rows;
+        $stmt->close();
+        return $result;
+    }
 }

@@ -135,4 +135,16 @@ class Member extends Database {
         $stmt->close();
         return (int)$result['SUM'];
     }
+
+
+public function getSingleMemberID($email){
+    $sql = "SELECT member_id FROM member 
+                WHERE email = ?";
+    $stmt = $this->getConnection()->prepare($sql);
+    $stmt->bind_param('s', $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    return $result;
+}
 }
