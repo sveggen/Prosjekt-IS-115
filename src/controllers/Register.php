@@ -24,7 +24,7 @@ class Register extends BaseController {
 
     }
 
-    public function renderRegisterPage() {
+    public function renderRegisterPage(): Response {
         $interestModel = new Interest();
         $interests = $interestModel->getAllInterests();
 
@@ -53,7 +53,7 @@ class Register extends BaseController {
         $memberModel = new Member();
 
         if ($memberModel->registerMember($memberdata, $role)) {
-            (new UploadFile)->uploadFile($image);
+            (new UploadFile)->uploadProfileImage($image);
             return new RedirectResponse('http://localhost:8081/login');
         } else {
             (new Session)->getFlashBag()->add('registrationError', 'Account could not be created');

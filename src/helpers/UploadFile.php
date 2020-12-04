@@ -20,15 +20,34 @@ class UploadFile {
         $this->request = Request::createFromGlobals();
     }
 
-    public function uploadFile($file) {
-        $dir_path = "./assets/img/profile/";
+    public function getProfileImage($memberID) {
+        $profileDirPath = "./assets/img/profile/" . $memberID . "/";
+        $dir = opendir($profileDirPath);
+
+        while (false !== ($file = readdir($dir))){
+            $pathinfo = pathinfo($profileDirPath . $file);
+            $filename = $pathinfo['filename'];
+            $extension = $pathinfo['extension'];
+        }
+        closedir($dir);
+        return $profileDirPath .$filename . "." .$extension;
+    }
+
+    public function uploadProfileImage($file, $memberID): bool {
+        $profileDirPath = "./assets/img/profile/" . $memberID . "/";
 
         if ($file instanceof UploadedFile){
-            $filename = $file->getClientOriginalName();
-            $newFilePath = $dir_path . $filename;
-            if($this->checkFileSize($file) && $this->checkExtension($file)) {
-                move_uploaded_file($file, $newFilePath);
-            }
+            $uploadedFile = $file;
+            $filename = $uploadedFile->getClientOriginalName();
+
+            //if($this->checkFileSize($file) && $this->checkExtension($file)) {
+
+            $tempFile = $uploadedFile->move($profileDirPath, $filename);
+            $profileImagePath = $profileDirPath . $memberID ."-profile." . $tempFile->getExtension();
+
+            $tempFile->move($profileDirPath, $profileImagePath);
+
+
             return true;
         } else {
             return false;
@@ -49,7 +68,7 @@ class UploadFile {
 
     private function checkExtension(UploadedFile $uploadedFile){
         $validExtensions = array("jpg", "png", "jpeg");
-        $fileExtension = $uploadedFile->getExtension();
+        $fileExtension = $uploadedFile->guessExtension();
 
         if (!in_array($fileExtension, $validExtensions)) {
             $extensionError = "Invalid filetype";

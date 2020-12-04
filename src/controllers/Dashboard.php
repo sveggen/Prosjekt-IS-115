@@ -13,12 +13,14 @@ class Dashboard extends BaseController{
     public function dashboard() {
         return new Response(
             $this->twig->render('pages/member/dashboard.html.twig',
-                ['members' =>$this->listMembers()]));
+                ['members' =>$this->listMembers(),]));
 
     }
 
     public function listMembers(){
         return (new Member)->getAllMembersAndMemberData();
     }
+
+
 
 }

@@ -8,7 +8,7 @@
     {% for trait in member %}
         <div class="ui centered card">
             <div class="image">
-                <img src="/assets/img/profile/placeholder.png">
+                <img src="{{ profileImage }}">
             </div>
             <div class="content">
                 <a class="header">{{ trait.first_name }} {{ trait.last_name }}</a>
@@ -26,7 +26,18 @@
                 </a>
             </div>
         </div>
+
+        <form action="/profile/update" method="post" enctype="multipart/form-data">'
+            <div class="field">
+                <label>Profile image
+                    <input type="file" name="image">
+                </label>
+            </div>
+            <button class="ui blue submit button" name="submit" type="submit">Update Profile</button>
+        </form>
+
     {% endfor %}
+
 
 </section>
 

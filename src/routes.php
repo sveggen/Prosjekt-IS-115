@@ -11,6 +11,7 @@ return [
     ['POST', '/register', ['App\controllers\Register', 'newUser']],
     ['GET', '/dashboard', ['App\controllers\Dashboard', 'dashboard']],
     ['GET', '/profile', ['App\controllers\Profile', 'renderMyProfile']],
+    ['POST', '/profile/update', ['App\controllers\Profile', 'updateProfile']],
     ['GET', '/profile/{id:\d+}', ['App\controllers\Profile', 'renderMemberProfile']],
     ['GET', '/activities', ['App\controllers\Activities', 'renderAllActivities']],
     ['POST', '/activities', ['App\controllers\Activities', 'newActivity']],

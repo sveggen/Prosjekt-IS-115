@@ -29,13 +29,15 @@ class Member extends Database {
     }
 
     /**
-     * Returns all data from member, interest, address and zip_code_register
+     * Returns all data from member, address and zip_code_register
      * JOIN-ed on member.
      */
     public function getAllMembersAndMemberData(){
         $sql = "SELECT * FROM member
                 LEFT JOIN address a on member.fk_address_id = a.address_id
-                LEFT JOIN zip_code_register zcr on a.fk_zip_code_register = zcr.zip_code";
+                LEFT JOIN zip_code_register zcr on a.fk_zip_code_register = zcr.zip_code
+                LEFT JOIN member_interest mi on member.member_id = mi.fk_member_id
+                LEFT JOIN interest i on mi.fk_interest_id = i.interest_id";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->execute();
         $result = $stmt->get_result();

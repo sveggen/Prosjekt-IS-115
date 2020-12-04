@@ -5,7 +5,6 @@ namespace App\controllers;
 
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class Logout extends BaseController {
@@ -17,7 +16,8 @@ class Logout extends BaseController {
         if ($currentSession){
             $session->clear();
         }
-        return new RedirectResponse('http://localhost:8081');
+        $session->getFlashBag()->add('authentication', 'Successfully logged out');
+        return new RedirectResponse('http://localhost:8081/login');
     }
 
 

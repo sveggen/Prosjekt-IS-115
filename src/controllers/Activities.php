@@ -9,16 +9,15 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class Activities extends BaseController {
 
-    public function newActivity() {
-        $session = new Session();
-        $session->start();
-
+    public function newActivity(): Response {
         $title = $this->request->get('title');
-        $startTime = (string)$this->request->get('start-time');
-        $endTime = (string)$this->request->get('end-time');
-        $description = (string)$this->request->get('description');
-        $maxAttendees = (int)$this->request->get('max-attendees');
-        $leader = (int)$session->get('memberID');
+        $startTime = $this->request->get('start-time');
+        $endTime = $this->request->get('end-time');
+        $description = $this->request->get('description');
+        $maxAttendees = $this->request->get('max-attendees');
+
+        $session = new Session();
+        $leader = $session->get('memberID');
 
         $activityModel = new Activity();
         $newActivity = $activityModel->addActivity($title, $startTime, $endTime, $description, $leader, $maxAttendees);
@@ -31,7 +30,7 @@ class Activities extends BaseController {
         }
     }
 
-    public function renderAllActivities() {
+    public function renderAllActivities(): Response {
         $activityModel = new Activity();
         $allActivities = $activityModel->getAllFutureActivities();
 
@@ -41,12 +40,13 @@ class Activities extends BaseController {
         );
     }
 
-    public function joinActivity($activityID) {
+    public function joinActivity($activityID): Response {
         $session = new Session();
         $session->start();
         $memberID = $session->get('memberID');
         $joinTime = date('Y-m-d H:i:s');
         $activityModel = new Activity();
+
 
         //$emptyActivitySlots = $activityModel->getEmptySlotsInActivity($activityID);
         $joinActivity = $activityModel->addActivityMember($memberID, $activityID['id'], $joinTime);
@@ -59,7 +59,7 @@ class Activities extends BaseController {
 
     }
 
-    public function leaveActivity($activityID) {
+    public function leaveActivity($activityID): Response {
         $session = new Session();
         $session->start();
         $memberID = $session->get('memberID');
