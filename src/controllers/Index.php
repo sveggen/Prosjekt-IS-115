@@ -24,8 +24,7 @@ class Index extends BaseController {
                 ['session' => (new Session),
                     'totalMembers' => $totalMembers,
                     'totalLeaders' => $totalLeaders,
-                    'totalActivities' => $totalActivities,
-                        'sent' => $emailSender->sendEmail('m.sveggen@gmail.com', 'Markus', 'Heisann', 'Innhold')
+                    'totalActivities' => $totalActivities
                 ])
         );
     }

@@ -40,7 +40,6 @@
                 <td data-label="Street Address">{{ member.street_address }}, {{ member.zip_code }}</td>
                 <td data-label="City"> {{ member.city | capitalize }}</td>
                 <td data-label="Registered">{{ member.time_of_registration |date("d. M. Y. H:i") }}</td>
-                <td data-label="Registered">{{ member.time_of_registration |date("d. M. Y. H:i") }}</td>
             </tr>
                 {% endfor %}
         </tbody>

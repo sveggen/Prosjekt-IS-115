@@ -95,13 +95,26 @@ class Member extends Database {
      */
     public function getAllMemberInterests() {
         $sql = "SELECT * FROM member_interest
-    JOIN interest i on member_interest.fk_interest_id = i.interest_id
-    JOIN member m on member_interest.fk_member_id = m.member_id ORDER BY I.type";
+                JOIN interest i on member_interest.fk_interest_id = i.interest_id
+                JOIN member m on member_interest.fk_member_id = m.member_id ORDER BY I.type";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();
         return $result->fetch_assoc();
+    }
+
+    public function getAllMembersInterests($memberID) {
+        $sql = "SELECT * FROM member_interest
+                JOIN interest i on member_interest.fk_interest_id = i.interest_id
+                JOIN member m on member_interest.fk_member_id = m.member_id 
+                WHERE member_id = ?";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('i', $memberID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
     }
 
     /**
@@ -168,7 +181,20 @@ public function addMemberRoles($memberID, $roleID){
         $sql = "SELECT * FROM member 
                 WHERE subscription_status = ?";
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bind_param('s', $paymentStatus);
+        $stmt->bind_param('t', $paymentStatus);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
+    }
+
+    public function getSingleUserRoles($memberID){
+        $sql = "SELECT * FROM member_role 
+                JOIN role i on member_role.fk_role_id = i.role_id
+                JOIN member m on m.member_id = member_role.fk_member_id
+                WHERE member_id = ?";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('i', $memberID);
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();

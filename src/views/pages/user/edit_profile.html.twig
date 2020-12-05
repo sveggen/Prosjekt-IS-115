@@ -1,0 +1,58 @@
+{% extends './includes/base.html.twig' %}
+{% block title %}
+    My Profile
+{% endblock %}
+{% block content %}
+    {% for data in member %}
+
+    <section class="ui center aligned middle aligned segment">
+        <h2 class="ui icon header">
+            <i class="settings icon"></i>
+            <div class="content">
+                Account Settings
+                <div class="sub header"></div>
+            </div>
+        </h2>
+        <div class="ui horizontal segments">
+            <div class="ui segment">
+                <a class="ui header" href="/profile/{{ data.member_id }}">Public profile</a>
+                <div class="ui divider"></div>
+
+                {# Include profile page #}
+                {% include './includes/profile_template.html.twig' %}
+
+                {# Update user form #}
+            </div>
+                <div class="ui segment">
+                    <div class="ui header">Edit Profile</div>
+                    <div class="ui divider"></div>
+
+                <form action="/profile/update" method="post" enctype="multipart/form-data">
+                    <div class="field">
+                        <label>Profile image
+                            <input type="file" name="image">
+                        </label>
+                    </div>
+                    <button class="ui blue submit button" name="submit" type="submit">Update Profile</button>
+                    {% for message in session.getFlashbag().get('profileUpdateError') %}
+                        <div class="ui negative message">
+                            <ul class="list">
+                                <li>{{ message }}</li>
+                            </ul>
+                        </div>
+                    {% endfor %}
+                    {% for message in session.getFlashbag().get('UpdateSuccess') %}
+                        <div class="ui success message">
+                            <ul class="list">
+                                <li>{{ message }}</li>
+                            </ul>
+                        </div>
+                    {% endfor %}
+
+                </form>
+            </div>
+        </div>
+    </section>
+
+    {% endfor %}
+{% endblock %}
