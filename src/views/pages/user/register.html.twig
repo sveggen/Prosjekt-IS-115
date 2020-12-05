@@ -4,24 +4,237 @@
 {% endblock %}
 {% block content %}
 
-<div class="box">
+    <section class="ui segment">
+        <form class="ui form" action="" method="post" enctype="multipart/form-data">
+            <h4 class="ui dividing header">Register</h4>
+            <div class="two fields">
+            <div class="field">
+                <label>First name
+                    <input type="text" name="first-name" placeholder="Ola">
+                </label>
+            </div>
+            <div class="field">
+                <label>Last name
+                    <input type="text" name="last-name" placeholder="Nordmann">
+                </label>
+            </div>
+            </div>
+            <div class="field">
+                <label>Username
+                    <input type="text" name="username" placeholder="mike.pence">
+                </label>
+            </div>
+            <div class="field">
+                <label>Password
+                    <input type="password" name="password" placeholder="*******">
+                </label>
+            </div>
+            <div class="field">
+                <label>Confirm password
+                    <input type="password" name="confirm-password" placeholder="*******">
+                </label>
+            </div>
+            <div class="field">
+                <label>Profile image
+                    <input type="file" name="image">
+                </label>
+            </div>
+            <div class="field">
+                <label>Email
+                    <input type="email" name="email" placeholder="olanordmann@mail.no">
+                </label>
+            </div>
+            <div class="field">
+                <label>Phone number
+                    <input type="tel" name="phone-number" pattern="[0-9]{8}" placeholder="12345678">
+                </label>
+            </div>
+            <div class="field">
+                <label>Birth date
+                    <input type="date" name="birth-date" min="1900-01-01" max="2010-01-01" placeholder>
+                </label>
+            </div>
 
-    <form action="" method="post">
-        <div class="form-group">
-            <h3>Register</h3>
-        </div>
-        <div class="form-group">
-            <label for="email">Email: </label>
-            <input type="text" class="form-control" name="email" placeholder="email@email.com">
-        </div>
-        <div class="form-group ">
-            <label for="password">Password: </label>
-            <input type="password" class="form-control" name="password" placeholder="*******">
-        </div>
-        <div class="form-group">
-            <button class="btn btn-primary btn-block" name="submit" type="submit">Register</button>
-        </div>
-    </form>
-</div>
+            <div class="grouped fields">
+                <label>Gender</label>
+                <div class="field">
+                    <div class="ui radio checkbox">
+                        <input type="radio" value="male" name="gender">
+                        <label>Male</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui radio checkbox">
+                        <input type="radio" value="female" name="gender">
+                        <label>Female</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui radio checkbox">
+                        <input type="radio" value="other" name="gender">
+                        <label>Other</label>
+                    </div>
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="field">
+                    <label>Street address
+                        <input type="text" name="street-address" placeholder="Volleveien 12">
+                    </label>
+                </div>
+                <div class="field">
+                    <label>Zip code
+                        <input type="text" name="zip-code" placeholder="0001">
+                    </label>
+                </div>
+            </div>
+            <div class="field">
+                <label for="multi-select"> Interests </label>
+                <select name="interests[]" class="ui search selection dropdown" multiple="" id="multi-select">
+                    <option value="">Interests</option>
+                    {% for interest in interests %}
+                        <option value="{{ interest.interest_id }}">{{ interest.type }}</option>
+                    {% endfor %}
+
+                </select>
+            </div>
+            <script>
+                $('#multi-select')
+                    .dropdown()
+                ;
+            </script>
+            <br>
+            <button class="ui blue submit button" name="submit" type="submit">Log in</button>
+            <div class="ui stackable menu">
+                <a href="/login" class="item">
+                    Already have an account?
+                </a>
+                <a href="/retrieve-user" class="item">
+                    Already a member of Neo Youthclub, <br> but do not have your log-in credentials?
+                </a>
+            </div>
+            <div class="ui error message" id="error-register"></div>
+        </form>
+        {% if session.getFlashbag().has('registrationError') %}
+            <div class="ui error message">
+                <i class="close icon"></i>
+                <div class="header">
+                    Registration failed
+                </div>
+                <ul class="list">
+                    {% for message in session.getFlashbag().get('registrationError') %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </section>
+
+    <script>
+        // form validation
+        // ---------------------------------------
+        $('.ui.form')
+            .form({
+                fields: {
+                    username: {
+                        identifier: 'username',
+                        rules: [
+                            {
+                                type: 'empty',
+                                prompt: 'Please enter a username'
+                            }
+                        ]
+                    },
+                    password: {
+                        identifier: 'password',
+                        rules: [
+                            {
+                                type: 'empty',
+                                prompt: 'Please enter a password'
+                            },
+                            {
+                                type: 'minLength[6]',
+                                prompt: 'Your password must be at least {ruleValue} characters'
+                            }
+                        ]
+                    },
+                    confirmpassword: {
+                        identifier: 'confirm-password',
+                        rules: [
+                            {
+                                type: 'match[password]',
+                                prompt: 'Passwords do not match'
+                            },
+                        ]
+                    },
+
+                    image: {
+                        identifier: 'image',
+                        rules: [
+                            {
+                                type: 'empty',
+                                prompt: 'Please select a profile image'
+                            },
+                        ]
+                    },
+                    email: {
+                        identifier: 'email',
+                        rules: [
+                            {
+                                type: 'email',
+                                prompt: 'Please enter a email'
+                            }
+                        ]
+                    },
+                    phonenumber: {
+                        identifier: 'phone-number',
+                        rules: [
+                            {
+                                type: 'length[8]',
+                                prompt: 'Please enter a valid phone number'
+                            }
+                        ]
+                    },
+                    gender: {
+                        identifier: 'gender',
+                        rules: [
+                            {
+                                type: 'checked',
+                                prompt: 'Please select a gender'
+                            }
+                        ]
+                    },
+                    streetaddress: {
+                        identifier: 'street-address',
+                        rules: [
+                            {
+                                type: 'empty',
+                                prompt: 'Please enter a street address'
+                            }
+                        ]
+                    },
+                    zipcode: {
+                        identifier: 'zip-code',
+                        rules: [
+                            {
+                                type: 'length[4.jpg]',
+                                prompt: 'Please enter a zip code'
+                            }
+                        ]
+                    },
+                    interests: {
+                        identifier: 'interests[]',
+                        rules: [
+                            {
+                                type: 'empty',
+                                prompt: 'Please select at least one interest'
+                            }
+                        ]
+                    },
+                }
+            })
+        ;
+    </script>
+
 
 {% endblock %}

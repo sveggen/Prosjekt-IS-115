@@ -1,0 +1,61 @@
+{% extends './includes/base.html.twig' %}
+{% block title %}
+    My Profile
+{% endblock %}
+{% block content %}
+<section class="ui center aligned middle aligned segment">
+
+    {% for trait in member %}
+        <div class="ui centered card">
+            <div class="image">
+                <img src="{{ profileImage }}" onerror="this.src='assets/img/profile/placeholder.png'">
+            </div>
+            <div class="content">
+                <a class="header">{{ trait.first_name }} {{ trait.last_name }}</a>
+                <div class="meta">
+                    <span class="date">Joined in 2013</span>
+                </div>
+                <div class="description">
+                    {{ trait.email }}
+                </div>
+            </div>
+            <div class="extra content">
+                <a>
+                    <i class="futbol icon"></i>
+                    Attending 25 activities
+                </a>
+            </div>
+        </div>
+
+        <form action="/profile/update" method="post" enctype="multipart/form-data">
+            <div class="field">
+                <label>Profile image
+                    <input type="file" name="image">
+                </label>
+            </div>
+            <button class="ui blue submit button" name="submit" type="submit">Update Profile</button>
+
+                {% for message in session.getFlashbag().get('profileUpdateError') %}
+            <div class="ui negative message">
+                <ul class="list">
+                    <li>{{ message }}</li>
+                </ul>
+            </div>
+                {% endfor %}
+
+            {% for message in session.getFlashbag().get('UpdateSuccess') %}
+            <div class="ui success message">
+                <ul class="list">
+                    <li>{{ message }}</li>
+                </ul>
+            </div>
+                    {% endfor %}
+
+        </form>
+
+    {% endfor %}
+
+
+</section>
+
+{% endblock %}

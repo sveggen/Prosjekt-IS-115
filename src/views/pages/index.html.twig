@@ -3,19 +3,47 @@
     Index
 {% endblock %}
 {% block content %}
-<h1>Index!</h1>
-<hr/>
-<h3>Sample data</h3>
+<section class="ui center aligned middle aligned segment">
+<h1>Neo Youthclub</h1>
+<div class="ui divider"></div>
 
-{# Retrieves a variable stored inside the session object #}
-   <h1> {{ session.get('hei') }}</h1>
+    <div class="ui segment middle aligned">
+        Welcome to Neo Youthclub! {{ sent }}
+    </div>
+    <div class="ui two statistics">
+    <div class="ui statistic">
+        <div class="value">
+            <i class="small users icon"></i>
+            {{ totalMembers }}
+        </div>
+        <div class="label">
+            total members
+        </div>
+    </div>
 
-{# Retrieves all users in users-array  #}
-    {% for item in users %}
-    {{ item.username }}
-    {% endfor %}
+    <div class="ui statistic">
+        <div class="value">
+            <i class="small user outline plus icon"></i>
+            {{ totalLeaders }}
+        </div>
+        <div class="label">
+            total leaders
+        </div>
+    </div>
+    </div>
 
+    <div class="ui one statistics">
+    <div class="ui statistic">
+        <div class="value">
+            <i class="small futbol outline plus icon"></i>
+            {{ totalActivities }}
+        </div>
+        <div class="label">
+            total upcoming activities
+        </div>
+    </div>
+    </div>
 
+</section>
 
 {% endblock %}
-

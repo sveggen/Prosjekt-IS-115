@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
@@ -8,6 +9,13 @@ use Twig\Loader\FilesystemLoader;
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $request = Request::createFromGlobals();
+
+/*
+ * Links Environment variables set in the dotenv-file
+ * to the $_ENV global variable
+ */
+$dotenv = new Dotenv();
+$dotenv->load(__DIR__ .'/../.env');
 
 /*
 * Retrieval of routes

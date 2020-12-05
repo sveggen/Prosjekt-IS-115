@@ -24,6 +24,16 @@ class Activity extends Database {
         return $result;
     }
 
+    public function getTotalFutureActivities() {
+        $sql = "SELECT COUNT(*) AS SUM FROM activity
+                WHERE start_time >= CURTIME()";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return (int)$result['SUM'];
+    }
+
     public function addActivity($title, $startTime, $endTime, $description, $memberID, $maxAttendees){
         $sql = "INSERT INTO activity (title, start_time, end_time, description, fk_member_id, max_attendees) 
                 VALUES (?, ?, ?, ?, ?, ?)";
@@ -35,12 +45,12 @@ class Activity extends Database {
         return $result;
     }
 
-    public function addActivityMember($memberID, $activityID){
+    public function addActivityMember($memberID, $activityID, $joinTime){
         //CHECK if max_attendees treshold has been met
-        $sql = "INSERT INTO member_activity (fk_member_id, fk_activity_id)
-                VALUES (?, ?)";
+        $sql = "INSERT INTO member_activity (fk_member_id, fk_activity_id, join_time)
+                VALUES (?, ?, ?)";
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bind_param('ii', $memberID, $activityID);
+        $stmt->bind_param('iis', $memberID, $activityID, $joinTime);
         $stmt->execute();
         $result = $stmt->affected_rows;
         $stmt->close();
@@ -76,6 +86,29 @@ class Activity extends Database {
         $activity = $this->getActivity($id)->fetch_assoc();
         $maxAttendees = (int)$activity['max_attendees'];
         return $maxAttendees - $attendees;
+    }
+
+    public function leaveActivity($memberID, $activityID){
+        $sql = "DELETE FROM member_activity WHERE fk_member_id = ? AND fk_activity_id = ?";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('ii', $memberID, $activityID);
+        $stmt->execute();
+        $result = $stmt->affected_rows;
+        $stmt->close();
+        return $result;
+    }
+
+    public function getMemberActivityAttendanceStatus($memberID, $activityID){
+        $sql = "SELECT COUNT(1) AS SUM
+                FROM member_activity 
+                WHERE fk_member_id = ?
+                AND fk_activity_id = ?";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('ii', $memberID, $activityID);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return (int)$result['SUM'];
     }
 
 
