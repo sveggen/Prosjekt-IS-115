@@ -1,3 +1,4 @@
 vendor
 .idea
 public/assets/img/profile/4.
+.env

@@ -2,6 +2,7 @@
 
 namespace App\controllers;
 
+use App\helpers\EmailSender;
 use App\models\Activity;
 use App\models\Member;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,12 +16,16 @@ class Index extends BaseController {
         $totalLeaders = $this->getCurrentLeaderTotal();
         $totalActivities = $this->getUpcomingActivitiesTotal();
 
+        $emailSender = new EmailSender();
+
+
         return new Response(
             $this->twig->render('pages/index.html.twig',
                 ['session' => (new Session),
                     'totalMembers' => $totalMembers,
                     'totalLeaders' => $totalLeaders,
-                    'totalActivities' => $totalActivities
+                    'totalActivities' => $totalActivities,
+                        'sent' => $emailSender->sendEmail('m.sveggen@gmail.com', 'Markus', 'Heisann', 'Innhold')
                 ])
         );
     }

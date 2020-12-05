@@ -36,13 +36,13 @@ class RetrieveUser extends BaseController {
         $userModel = $userModel = new User();
         $userExists = $userModel->checkUserExistence($memberID);
 
-        if ($memberID && !$userExists ) {
+        if ($memberID && !$userExists) {
             //checks if member exists and if an associated user does not exist.
             $temporaryPassword = $this->createUserAndPassword($memberID, $email);
 
             //checks if temporary password was created
             if ($temporaryPassword) {
-                $this->sendTemporaryPasswordEmail($memberID, $email);
+                $this->sendTemporaryPasswordEmail($email, $temporaryPassword);
             }
         }
 
@@ -64,24 +64,30 @@ class RetrieveUser extends BaseController {
      * @param $email
      * @return false|string
      */
-    private function createUserAndPassword($memberID, $email){
-            $passwordGenerator = new PasswordGenerator();
-            //generates temporary password
-            $temporaryPassword = $passwordGenerator->generatePassword();
-            $userModel = new User();
-            $createUser = $userModel->registerUser($email, $temporaryPassword, $memberID);
-            if ($createUser){
-                return $temporaryPassword;
-            } else {
-                return false;
-            }
+    private function createUserAndPassword($memberID, $email) {
+        $passwordGenerator = new PasswordGenerator();
+        //generates temporary password
+        $temporaryPassword = $passwordGenerator->generatePassword();
+        $userModel = new User();
+        $createUser = $userModel->registerUser($email, $temporaryPassword, $memberID);
+        if ($createUser) {
+            return $temporaryPassword;
+        } else {
+            return false;
         }
+    }
 
+    private function sendTemporaryPasswordEmail($email, $temporaryPassword) {
+        if ((new Validate)->validateEmail($email)) {
 
-    private function sendTemporaryPasswordEmail($email, $temporaryPassword){
-        if ((new Validate)->validateEmail($email)){
+            $subject = "Retrieve account";
+            $content = "<p> Your temporary password is: $temporaryPassword.
+                        You can log in <a href='http://localhost:8081/login'>here</a> and change
+                        your password.</p><br> 
+                        Best Regards <br>
+                        Neo Youtclub";
             $emailSender = new EmailSender();
-            $emailSender->sendEmail("from", $email, "subject", $temporaryPassword);
+            $emailSender->sendEmail($email, $subject, $content);
         }
     }
 

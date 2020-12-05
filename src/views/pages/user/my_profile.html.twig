@@ -8,7 +8,7 @@
     {% for trait in member %}
         <div class="ui centered card">
             <div class="image">
-                <img src="{{ profileImage }}">
+                <img src="{{ profileImage }}" onerror="this.src='assets/img/profile/placeholder.png'">
             </div>
             <div class="content">
                 <a class="header">{{ trait.first_name }} {{ trait.last_name }}</a>
@@ -27,13 +27,30 @@
             </div>
         </div>
 
-        <form action="/profile/update" method="post" enctype="multipart/form-data">'
+        <form action="/profile/update" method="post" enctype="multipart/form-data">
             <div class="field">
                 <label>Profile image
                     <input type="file" name="image">
                 </label>
             </div>
             <button class="ui blue submit button" name="submit" type="submit">Update Profile</button>
+
+                {% for message in session.getFlashbag().get('profileUpdateError') %}
+            <div class="ui negative message">
+                <ul class="list">
+                    <li>{{ message }}</li>
+                </ul>
+            </div>
+                {% endfor %}
+
+            {% for message in session.getFlashbag().get('UpdateSuccess') %}
+            <div class="ui success message">
+                <ul class="list">
+                    <li>{{ message }}</li>
+                </ul>
+            </div>
+                    {% endfor %}
+
         </form>
 
     {% endfor %}

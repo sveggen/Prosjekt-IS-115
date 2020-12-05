@@ -47,9 +47,20 @@ class Profile extends BaseController{
 
 
     private function updateProfileImage(){
+        $session = new Session();
         $memberID = (new Session)->get('memberID');
         $image = $this->request->files->get('image');
-        (new UploadFile)->uploadProfileImage($image, $memberID);
+        $uploadFile = new UploadFile;
+        $uploadProfileImage = $uploadFile->uploadProfileImage($image, $memberID);
+
+        if ($uploadProfileImage){
+            $session->getFlashBag()->add('UpdateSuccess', 'Uploaded image successfully');
+        } else {
+            $errorMessages = $uploadFile->getErrorMessages();
+            foreach ($errorMessages as $message){
+                $session->getFlashBag()->add('profileUpdateError', $message);
+            }
+        }
     }
 
 }
