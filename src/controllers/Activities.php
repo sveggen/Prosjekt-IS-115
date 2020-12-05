@@ -65,7 +65,7 @@ class Activities extends BaseController {
         $memberID = $session->get('memberID');
 
         $activityModel = new Activity();
-        $activityModel->leaveActivity($memberID, $activityID['id']);
+        $activityModel->leaveActivity($memberID, $activityID);
 
         return $this->renderSingleActivity($activityID);
         }

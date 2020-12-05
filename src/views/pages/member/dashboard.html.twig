@@ -8,92 +8,40 @@
         <i class="users icon"></i>
         Members
     </h1>
-    <form method="get" action="" id="filter">
-    <div class="ui menu">
-        <div class="ui floating labeled icon dropdown button">
-            <span class="text">Filters</span>
-            <i class="filter icon"></i>
-            <div class="menu">
-                <div class="header">Categories</div>
-                <div class="item">
-                    <i class="dropdown icon"></i>
-                    <span class="text">Age</span>
-                    <div class="right menu">
-                        <div class="item">10-13</div>
-                        <div class="item">13-16</div>
-                        <div class="item">17-20</div>
-                    </div>
-                </div>
-                <div class="item">
-                    <i class="dropdown icon"></i>
-                    <span class="text">Payment status</span>
-                    <div class="right menu">
-                        <div class="item">Paid</div>
-                        <div class="item">Not Paid</div>
-                    </div>
-                </div>
-                <div class="item">
-                    <i class="dropdown icon"></i>
-                    <span class="text">Gender</span>
-                    <div class="right menu">
-                        <div class="item">Male</div>
-                        <div class="item">Female</div>
-                        <div class="item">Other</div>
-                    </div>
-                </div>
-                <div class="item">
-                    <i class="dropdown icon"></i>
-                    <span class="text">Active/Old Members</span>
-                    <div class="right menu">
-                        <div class="item">Old</div>
-                        <div class="item">Active</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <button class="ui left floated square button" value="Search" type="submit" form="filter">Search</button>
+    <div class="ui fluid three item menu">
+        <a class="item active">General member information</a>
+        <a class="item">Interests</a>
+        <a class="item">Activities</a>
     </div>
-
+    <form method="get" action="/dashboard/search">
+            <select name="payment-status" onchange="this.form.submit()">
+                <option value="">All</option>
+                <option value="0">Not Paid</option>
+                <option value="1">Paid</option>
+            </select>
     </form>
-    <table class="ui selectable celled table">
+    <table class="ui celled table" id="membersTable">
         <thead>
             <tr>
                 <th>ID</th>
-                <th>First name</th>
-                <th>Last name</th>
+                <th>Name</th>
                 <th>Email</th>
-                <th>Street Address</th>
-                <th>Zip code</th>
+                <th>Address</th>
                 <th>City</th>
-                <th>Interests</th>
+                <th>Registered</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 {% for member in members %}
                 <td data-label="ID">{{ member.member_id }}</td>
-                <td data-label="First name">{{ member.first_name }}</td>
-                <td data-label="Last name">{{ member.last_name }}</td>
+                <td data-label="First name">{{ member.first_name }} {{ member.last_name }}</td>
                 <td data-label="Email">{{ member.email }}</td>
-                <td data-label="Street Address">{{ member.street_address }}</td>
-                <td data-label="Zip code">{{ member.zip_code }}</td>
-                <td data-label="City">{{ member.city }}</td>
-
-                    <td data-label="Interests">
-                    <div class="ui selection dropdown">
-                        <input type="hidden" name="gender">
-                        <i class="dropdown icon"></i>
-                        <div class="default text">Interests</div>
-                        <div class="menu">
-                            {% for interest in member.interests %}
-                            <div class="item" data-value={{ interest.type }}>{{ interest.type }}</div>
-                            {% endfor %}
-                            <div class="item" data-value="1">Hallo</div>
-                        </div>
-                        </div>
-                    </td>
+                <td data-label="Street Address">{{ member.street_address }}, {{ member.zip_code }}</td>
+                <td data-label="City"> {{ member.city | capitalize }}</td>
+                <td data-label="Registered">{{ member.time_of_registration |date("d. M. Y. H:i") }}</td>
             </tr>
-            {% endfor %}
+                {% endfor %}
         </tbody>
     </table>
 </section>
@@ -101,6 +49,11 @@
         $('.ui.dropdown')
             .dropdown()
         ;
+
+        $(document).ready(function() {
+            $('#membersTable').DataTable();
+        } );
+
     </script>
 
 

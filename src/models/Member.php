@@ -163,4 +163,18 @@ public function addMemberRoles($memberID, $roleID){
     $stmt->close();
     return $result;
 }
+
+    public function getMembersSortPaymentStatus($paymentStatus){
+        $sql = "SELECT * FROM member 
+                WHERE subscription_status = ?";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('s', $paymentStatus);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
+    }
+
+
+
 }

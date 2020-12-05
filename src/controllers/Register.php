@@ -53,7 +53,7 @@ class Register extends BaseController {
         $memberModel = new Member();
 
         if ($memberModel->registerMember($memberdata, $role)) {
-            (new UploadFile)->uploadProfileImage($image);
+            //(new UploadFile)->uploadProfileImage($image);
             return new RedirectResponse('http://localhost:8081/login');
         } else {
             (new Session)->getFlashBag()->add('registrationError', 'Account could not be created');

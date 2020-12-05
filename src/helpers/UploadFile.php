@@ -4,23 +4,15 @@
 namespace App\helpers;
 
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UploadFile {
 
     const MB = 1048576;
-    private $request;
     private $errorMessages = array();
 
-    /**
-     * UploadFile constructor.
-     */
-    public function __construct() {
-        $this->request = Request::createFromGlobals();
-    }
 
-    public function getProfileImage($memberID) {
+    public function getProfileImage($memberID): string {
         $profileDirPath = "./assets/img/profile/" . $memberID . "/";
         $dir = opendir($profileDirPath);
 
@@ -30,7 +22,7 @@ class UploadFile {
             $extension = $pathinfo['extension'];
         }
         closedir($dir);
-        return $profileDirPath .$filename . "." .$extension;
+        return $profileDirPath . $filename . "." .$extension;
     }
 
     public function uploadProfileImage($file, $memberID): bool {
@@ -44,6 +36,9 @@ class UploadFile {
 
             $tempFile = $uploadedFile->move($profileDirPath, $filename);
             $profileImagePath = $profileDirPath . $memberID ."-profile." . $tempFile->getExtension();
+
+            $currentProfileImage = $this->getProfileImage($memberID);
+            //unlink($currentProfileImage);
 
             $tempFile->move($profileDirPath, $profileImagePath);
 
