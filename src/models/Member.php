@@ -201,6 +201,30 @@ public function addMemberRoles($memberID, $roleID){
         return $result;
     }
 
+    public function removeMemberAndAssociatedData($memberID){
+        $sql = "DELETE *
+                FROM member
+                INNER JOIN T2 ON T1.key = T2.key
+                WHERE condition;";
+
+        //delete member
+        //delete user
+        //delete address - addr
+        //delete interests
+        // delete joined activities
+
+
+
+        $stmt = $this->getConnection()->begin_transaction();
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('i', $memberID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
+
+    }
+
 
 
 }

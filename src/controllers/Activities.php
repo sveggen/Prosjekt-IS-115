@@ -37,10 +37,10 @@ class Activities extends BaseController {
     }
 
     public function renderAllActivities(): Response {
-        if ($this->hasMemberPrivileges() == false
-            or $this->hasLeaderPrivileges() == false){
+        if ($this->hasLeaderPrivileges() == false) {
             return $this->methodNotAllowed();
         }
+
 
         $activityModel = new Activity();
         $allActivities = $activityModel->getAllFutureActivities();

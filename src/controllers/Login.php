@@ -65,7 +65,7 @@ class Login extends BaseController {
         $memberModel = new Member();
         $userRoles = $memberModel->getSingleUserRoles($credentials['fk_member_id'])->fetch_assoc();
         // highest role/privilege the user has eg. 4 is leader, 3 is member
-        $highestRole = max($userRoles['fk_role_id']);
+        //$highestRole = max($userRoles['fk_role_id']);
 
         $session->set('memberID', $credentials['fk_member_id']);
         $session->set('username', $credentials['username']);

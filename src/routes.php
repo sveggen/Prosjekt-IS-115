@@ -10,6 +10,7 @@ return [
     ['GET', '/register', ['App\controllers\Register', 'renderRegisterPage']],
     ['POST', '/register', ['App\controllers\Register', 'newUser']],
     ['GET', '/dashboard', ['App\controllers\Dashboard', 'dashboard']],
+    ['POST', '/dashboard/send-email', ['App\controllers\Dashboard', 'sendEmailToMarked']],
     ['GET', '/dashboard/search', ['App\controllers\Dashboard', 'renderMemberOnPaymentStatus']],
     ['GET', '/profile', ['App\controllers\Profile', 'renderMyProfile']],
     ['POST', '/profile/update', ['App\controllers\Profile', 'updateProfile']],

@@ -5,15 +5,15 @@ namespace App\helpers;
 
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 class EmailSender {
 
-    public function sendEmail($recipient, $subject, $content) {
+    public function sendEmail($recipient, $subject, $content): bool {
 
         $mail = new PHPMailer(true);
         try {
+
             $mail->isSMTP();                                            // Send using SMTP
             $mail->Host = 'smtp.gmail.com';                    // Set the SMTP server to send through
             $mail->SMTPAuth = true;                                   // Enable SMTP authentication
@@ -24,16 +24,29 @@ class EmailSender {
 
             //Recipients
             $mail->setFrom($_ENV['MAIL_USERNAME'], 'Neo Youthclub');
-            $mail->addAddress($recipient);
 
             // Content
             $mail->isHTML(true);                                  // Set email format to HTML
             $mail->Subject = $subject;
             $mail->Body = $content;
 
-            $mail->send();
-        } catch (Exception $e) {
+            if (is_array($recipient)){
+                foreach($recipient as $member) {
+                    $mail->addAddress($member);
+                    $mail->send();
+                    $mail->clearAddresses();
+                }
+            } else {
+                $mail->addAddress($recipient);
+                $mail->send();
+            }
 
+        } catch (Exception $e) {
+            return false;
         }
+        return true;
+    }
+
+    public function sendMultipleEmails(array $recipient, $subject, $content){
     }
 }

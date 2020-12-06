@@ -34,8 +34,8 @@ class User extends Database {
      * @return array|null with user's credentials.
      */
     public function getUserCredentials($username) {
-        $sql = "SELECT user.user_id, username, password, fk_member_id 
-                FROM user WHERE user.username = ?";
+        $sql = "SELECT user_id, fk_member_id, password, username
+                FROM user WHERE username = ?";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bind_param('s', $username);
         $stmt->execute();
