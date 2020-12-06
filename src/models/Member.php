@@ -22,7 +22,7 @@ class Member extends Database {
             }
             $this->addMemberRoles($memberID, $role);
             $this->addMemberInterests($memberID, $memberData['interests']);
-            return true;
+            return $memberID;
         } catch (\Exception $e) {
             return false;
         }
@@ -181,7 +181,7 @@ public function addMemberRoles($memberID, $roleID){
         $sql = "SELECT * FROM member 
                 WHERE subscription_status = ?";
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bind_param('t', $paymentStatus);
+        $stmt->bind_param('i', $paymentStatus);
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();

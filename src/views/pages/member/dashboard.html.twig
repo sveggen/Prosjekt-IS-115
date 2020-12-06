@@ -3,57 +3,64 @@
     Dashboard
 {% endblock %}
 {% block content %}
-<section class="ui center aligned middle aligned segment">
-    <h1 class="ui header">
-        <i class="users icon"></i>
-        Members
-    </h1>
-    <div class="ui fluid three item menu">
-        <a class="item active">General member information</a>
-        <a class="item">Interests</a>
-        <a class="item">Activities</a>
-    </div>
-    <form method="get" action="/dashboard/search">
-            <select name="payment-status" onchange="this.form.submit()">
-                <option value="">All</option>
-                <option value="0">Not Paid</option>
-                <option value="1">Paid</option>
-            </select>
-    </form>
-    <table class="ui celled table" id="membersTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Address</th>
-                <th>City</th>
-                <th>Registered</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                {% for member in members %}
-                <td data-label="ID">{{ member.member_id }}</td>
-                <td data-label="First name">{{ member.first_name }} {{ member.last_name }}</td>
-                <td data-label="Email">{{ member.email }}</td>
-                <td data-label="Street Address">{{ member.street_address }}, {{ member.zip_code }}</td>
-                <td data-label="City"> {{ member.city | capitalize }}</td>
-                <td data-label="Registered">{{ member.time_of_registration |date("d. M. Y. H:i") }}</td>
-            </tr>
+    <section class="ui center aligned middle aligned segment">
+        <h1 class="ui header">
+            <i class="users icon"></i>
+            Members
+        </h1>
+        <div class="ui segment">
+        <form method="get" action="/dashboard/search">
+            <label> Payment status
+                <select name="payment-status" onchange="this.form.submit()">
+                    <option value="">None selected ..</option>
+                    <option value="0">Not Paid</option>
+                    <option value="1">Paid</option>
+                </select>
+            </label>
+            <label> Interests
+                <select name="interests" onchange="this.form.submit()">
+                    <option value="">None selected ..</option>
+                    <option value="0">Football</option>
+                    <option value="1">Potato</option>
+                </select>
+            </label>
+        </form>
+        </div>
+        <table class="ui celled table" id="membersTable">
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>Registered</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for member in members %}
+                    <td class="checkbox">
+                        <input type="checkbox" name="selectedMembers[]" value="{{ member.member_id }}">
+                    </td>
+                    <td data-label="ID">{{ member.member_id }}</td>
+                    <td data-label="Name">{{ member.first_name }} {{ member.last_name }}</td>
+                    <td data-label="Email">{{ member.email }}</td>
+                    <td data-label="Street Address">{{ member.street_address }}, {{ member.zip_code }}</td>
+                    <td data-label="City"> {{ member.city | capitalize }}</td>
+                    <td data-label="Registered">{{ member.time_of_registration |date("d. M. Y. H:i") }}</td>
+                </tr>
                 {% endfor %}
-        </tbody>
-    </table>
-</section>
+            </tbody>
+        </table>
+    </section>
     <script>
         $('.ui.dropdown')
-            .dropdown()
-        ;
+            .dropdown();
 
-        $(document).ready(function() {
-            $('#membersTable').DataTable();
-        } );
-
+        $('#membersTable').DataTable( {
+            select: true } );
     </script>
 
 

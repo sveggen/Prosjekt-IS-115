@@ -5,7 +5,6 @@ namespace App\controllers;
 
 use App\models\Interest;
 use App\models\Member;
-use App\models\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use App\helpers\UploadFile;
@@ -13,18 +12,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class Register extends BaseController {
 
-    private $userModel;
-
-    /**
-     * Register constructor.
-     */
-    public function __construct() {
-        parent::__construct();
-        $this->userModel = new User();
-
-    }
 
     public function renderRegisterPage(): Response {
+        if ($this->hasMemberPrivileges() == true
+            or $this->hasLeaderPrivileges() == true){
+            return $this->methodNotAllowed();
+        }
+
         $interestModel = new Interest();
         $interests = $interestModel->getAllInterests();
 
@@ -35,25 +29,46 @@ class Register extends BaseController {
     }
 
     public function newUser() {
+        if ($this->hasMemberPrivileges() == true
+            or $this->hasLeaderPrivileges() == true){
+            return $this->methodNotAllowed();
+        }
+
         $image = $this->request->files->get('image');
 
-        $memberdata['firstName'] = $this->request->get('first-name');
-        $memberdata['lastName'] = $this->request->get('last-name');
-        $memberdata['email'] = $this->request->get('email');
-        $memberdata['password'] = $this->request->get('password');
-        $memberdata['phoneNumber'] = $this->request->get('phone-number');
-        $memberdata['birthDate'] = $this->request->get('birth-date');
-        $memberdata['gender'] = $this->request->get('gender');
-        $memberdata['streetAddress'] = $this->request->get('street-address');
-        $memberdata['zipCode'] = $this->request->get('zip-code');
-        $memberdata['interests'] = $this->request->get('interests');
+        $memberData = [
+            'firstName' => $this->request->get('first-name'),
+            'lastName' => $this->request->get('last-name'),
+            'username' => $this->request->get('username'),
+            'email' => $this->request->get('email'),
+            'password' => $this->request->get('password'),
+            'phoneNumber' => $this->request->get('phone-number'),
+            'birthDate' => $this->request->get('birth-date'),
+            'gender' => $this->request->get('gender'),
+            'streetAddress' => $this->request->get('gender'),
+            'zipCode' => $this->request->get('gender'),
+            'interests' => $this->request->get('interests'),
+                'role' => 3 // ordinary member
+        ];
+//        $memberdata['firstName'] = $this->request->get('first-name');
+//        $memberdata['lastName'] = $this->request->get('last-name');
+//        $memberdata['email'] = $this->request->get('email');
+//        $memberdata['password'] = $this->request->get('password');
+//        $memberdata['phoneNumber'] = $this->request->get('phone-number');
+//        $memberdata['birthDate'] = $this->request->get('birth-date');
+//        $memberdata['gender'] = $this->request->get('gender');
+//        $memberdata['streetAddress'] = $this->request->get('street-address');
+//        $memberdata['zipCode'] = $this->request->get('zip-code');
+//        $memberdata['interests'] = $this->request->get('interests');
 
         //define user role
         $role = 3;
         $memberModel = new Member();
+        $registerMember = $memberModel->registerMember($memberData, $role);
 
-        if ($memberModel->registerMember($memberdata, $role)) {
-            //(new UploadFile)->uploadProfileImage($image);
+        if ($registerMember) {
+            $fileUpload = new UploadFile();
+            $fileUpload->uploadProfileImage($image, $registerMember);
             return new RedirectResponse('http://localhost:8081/login');
         } else {
             (new Session)->getFlashBag()->add('registrationError', 'Account could not be created');

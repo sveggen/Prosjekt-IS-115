@@ -1,6 +1,6 @@
 <div class="ui centered card">
     <div class="image">
-        <img src="{{ profileImage }}" onerror="this.src='assets/img/profile/placeholder.png'">
+        <img src="{{ profileImage }}">
     </div>
     <div class="content">
         <a class="header">{{ data.first_name }} {{ data.last_name }}</a>
@@ -10,7 +10,13 @@
 
         <div class="ui list">
             <div class="item">
-                <i class="marker icon"></i>
+                <i class="address card icon"></i>
+                <div class="content">
+                    Member ID: {{ data.member_id }}
+                </div>
+            </div>
+            <div class="item">
+                <i class="map marker alternate icon"></i>
                 <div class="content">
                     {{ data.street_address }}, {{ data.zip_code }}, {{ data.city }}
                 </div>
@@ -32,11 +38,10 @@
                 <div class="content">
                     Subscription:
                     {% if data.subscription_status == 1 %}
-                    Paid
+                        Paid
                     {% else %}
-                    Not paid
+                        Not paid
                     {% endif %}
-
                 </div>
             </div>
         </div>
@@ -47,9 +52,9 @@
       </span>
         <div class="ui horizontal list">
             <div class="item">|
-        {% for interest in interests %}
-              {{ interest.type }} |
-        {% endfor %}
+                {% for interest in interests %}
+                    {{ interest.type }} |
+                {% endfor %}
             </div>
         </div>
     </div>

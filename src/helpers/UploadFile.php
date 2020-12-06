@@ -4,6 +4,7 @@
 namespace App\helpers;
 
 
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UploadFile {
@@ -20,7 +21,6 @@ class UploadFile {
      */
     public function getProfileImage($memberID) {
         $profileDirPath = "./assets/img/profile/" . $memberID . "/";
-        $placeholder = "./assets/img/profile/placeholder.png";
         $iterator = new \FilesystemIterator($profileDirPath);
         $notEmptyDir = $isDirEmpty = $iterator->valid();
 
@@ -38,6 +38,13 @@ class UploadFile {
         return false;
     }
 
+    /**
+     * Uploads a new profile image linked to a member.
+     *
+     * @param $file File Profile Image.
+     * @param $memberID int members MemberID
+     * @return bool True if image was uploaded, false if not.
+     */
     public function uploadProfileImage($file, $memberID): bool {
         $profileDirPath = "./assets/img/profile/" . $memberID . "/";
 
@@ -47,9 +54,12 @@ class UploadFile {
 
             if ($this->compareFileSizeToLimit($uploadedFile) && $this->checkExtension($uploadedFile)) {
 
-                // deletes old profile image
-                $currentProfileImage = $this->getProfileImage($memberID);
-                $this->deleteOldImage($currentProfileImage);
+                // if users image directory exists
+                if (file_exists($profileDirPath)) {
+                    // deletes old profile image if there is any
+                    $currentProfileImage = $this->getProfileImage($memberID);
+                    $this->deleteOldImage($currentProfileImage);
+                }
 
                 //moves temporary file to members directory
                 $tempFile = $uploadedFile->move($profileDirPath, $filename);

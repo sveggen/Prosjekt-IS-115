@@ -1,0 +1,42 @@
+{% extends './includes/base.html.twig' %}
+{% block title %}
+    Dashboard
+{% endblock %}
+{% block content %}
+    <section class="ui center aligned middle aligned segment">
+        <h1 class="ui header">
+            <i class="users icon"></i>
+            Members
+        </h1>
+        <div class="ui segment">
+        </div>
+        <table class="ui celled table" id="membersTable">
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>City</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for member in members %}
+                    <td data-label="ID">{{ member.member_id }}</td>
+                    <td data-label="Name">{{ member.first_name }} {{ member.last_name }}</td>
+                    <td data-label="City"> {{ member.city | capitalize }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <script>
+        $('.ui.dropdown')
+            .dropdown();
+
+        $('#membersTable').DataTable( {
+            select: true } );
+    </script>
+
+
+{% endblock %}

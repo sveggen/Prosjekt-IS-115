@@ -3,6 +3,7 @@
 
 namespace App\models;
 
+use App\helpers\PasswordGenerator;
 use mysqli_result;
 
 /**
@@ -22,22 +23,8 @@ class User extends Database {
      */
     public function login($username, $password) {
         $user = $this->getUserCredentials($username);
-        if (password_verify($this->pepperPassword($password), $user['password'])){
+        if (password_verify($this->pepperPassword($password), $user['password'])) {
             return $user;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Hashes password and calls on addUser()-function.
-     * @return bool true on registration success.
-     */
-    public function registerUser($username, $password, $memberID) {
-        $hashedPassword = password_hash($this->pepperPassword($password), PASSWORD_BCRYPT);
-        $user = $this->addUser($username, $hashedPassword, $memberID);
-        if ($user) {
-            return true;
         } else {
             return false;
         }
@@ -62,6 +49,42 @@ class User extends Database {
      */
     private function pepperPassword($password) {
         return hash_hmac("sha256", $password, self::PEPPER);
+    }
+
+    /**
+     * Creates a User and generates a temporary password.
+     *
+     * @param $memberID
+     * @param $email
+     * @return false|string
+     */
+    public function createUserAndPassword($memberID, $email) {
+        $passwordGenerator = new PasswordGenerator();
+        //generates temporary password
+        $temporaryPassword = $passwordGenerator->generatePassword();
+
+        $userModel = new User();
+        $createUser = $userModel->registerUser($email, $temporaryPassword, $memberID);
+
+        if ($createUser) {
+            return $temporaryPassword;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Hashes password and calls on addUser()-function.
+     * @return bool true on registration success.
+     */
+    public function registerUser($username, $password, $memberID) {
+        $hashedPassword = password_hash($this->pepperPassword($password), PASSWORD_BCRYPT);
+        $user = $this->addUser($username, $hashedPassword, $memberID);
+        if ($user) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -105,7 +128,7 @@ class User extends Database {
         return $result;
     }
 
-    public function checkUserExistence($memberID){
+    public function checkUserExistence($memberID) {
         $sql = "SELECT COUNT(1) AS SUM
                 FROM user 
                 WHERE fk_member_id = ?";
@@ -116,4 +139,5 @@ class User extends Database {
         $stmt->close();
         return (int)$result['SUM'];
     }
+
 }

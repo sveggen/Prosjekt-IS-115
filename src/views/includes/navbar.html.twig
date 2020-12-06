@@ -1,15 +1,17 @@
 <div class="ui stackable menu">
-    <header class="ui header item"> <a href="/"> Neo Youthclub </a></header>
-        <a id="profile" class="item" href="/profile"> Profile </a>
-        <a id="activities" class="item" href="/activities"> Activities </a>
-        <a id="members" class="item" href="/dashboard"> Members </a>
+    <header class="ui header item"><a href="/"> Neo Youthclub </a></header>
+    {% if  session.get('memberID') %}
+    <a id="profile" class="item" href="/profile"> Profile </a>
+    <a id="activities" class="item" href="/activities"> Activities </a>
+    <a id="members" class="item" href="/dashboard"> Members </a>
+    {% endif %}
     <div class="right menu">
-        <div class="item">
-            <div class="ui icon input">
-                <input type="text" placeholder="Search...">
-                <i class="search link icon"></i>
-            </div>
-        </div>
+        {% if  session.get('memberID') %}
         <a class="ui item" id="about" href="/logout"> Logout </a>
+        {% else %}
+            <a id="register" class="item" href="/retrieve-user"> Retrieve user </a>
+            <a id="register" class="item" href="/register"> Register </a>
+            <a id="login" class="item" href="/login"> Login </a>
+        {% endif %}
     </div>
 </div>

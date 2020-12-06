@@ -4,7 +4,14 @@
 namespace App\controllers;
 
 
-class AddMember
-{
+use Symfony\Component\HttpFoundation\Response;
+
+class AddMember extends BaseController {
+
+    public function addMember(): Response {
+        if ($this->hasLeaderPrivileges() == false){
+            return $this->methodNotAllowed();
+        }
+    }
 
 }

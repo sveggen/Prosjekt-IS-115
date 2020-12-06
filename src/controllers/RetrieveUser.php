@@ -4,7 +4,6 @@
 namespace App\controllers;
 
 use App\helpers\EmailSender;
-use App\helpers\PasswordGenerator;
 use App\helpers\Validate;
 use App\models\Member;
 use App\models\User;
@@ -14,7 +13,12 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class RetrieveUser extends BaseController {
 
 
-    public function renderRetrieveUserPage() {
+    public function renderRetrieveUserPage(): Response {
+        if ($this->hasMemberPrivileges() == true
+            or $this->hasLeaderPrivileges() == true){
+            return $this->methodNotAllowed();
+        }
+
         return new Response(
             $this->twig->render('pages/user/retrieve_user.html.twig')
         );
@@ -26,19 +30,23 @@ class RetrieveUser extends BaseController {
      *
      * @return Response renders Flash message and retrieve user page.
      */
-    public function retrieveUser() {
-        $session = new Session();
-        $email = $this->request->get('email');
+    public function retrieveUser(): Response {
+        if ($this->hasMemberPrivileges() == true
+            or $this->hasLeaderPrivileges() == true){
+            return $this->methodNotAllowed();
+        }
 
         $memberModel = new Member();
+        $email = $this->request->get('email');
         $memberID = $memberModel->getSingleMemberID($email);
 
         $userModel = $userModel = new User();
         $userExists = $userModel->checkUserExistence($memberID);
 
+        //checks if member exists and if an associated user does not exist.
         if ($memberID && !$userExists) {
-            //checks if member exists and if an associated user does not exist.
-            $temporaryPassword = $this->createUserAndPassword($memberID, $email);
+            // create user with temporary password
+            $temporaryPassword = $userModel->createUserAndPassword($memberID, $email);
 
             //checks if temporary password was created
             if ($temporaryPassword) {
@@ -46,36 +54,17 @@ class RetrieveUser extends BaseController {
             }
         }
 
-
+        $session = new Session();
         $session->getFlashBag()->add('retrieveUserSuccess',
             'If there is a member associated with this email, a temporary password
              will be sent to the email submitted.');
-        $session->set('pass', $temporaryPassword);
 
         return new Response(
             $this->twig->render('pages/user/retrieve_user.html.twig')
         );
     }
 
-    /**
-     * Creates a User and generates a temporary password.
-     *
-     * @param $memberID
-     * @param $email
-     * @return false|string
-     */
-    private function createUserAndPassword($memberID, $email) {
-        $passwordGenerator = new PasswordGenerator();
-        //generates temporary password
-        $temporaryPassword = $passwordGenerator->generatePassword();
-        $userModel = new User();
-        $createUser = $userModel->registerUser($email, $temporaryPassword, $memberID);
-        if ($createUser) {
-            return $temporaryPassword;
-        } else {
-            return false;
-        }
-    }
+
 
     private function sendTemporaryPasswordEmail($email, $temporaryPassword) {
         if ((new Validate)->validateEmail($email)) {
