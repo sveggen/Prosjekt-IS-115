@@ -16,7 +16,7 @@ class Login extends BaseController {
 
     public function renderLoginPage(): Response {
         if ($this->hasMemberPrivileges() == true
-            and $this->hasLeaderPrivileges() == true){
+            and $this->hasLeaderPrivileges() == true) {
             return $this->methodNotAllowed();
         }
 
@@ -27,7 +27,7 @@ class Login extends BaseController {
 
     public function login() {
         if ($this->hasMemberPrivileges() == true
-            and $this->hasLeaderPrivileges() == true){
+            and $this->hasLeaderPrivileges() == true) {
             return $this->methodNotAllowed();
         }
 
@@ -36,7 +36,7 @@ class Login extends BaseController {
         $email = $this->request->get('email');
         $password = $this->request->get('password');
 
-        if ($email && $password){
+        if ($email && $password) {
             $userModel = new User();
             $credentials = $userModel->login($email, $password);
 
@@ -52,7 +52,7 @@ class Login extends BaseController {
                     $this->twig->render('/pages/authentication/login.html.twig')
                 );
             }
-        } else{
+        } else {
             $session->getFlashBag()->add('loginError', 'Password or username is missing.');
 
             return new Response(
@@ -61,20 +61,40 @@ class Login extends BaseController {
         }
     }
 
-    private function setUserSession($credentials){
+    private function setUserSession($credentials) {
         $session = new Session();
-
-        $memberModel = new Member();
-        $userRoles = $memberModel->getSingleUserRoles($credentials['fk_member_id'])->fetch_assoc();
-        // highest role/privilege the authentication has eg. 4 is leader, 3 is member
-        //$highestRole = max($userRoles['fk_role_id']);
 
         $session->set('memberID', $credentials['fk_member_id']);
         $session->set('username', $credentials['username']);
-        $session->set('role', 4);
 
+        $role = $this->getUserRole($credentials['fk_member_id']);
+        $session->set('role', $role);
     }
 
+    /**
+     * @param $memberID
+     * @return string The user's role with the highest privilege and
+     * assigns this role to the session object
+     */
+    private function getUserRole($memberID): string {
+        $memberModel = new Member();
+        $userRoles = $memberModel->getSingleUserRoles($memberID);
+
+        // evaluates the users roles - assigns the users role with
+        // the highest privilege to the session object.
+        $role = "";
+        while ($row = $userRoles->fetch_assoc()){
+            if ($row['privilege'] == 'leader') {
+                $role = $row['privilege'];
+                break;
+            } elseif ($row['privilege'] == 'member') {
+                $role = $row['privilege'];
+            } else {
+                exit();
+            }
+        }
+        return $role;
+    }
 
 }
 

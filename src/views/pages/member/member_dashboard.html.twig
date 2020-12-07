@@ -25,20 +25,26 @@
         {# Search filters #}
         <form method="get" action="/dashboard/search">
             <label> Payment status
-                <select name="payment-status" onchange="this.form.submit()">
+                <select name="payment-status" class="ui dropdown" onchange="this.form.submit()">
                     <option value="">None selected ..</option>
                     <option value="0">Not Paid</option>
                     <option value="1">Paid</option>
                 </select>
             </label>
+        </form>
+        <form method="get" action="/dashboard/search">
             <label> Interests
-                <select name="interests" onchange="this.form.submit()">
+                <select name="interests" class="ui dropdown" onchange="this.form.submit()">
                     <option value="">None selected ..</option>
                     <option value="0">Football</option>
                     <option value="1">Potato</option>
                 </select>
             </label>
         </form>
+
+        <div class="ui header">
+            {{ searchQuery }}
+        </div>
 
         {# Table listing members #}
         <table class="ui celled table" id="membersTable">
@@ -65,7 +71,7 @@
                                 href="http://localhost:8081/profile/{{ member.member_id }}">{{ member.first_name }} {{ member.last_name }} </a></td>
                     <td data-label="Email">{{ member.email }}</td>
                     <td data-label="Street Address">{{ member.street_address }}, {{ member.zip_code }}</td>
-                    <td data-label="City"> {{ member.city | capitalize }}</td>
+                    <td data-label="City"> {{ member.city | title }}</td>
                     <td data-label="Registered">{{ member.time_of_registration |date("d. M. Y. H:i") }}</td>
                 </tr>
 
@@ -77,16 +83,10 @@
                 <tr>
                     <th></th>
                     <th></th>
+                    <th></th>
                     <th colspan="4">
-                        <button class="ui negative right floated small primary labeled icon button" disabled>
-                            <i class="remove icon"></i> Delete member
-                        </button>
                         <button class="ui button" id="openMailModal">
                             Send Email
-                        </button>
-                        <button class="ui positive right floated small primary labeled icon button" disabled>
-                            <i class="remove icon"></i>
-                            <a href="/add-member">Add a new member</a>
                         </button>
                         <button class="ui small button" id="markAll">
                             Mark all
@@ -106,12 +106,12 @@
                 Send Email
             </div>
             <div class="content">
-                <form class="ui form" id="send-email" action="dashboard/send-email" method="post">
+                <form class="ui form" id="send-email" action="/dashboard/send-email" method="post">
                     <div class="field">
                     </div>
                     <div class="field">
                         <label>Subject
-                            <input type="text" name="subject" placeholder="Dear Tom">
+                            <input type="text" name="subject" placeholder="Email subject...">
                         </label>
                     </div>
                     <div class="field">

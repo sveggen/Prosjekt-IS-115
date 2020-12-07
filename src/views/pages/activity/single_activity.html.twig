@@ -4,10 +4,21 @@
 {% endblock %}
 {% block content %}
     <section class="ui center aligned middle aligned segment">
+
+                {% for message in session.getFlashbag().get('activityFailure') %}
+                    <div class="ui negative message">
+                        <div class="header">
+                            {{ message }}
+                        </div>
+                    </div>
+                {% endfor %}
+
+
+
         {% for activity in activity %}
 
         <div class="jumbotron" xmlns="http://www.w3.org/1999/html">
-            <h1 class="display-6">{{ activity.title }}</h1>
+                <h1 class="display-6">{{ activity.title }}</h1>
             <p class="lead">{{ activity.start_time|date("l d. M. H:i") }}
                 - {{ activity.end_time|date("l d. M. Y. H:i") }}</p>
             <div><b>Leader: </b>{{ activity.first_name }} {{ activity.last_name }} - {{ activity.email }} </div>
@@ -23,6 +34,13 @@
                    onclick="return confirm('Are you sure you want to join this activity?');">Join</a>
 
             {% endif %}
+            {% if session.get('role') == 'leader' %}
+                <a href="/activities/{{ activity.activity_id }}/remove" class="negative ui button"
+                   onclick="return confirm('Are you sure you want to remove this activity?');">
+                    <i class="trash alternate middle aligned icon"></i>
+                    Delete</a>
+            {% endif %}
+
             <div class="ui center aligned middle aligned segment">
                 <p>{{ activity.description }}</p>
             </div>

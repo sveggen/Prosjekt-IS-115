@@ -5,9 +5,10 @@
     {% if  session.get('memberID') %}
         <a id="profile" class="item" href="/profile/{{ session.get('memberID') }}"> Profile </a>
         <a id="activities" class="item" href="/activities"> Activities </a>
-        {# show the admin dashboard if the user is admin #}
-        {% if session.get('role') == 4 %}
-            <a id="members" class="item" href="/dashboard"> Members </a>
+        {# show the leader sites if the user is leader #}
+        {% if session.get('role') == 'leader' %}
+            <a id="members" class="item" href="/dashboard"> Member Dashboard </a>
+            <a id="add-member" class="item" href="/add-member"> Add member </a>
         {% endif %}
     {% endif %}
     <div class="right menu">

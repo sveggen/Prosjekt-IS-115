@@ -124,4 +124,15 @@ class Activity extends Database {
         $stmt->close();
         return $result;
     }
+
+    public function removeActivity($activityID): int {
+        $sql = "DELETE FROM activity
+                WHERE activity.activity_id= ?";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('i', $activityID);
+        $stmt->execute();
+        $result = $stmt->affected_rows;
+        $stmt->close();
+        return $result;
+    }
 }

@@ -50,8 +50,8 @@ abstract class BaseController {
     protected function hasLeaderPrivileges(): bool {
         $session = new Session();
         $role = $session->get('role');
-        // if authentication is "leader" or an "admin"
-        if ($this->getSession() && $role == 4) {
+        // if the members role is "leader"
+        if ($this->getSession() && $role == 'leader') {
             return true;
         } else {
             return false;
@@ -62,8 +62,8 @@ abstract class BaseController {
     protected function hasMemberPrivileges(): bool {
         $session = new Session();
         $role = $session->get('role');
-        // if authentication is a "member"
-        if ($this->getSession() && $role == 3) {
+        // if the members role is "member"
+        if ($this->getSession() && $role == 'member') {
             return true;
         } else {
             return false;

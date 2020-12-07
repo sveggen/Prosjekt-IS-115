@@ -7,6 +7,7 @@ namespace App\controllers\member;
 use App\controllers\BaseController;
 use App\helpers\UploadFile;
 use App\models\activity\Activity;
+use App\models\interest\Interest;
 use App\models\member\Member;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,41 +40,48 @@ class Profile extends BaseController {
     private function renderProfile($memberID): Response {
 
         $memberModel = new Member();
-        $member = $memberModel->getSingleMemberAndMemberData($memberID);
+        $member = $memberModel->getSingleMemberAndAddress($memberID);
+        $membersInterests = $memberModel->getAllMembersInterests($memberID);
+        $membersRoles = $memberModel->getSingleUserRoles($memberID);
 
-        $interests = $memberModel->getAllMembersInterests($memberID);
+        $interestModel = new Interest();
+        $allAvailableActivities = $interestModel->getAllInterests();
 
         $activityModel = new Activity();
-        $activities = $activityModel->getAllMembersActivities($memberID);
-
-        $roles = $memberModel->getSingleUserRoles($memberID);
+        $membersActivities = $activityModel->getAllMembersActivities($memberID);
 
         $uploadFile = new UploadFile;
-        $profileImage = $uploadFile->getProfileImage($memberID);
+        $membersProfileImage = $uploadFile->getProfileImage($memberID);
 
         return new Response(
             $this->twig->render('pages/member/edit_member_profile.html.twig',
                 ['member' => $member,
-                    'profileImage' => $profileImage,
-                    'interests' => $interests,
-                    'activity' => $activities,
-                    'roles' => $roles])
+                    'profileImage' => $membersProfileImage,
+                    'interests' => $membersInterests,
+                    'activity' => $membersActivities,
+                    'roles' => $membersRoles,
+                'allAvailableActivities' => $allAvailableActivities])
         );
     }
 
-    public function updateProfile(): Response {
+    public function updateProfile($profileID) {
         if ($this->hasMemberPrivileges() == false
             and $this->hasLeaderPrivileges() == false) {
             return $this->methodNotAllowed();
         }
 
-        $this->updateProfileImage();
-        return new RedirectResponse('http://localhost:8081/profile');
     }
 
-    private function updateProfileImage() {
+
+    /**
+     * Updates the users profile image.
+     *
+     * @param $profileID
+     * @return Response
+     */
+    public function updateProfileImage($profileID): Response {
         $session = new Session();
-        $memberID = (new Session)->get('memberID');
+        $memberID = $session->get('memberID');
         $image = $this->request->files->get('image');
         $uploadFile = new UploadFile;
         $uploadProfileImage = $uploadFile->uploadProfileImage($image, $memberID);
@@ -86,5 +94,6 @@ class Profile extends BaseController {
                 $session->getFlashBag()->add('profileUpdateError', $message);
             }
         }
+        return $this->renderMemberProfile($profileID);
     }
 }

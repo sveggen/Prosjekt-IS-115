@@ -20,7 +20,7 @@ class User extends Database {
     /**
      * @param $username
      * @param $password
-     * @return array | bool true on login success.
+     * @return array | bool True on login success.
      */
     public function login($username, $password) {
         $user = $this->getUserCredentials($username);
@@ -33,7 +33,7 @@ class User extends Database {
 
     /**
      * @param $username
-     * @return array|null with authentication's credentials.
+     * @return array|null User's credentials.
      */
     public function getUserCredentials($username): ?array {
         $sql = "SELECT user_id, fk_member_id, password, username
@@ -94,7 +94,8 @@ class User extends Database {
     }
 
     /**
-     * Add authentication to DB.
+     * Add user to DB.
+     *
      * @param $username
      * @param $password
      * @param $memberID
@@ -124,9 +125,9 @@ class User extends Database {
     }
 
     /**
-     * Removes authentication from DB.
+     * Removes user from DB.
      * @param $userID
-     * @return int above 1 if authentication was removed from DB.
+     * @return int above 1 if user was removed from DB.
      */
     public function removeUser($userID): int {
         $sql = "DELETE FROM user WHERE user_id = ?";

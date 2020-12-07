@@ -1,43 +1,23 @@
 {% extends './includes/base.html.twig' %}
 {% block title %}
-    Register
+    Add member
 {% endblock %}
 {% block content %}
 
     <section class="ui segment">
         <form class="ui form" action="" method="post" enctype="multipart/form-data">
-            <h4 class="ui dividing header">Register</h4>
+            <h4 class="ui dividing header">Add member</h4>
             <div class="two fields">
-            <div class="field">
-                <label>First name
-                    <input type="text" name="first-name" placeholder="Ola">
-                </label>
-            </div>
-            <div class="field">
-                <label>Last name
-                    <input type="text" name="last-name" placeholder="Nordmann">
-                </label>
-            </div>
-            </div>
-            <div class="field">
-                <label>Username
-                    <input type="text" name="username" placeholder="mike.pence">
-                </label>
-            </div>
-            <div class="field">
-                <label>Password
-                    <input type="password" name="password" placeholder="*******">
-                </label>
-            </div>
-            <div class="field">
-                <label>Confirm password
-                    <input type="password" name="confirm-password" placeholder="*******">
-                </label>
-            </div>
-            <div class="field">
-                <label>Profile image
-                    <input type="file" name="image">
-                </label>
+                <div class="field">
+                    <label>First name
+                        <input type="text" name="first-name" placeholder="Ola">
+                    </label>
+                </div>
+                <div class="field">
+                    <label>Last name
+                        <input type="text" name="last-name" placeholder="Nordmann">
+                    </label>
+                </div>
             </div>
             <div class="field">
                 <label>Email
@@ -51,7 +31,7 @@
             </div>
             <div class="field">
                 <label>Birth date
-                    <input type="date" name="birth-date" min="1900-01-01" max="2010-01-01" required>
+                    <input type="date" name="birth-date" min="1900-01-01" max="2010-01-01" placeholder>
                 </label>
             </div>
 
@@ -104,16 +84,8 @@
                 ;
             </script>
             <br>
-            <button class="ui blue submit button" name="submit" type="submit">Register</button>
-            <div class="ui stackable menu">
-                <a href="/login" class="item">
-                    Already have an account?
-                </a>
-                <a href="/retrieve-account" class="item">
-                    Already a member of Neo Youthclub, <br> but do not have your log-in credentials?
-                </a>
-            </div>
-            <div class="ui error message" id="error-register"></div>
+            <button class="ui blue submit button" name="submit" type="submit">Add member</button>
+            <div class="ui error message" id="error-add-member"></div>
         </form>
         {% if session.getFlashbag().has('registrationError') %}
             <div class="ui error message">
@@ -133,7 +105,75 @@
     <script>
         // form validation
         // ---------------------------------------
-
+        $('.ui.form')
+            .form({
+                fields: {
+                    username: {
+                        identifier: 'username',
+                        rules: [
+                            {
+                                type: 'empty',
+                                prompt: 'Please enter a username'
+                            }
+                        ]
+                    },
+                    email: {
+                        identifier: 'email',
+                        rules: [
+                            {
+                                type: 'email',
+                                prompt: 'Please enter a email'
+                            }
+                        ]
+                    },
+                    phonenumber: {
+                        identifier: 'phone-number',
+                        rules: [
+                            {
+                                type: 'length[8]',
+                                prompt: 'Please enter a valid phone number'
+                            }
+                        ]
+                    },
+                    gender: {
+                        identifier: 'gender',
+                        rules: [
+                            {
+                                type: 'checked',
+                                prompt: 'Please select a gender'
+                            }
+                        ]
+                    },
+                    streetaddress: {
+                        identifier: 'street-address',
+                        rules: [
+                            {
+                                type: 'empty',
+                                prompt: 'Please enter a street address'
+                            }
+                        ]
+                    },
+                    zipcode: {
+                        identifier: 'zip-code',
+                        rules: [
+                            {
+                                type: 'length[4]',
+                                prompt: 'Please enter a zip code'
+                            }
+                        ]
+                    },
+                    interests: {
+                        identifier: 'interests[]',
+                        rules: [
+                            {
+                                type: 'empty',
+                                prompt: 'Please select at least one interest'
+                            }
+                        ]
+                    },
+                }
+            })
+        ;
     </script>
 
 
