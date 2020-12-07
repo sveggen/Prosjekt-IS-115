@@ -10,6 +10,16 @@
             <i class="futbol icon"></i>
             Upcoming Activities
         </h1>
+
+        {# success message handling #}
+        {% for message in session.getFlashbag().get('activitySuccess') %}
+            <div class="ui positive message">
+                <div class="header">
+                    {{ message }}
+                </div>
+            </div>
+        {% endfor %}
+
         {# list all activities in a table #}
         <table class="ui selectable celled table">
             <thead>
@@ -36,7 +46,7 @@
             </tbody>
         </table>
         {# show add activity modal if user is admin #}
-        {% if session.get('role') == 4 %}
+        {% if session.get('role') == 'leader' %}
 
         <div class="ui button">
             Add activity

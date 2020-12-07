@@ -46,26 +46,16 @@ class Register extends BaseController {
             'phoneNumber' => $this->request->get('phone-number'),
             'birthDate' => $this->request->get('birth-date'),
             'gender' => $this->request->get('gender'),
-            'streetAddress' => $this->request->get('gender'),
-            'zipCode' => $this->request->get('gender'),
+            'streetAddress' => $this->request->get('street-address'),
+            'zipCode' => $this->request->get('zip-code'),
             'interests' => $this->request->get('interests'),
-                'role' => 3 // ordinary member
+            'paymentStatus' => 0,
+                'role' => 3, // ordinary member,
         ];
-//        $memberdata['firstName'] = $this->request->get('first-name');
-//        $memberdata['lastName'] = $this->request->get('last-name');
-//        $memberdata['email'] = $this->request->get('email');
-//        $memberdata['password'] = $this->request->get('password');
-//        $memberdata['phoneNumber'] = $this->request->get('phone-number');
-//        $memberdata['birthDate'] = $this->request->get('birth-date');
-//        $memberdata['gender'] = $this->request->get('gender');
-//        $memberdata['streetAddress'] = $this->request->get('street-address');
-//        $memberdata['zipCode'] = $this->request->get('zip-code');
-//        $memberdata['interests'] = $this->request->get('interests');
 
         //define authentication role
-        $role = 3;
         $memberModel = new Member();
-        $registerMember = $memberModel->registerMember($memberData, $role);
+        $registerMember = $memberModel->registerMember($memberData);
 
         if ($registerMember) {
             $fileUpload = new UploadFile();
