@@ -1,16 +1,17 @@
 <?php
 
 
-namespace App\models;
+namespace App\models\activity;
 
 
+use App\models\Database;
 use mysqli_result;
 
 class Activity extends Database {
 
     /**
      * @return false|mysqli_result Containing MySQL of array containing
-     * all future activities.
+     * all future activity.
      */
     public function getAllFutureActivities() {
         $sql = "SELECT a.title, a.activity_id, a.start_time, a.end_time,
@@ -24,7 +25,7 @@ class Activity extends Database {
         return $result;
     }
 
-    public function getTotalFutureActivities() {
+    public function getTotalFutureActivities(): int {
         $sql = "SELECT COUNT(*) AS SUM FROM activity
                 WHERE start_time >= CURTIME()";
         $stmt = $this->getConnection()->prepare($sql);
@@ -45,8 +46,8 @@ class Activity extends Database {
         return $result;
     }
 
-    public function addActivityMember($memberID, $activityID, $joinTime){
-        //CHECK if max_attendees treshold has been met
+    public function addActivityMember($memberID, $activityID, $joinTime): int {
+        //CHECK if max_attendees threshold has been met
         $sql = "INSERT INTO member_activity (fk_member_id, fk_activity_id, join_time)
                 VALUES (?, ?, ?)";
         $stmt = $this->getConnection()->prepare($sql);
@@ -81,14 +82,14 @@ class Activity extends Database {
         return $result;
     }
 
-    public function getEmptySlotsInActivity($id){
+    public function getEmptySlotsInActivity($id): int {
         $attendees = $this->getActivityAttendees($id)->num_rows;
         $activity = $this->getActivity($id)->fetch_assoc();
         $maxAttendees = (int)$activity['max_attendees'];
         return $maxAttendees - $attendees;
     }
 
-    public function leaveActivity($memberID, $activityID){
+    public function leaveActivity($memberID, $activityID): int {
         $sql = "DELETE FROM member_activity WHERE fk_member_id = ? AND fk_activity_id = ?";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bind_param('ii', $memberID, $activityID);
@@ -98,7 +99,7 @@ class Activity extends Database {
         return $result;
     }
 
-    public function getMemberActivityAttendanceStatus($memberID, $activityID){
+    public function getMemberActivityAttendanceStatus($memberID, $activityID): int {
         $sql = "SELECT COUNT(1) AS SUM
                 FROM member_activity 
                 WHERE fk_member_id = ?
@@ -111,5 +112,16 @@ class Activity extends Database {
         return (int)$result['SUM'];
     }
 
-
+    public function getAllMembersActivities($memberID) {
+        $sql = "SELECT * FROM member_activity
+                JOIN activity i on member_activity.fk_activity_id = i.activity_id
+                JOIN member m on member_activity.fk_member_id = m.member_id
+                WHERE member_id = ? AND  start_time >= CURTIME()";
+        $stmt = $this->getConnection()->prepare($sql);
+         $stmt->bind_param('i', $memberID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
+    }
 }

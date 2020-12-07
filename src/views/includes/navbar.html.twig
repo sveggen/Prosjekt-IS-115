@@ -1,15 +1,23 @@
 <div class="ui stackable menu">
-    <header class="ui header item"> <a href="/"> Neo Youthclub </a></header>
-        <a id="profile" class="item" href="/profile"> Profile </a>
+    <header class="ui header item"><a href="/"> Neo Youthclub </a></header>
+
+    {# Navbar if member is logged in #}
+    {% if  session.get('memberID') %}
+        <a id="profile" class="item" href="/profile/{{ session.get('memberID') }}"> Profile </a>
         <a id="activities" class="item" href="/activities"> Activities </a>
-        <a id="members" class="item" href="/dashboard"> Members </a>
+        {# show the admin dashboard if the user is admin #}
+        {% if session.get('role') == 4 %}
+            <a id="members" class="item" href="/dashboard"> Members </a>
+        {% endif %}
+    {% endif %}
     <div class="right menu">
-        <div class="item">
-            <div class="ui icon input">
-                <input type="text" placeholder="Search...">
-                <i class="search link icon"></i>
-            </div>
-        </div>
-        <a class="ui item" id="about" href="/logout"> Logout </a>
+        {% if  session.get('memberID') %}
+            <a class="ui item" id="about" href="/logout"> Logout </a>
+            {# Navbar if member is not logged in #}
+        {% else %}
+            <a id="register" class="item" href="/retrieve-account"> Retrieve account </a>
+            <a id="register" class="item" href="/register"> Register </a>
+            <a id="login" class="item" href="/login"> Login </a>
+        {% endif %}
     </div>
 </div>

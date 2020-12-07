@@ -104,12 +104,12 @@
                 ;
             </script>
             <br>
-            <button class="ui blue submit button" name="submit" type="submit">Log in</button>
+            <button class="ui blue submit button" name="submit" type="submit">Register</button>
             <div class="ui stackable menu">
                 <a href="/login" class="item">
                     Already have an account?
                 </a>
-                <a href="/retrieve-user" class="item">
+                <a href="/retrieve-account" class="item">
                     Already a member of Neo Youthclub, <br> but do not have your log-in credentials?
                 </a>
             </div>
@@ -217,7 +217,7 @@
                         identifier: 'zip-code',
                         rules: [
                             {
-                                type: 'length[4.jpg]',
+                                type: 'length[4]',
                                 prompt: 'Please enter a zip code'
                             }
                         ]

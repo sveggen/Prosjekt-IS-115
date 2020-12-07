@@ -3,6 +3,7 @@
     Login
 {% endblock %}
 {% block content %}
+
 <section class="ui segment">
     <form class="ui form" action="" method="post">
         <h4 class="ui dividing header">Log in</h4>
@@ -19,13 +20,14 @@
             <a href="/register" class="item">
                 Not yet registered in Neo Youthclub?
             </a>
-            <a href="/retrieve-user" class="item">
+            <a href="/retrieve-account" class="item">
                 Already a member of Neo Youthclub, <br> but do not have your log-in credentials?
             </a>
         </div>
         <div class="ui error message" id="error-register"></div>
     </form>
     {% if session.getFlashbag().has('loginError') %}
+
         <div class="ui error message">
             <ul class="list">
                 {% for message in session.getFlashbag().get('loginError') %}
@@ -33,12 +35,13 @@
                 {% endfor %}
             </ul>
         </div>
+
     {% endif %}
 
 </section>
 
     <script>
-        // form validation
+        // jQuery form validation
         // ---------------------------------------
         $('.ui.form')
             .form({

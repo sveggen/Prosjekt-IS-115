@@ -1,17 +1,21 @@
 <?php
 
 
-namespace App\models;
+namespace App\models\address;
 
+
+use App\models\Database;
+use mysqli_result;
 
 class Address extends Database
 {
 
-
     /**
      * Returns true if zipcode is valid, false if not.
+     * @param $zipCode
+     * @return bool
      */
-    public function checkForValidZipCode($zipCode){
+    public function checkForValidZipCode($zipCode): bool {
         $result = $this->getZipcode($zipCode)->fetch_assoc();
         if ($result['zipCode']){
             return true;
@@ -22,20 +26,24 @@ class Address extends Database
 
     /**
      * Adds an address to the database.
+     * @param $streetAddress
+     * @param $zipCode
+     * @return int
      */
-    public function addAddress($streetAddress, $zipCode)
-    {
+    public function addAddress($streetAddress, $zipCode): int {
         $sql = "INSERT INTO address (street_address, fk_zip_code_register) VALUES (?, ?)";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bind_param("ss", $streetAddress, $zipCode);
         $stmt->execute();
         $insertId = $this->getConnection()->insert_id;
         $stmt->close();
-        return $insertId;
+        return (int)$insertId;
     }
 
     /**
      * Returns data from Zipcoderegister base on input as zipcode.
+     * @param $zipCode
+     * @return false|mysqli_result
      */
     public function getZipcode($zipCode){
         $sql = "SELECT * FROM zip_code_register WHERE zip_code = ? LIMIT 1";

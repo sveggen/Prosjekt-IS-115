@@ -1,28 +1,35 @@
 <?php
 
 
-namespace App\models;
+namespace App\models\member;
+
+
+
+use App\models\address\Address;
+use App\models\authentication\User;
+use App\models\Database;
 
 
 class Member extends Database {
 
     /**
      * @param $memberData mixed all fields of from the member registration
+     * @param $role
      * @return bool
      */
-    public function registerMember($memberData, $role) {
+    public function registerMember($memberData, $role): bool {
         try {
             $addressID = (new Address)->addAddress($memberData['streetAddress'], $memberData['zipCode']);
             $memberID = $this->addMember($memberData['firstName'], $memberData['lastName'],
                 $memberData['email'], $memberData['phoneNumber'], $addressID);
-            // adds user if registration has has been done by member self
+            // adds authentication if registration has has been done by member self
 
             if ($memberData['password']) {
                 (new User)->registerUser($memberData['email'], $memberData['password'], $memberID);
             }
             $this->addMemberRoles($memberID, $role);
             $this->addMemberInterests($memberID, $memberData['interests']);
-            return true;
+            return $memberID;
         } catch (\Exception $e) {
             return false;
         }
@@ -60,8 +67,11 @@ class Member extends Database {
 
     /**
      * Adds a members interests to the DB.
+     * @param $memberID
+     * @param $interests
+     * @return bool
      */
-    public function addMemberInterests($memberID, $interests) {
+    public function addMemberInterests($memberID, $interests): bool {
         $sql = "INSERT INTO member_interest (fk_member_id, fk_interest_id) VALUES (?, ?)";
         $this->getConnection()->begin_transaction();
         foreach ($interests as $interest) {
@@ -93,15 +103,28 @@ class Member extends Database {
      * @return array containing all members with
      * their corresponding interests.
      */
-    public function getAllMemberInterests() {
+    public function getAllMemberInterests(): array {
         $sql = "SELECT * FROM member_interest
-    JOIN interest i on member_interest.fk_interest_id = i.interest_id
-    JOIN member m on member_interest.fk_member_id = m.member_id ORDER BY I.type";
+                JOIN interest i on member_interest.fk_interest_id = i.interest_id
+                JOIN member m on member_interest.fk_member_id = m.member_id ORDER BY I.type";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();
         return $result->fetch_assoc();
+    }
+
+    public function getAllMembersInterests($memberID) {
+        $sql = "SELECT * FROM member_interest
+                JOIN interest i on member_interest.fk_interest_id = i.interest_id
+                JOIN member m on member_interest.fk_member_id = m.member_id 
+                WHERE member_id = ?";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('i', $memberID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
     }
 
     /**
@@ -168,11 +191,48 @@ public function addMemberRoles($memberID, $roleID){
         $sql = "SELECT * FROM member 
                 WHERE subscription_status = ?";
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bind_param('s', $paymentStatus);
+        $stmt->bind_param('i', $paymentStatus);
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();
         return $result;
+    }
+
+    public function getSingleUserRoles($memberID){
+        $sql = "SELECT * FROM member_role 
+                JOIN role i on member_role.fk_role_id = i.role_id
+                JOIN member m on m.member_id = member_role.fk_member_id
+                WHERE member_id = ?";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('i', $memberID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
+    }
+
+    public function removeMemberAndAssociatedData($memberID){
+        $sql = "DELETE *
+                FROM member
+                INNER JOIN T2 ON T1.key = T2.key
+                WHERE condition;";
+
+        //delete member
+        //delete authentication
+        //delete address - addr
+        //delete interests
+        // delete joined activity
+
+
+
+        $stmt = $this->getConnection()->begin_transaction();
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('i', $memberID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
+
     }
 
 

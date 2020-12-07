@@ -4,6 +4,7 @@
 namespace App\helpers;
 
 
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UploadFile {
@@ -11,33 +12,13 @@ class UploadFile {
     const MB = 1048576;
     private $errorMessages = array();
 
-
     /**
-     * Returns path to currently saved profile image.
+     * Uploads a new profile image linked to a member.
      *
-     * @param $memberID
-     * @return string | false Path to profile image or false if none exist.
+     * @param $file File Profile Image.
+     * @param $memberID int members MemberID
+     * @return bool True if image was uploaded, false if not.
      */
-    public function getProfileImage($memberID) {
-        $profileDirPath = "./assets/img/profile/" . $memberID . "/";
-        $placeholder = "./assets/img/profile/placeholder.png";
-        $iterator = new \FilesystemIterator($profileDirPath);
-        $notEmptyDir = $isDirEmpty = $iterator->valid();
-
-        if (file_exists($profileDirPath) && $notEmptyDir) {
-            $dir = opendir($profileDirPath);
-            while (false !== ($file = readdir($dir))) {
-                $pathInfo = pathinfo($profileDirPath . $file);
-                $filename = $pathInfo['filename'];
-                $extension = $pathInfo['extension'];
-            }
-            closedir($dir);
-            $profileImage = $profileDirPath . $filename . "." . $extension;
-            return $profileImage;
-        }
-        return false;
-    }
-
     public function uploadProfileImage($file, $memberID): bool {
         $profileDirPath = "./assets/img/profile/" . $memberID . "/";
 
@@ -47,9 +28,12 @@ class UploadFile {
 
             if ($this->compareFileSizeToLimit($uploadedFile) && $this->checkExtension($uploadedFile)) {
 
-                // deletes old profile image
-                $currentProfileImage = $this->getProfileImage($memberID);
-                $this->deleteOldImage($currentProfileImage);
+                // if users image directory exists
+                if (file_exists($profileDirPath)) {
+                    // deletes old profile image if there is any
+                    $currentProfileImage = $this->getProfileImage($memberID);
+                    $this->deleteOldImage($currentProfileImage);
+                }
 
                 //moves temporary file to members directory
                 $tempFile = $uploadedFile->move($profileDirPath, $filename);
@@ -66,10 +50,6 @@ class UploadFile {
         return false;
     }
 
-    /*
-     * @param UploadedFile $uploadedFile File to check size of.
-     * @return bool True if filesize is below limit, false if not.
-     */
     private function compareFileSizeToLimit(UploadedFile $uploadedFile): bool {
         $maxFileSize = 2 * self::MB;
         $fileSize = $uploadedFile->getSize();
@@ -83,12 +63,10 @@ class UploadFile {
         }
     }
 
-    /**
-     * @return array Containing all the error messages.
+    /*
+     * @param UploadedFile $uploadedFile File to check size of.
+     * @return bool True if filesize is below limit, false if not.
      */
-    public function getErrorMessages(): array {
-        return $this->errorMessages;
-    }
 
     /**
      * @param UploadedFile $uploadedFile File to check extension of.
@@ -107,9 +85,43 @@ class UploadFile {
         }
     }
 
-    private function deleteOldImage($filePath){
-        if (file_exists($filePath)){
+    /**
+     * Returns path to currently saved profile image.
+     *
+     * @param $memberID
+     * @return string | false Path to profile image or false if none exist.
+     */
+    public function getProfileImage($memberID) {
+        $profileDirPath = "./assets/img/profile/" . $memberID . "/";
+        if (file_exists($profileDirPath)){
+            $iterator = new \FilesystemIterator($profileDirPath);
+            $notEmptyDir = $isDirEmpty = $iterator->valid();
+        }
+
+        if (file_exists($profileDirPath) && $notEmptyDir) {
+            $dir = opendir($profileDirPath);
+            while (false !== ($file = readdir($dir))) {
+                $pathInfo = pathinfo($profileDirPath . $file);
+                $filename = $pathInfo['filename'];
+                $extension = $pathInfo['extension'];
+            }
+            closedir($dir);
+            $profileImage = $profileDirPath . $filename . "." . $extension;
+            return $profileImage;
+        }
+        return false;
+    }
+
+    private function deleteOldImage($filePath) {
+        if (file_exists($filePath)) {
             unlink($filePath);
         }
+    }
+
+    /**
+     * @return array Containing all the error messages.
+     */
+    public function getErrorMessages(): array {
+        return $this->errorMessages;
     }
 }

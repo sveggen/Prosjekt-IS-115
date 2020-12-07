@@ -1,0 +1,17 @@
+{% extends './includes/base.html.twig' %}
+{% block title %}
+    Profile
+{% endblock %}
+{% block content %}
+
+    {% for data in member %}
+
+    <section class="ui center aligned middle aligned segment">
+
+        {# Include profile page #}
+        {% include './includes/member_profile_template.html.twig' %}
+    </section>
+
+    {% endfor %}
+
+{% endblock %}

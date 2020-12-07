@@ -9,22 +9,21 @@ abstract class Database
 {
 
     private $database;
-    /**
-     * Database constructor.
-     */
+
     public function __construct()
     {
         $this->database = $this->connect();
     }
 
-    private function connect()
-    {
-        define('HOST', 'db');
-        define('USER', 'root');
-        define('PASSWORD', 'BSBACIT2020');
-        define('DB', 'ergotests');
-
-        $connection = new mysqli(HOST, USER, PASSWORD, DB);
+    /**
+     * Connects to the database.
+     *
+     * @return mysqli
+     */
+    private function connect(): mysqli {
+        // uses credentials from the .env file to sign in to the DB.
+        $connection = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER_1_USERNAME'],
+            $_ENV['DB_USER_1_PASSWORD'], $_ENV['DB_NAME']);
         if ($connection->connect_error) {
             die('Database connection failed');
         } else {
@@ -34,10 +33,9 @@ abstract class Database
     }
 
     /**
-     * @return mysqli which acts as an entrypoint to the DB.
+     * @return mysqli Entrypoint to the DB.
      */
-    protected function getConnection()
-    {
+    protected function getConnection(): mysqli {
         return $this->database;
     }
 }

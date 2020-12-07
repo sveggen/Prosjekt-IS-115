@@ -1,15 +1,22 @@
 <?php
 
 
-namespace App\controllers;
+namespace App\controllers\activity;
 
-use App\models\Activity;
+use App\controllers\BaseController;
+use App\models\activity\Activity;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class Activities extends BaseController {
 
     public function newActivity(): Response {
+        if ($this->hasMemberPrivileges() == false
+            and $this->hasLeaderPrivileges() == false){
+            return $this->methodNotAllowed();
+        }
+
+        //retrieve POST-parameters from form.
         $title = $this->request->get('title');
         $startTime = $this->request->get('start-time');
         $endTime = $this->request->get('end-time');
@@ -31,6 +38,12 @@ class Activities extends BaseController {
     }
 
     public function renderAllActivities(): Response {
+        if ($this->hasMemberPrivileges() == false
+            and $this->hasLeaderPrivileges() == false){
+            return $this->methodNotAllowed();
+        }
+
+
         $activityModel = new Activity();
         $allActivities = $activityModel->getAllFutureActivities();
 
@@ -41,6 +54,11 @@ class Activities extends BaseController {
     }
 
     public function joinActivity($activityID): Response {
+        if ($this->hasMemberPrivileges() == false
+            and $this->hasLeaderPrivileges() == false){
+            return $this->methodNotAllowed();
+        }
+
         $session = new Session();
         $session->start();
         $memberID = $session->get('memberID');
@@ -60,6 +78,11 @@ class Activities extends BaseController {
     }
 
     public function leaveActivity($activityID): Response {
+        if ($this->hasMemberPrivileges() == false
+            and $this->hasLeaderPrivileges() == false){
+            return $this->methodNotAllowed();
+        }
+
         $session = new Session();
         $session->start();
         $memberID = $session->get('memberID');
@@ -70,7 +93,12 @@ class Activities extends BaseController {
         return $this->renderSingleActivity($activityID);
         }
 
-    public function renderSingleActivity($id) {
+    public function renderSingleActivity($id): Response {
+        if ($this->hasMemberPrivileges() == false
+            and $this->hasLeaderPrivileges() == false){
+            return $this->methodNotAllowed();
+        }
+
         $activityModel = new Activity();
         $activity = $activityModel->getActivity($id['id']);
         $attendees = $activityModel->getActivityAttendees($id['id']);

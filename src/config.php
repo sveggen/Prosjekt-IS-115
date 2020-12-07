@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
@@ -8,19 +8,16 @@ use Twig\Loader\FilesystemLoader;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// Initialises the request variable with all the PHP-super globals.
 $request = Request::createFromGlobals();
 
-/*
- * Links Environment variables set in the dotenv-file
- * to the $_ENV global variable
- */
+// Links Environment variables set in the dotenv-file
+// in the root-dir, to the $_ENV global variable.
 $dotenv = new Dotenv();
-$dotenv->load(__DIR__ .'/../.env');
+$dotenv->load(__DIR__ . '/../.env');
 
-/*
-* Retrieval of routes
-*/
 
+// Fetches all the website's routes
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     $routes = require __DIR__ . '/routes.php';
     foreach ($routes as $route) {
@@ -28,18 +25,16 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     }
 });
 
-/*
- * Twig
- */
+// Twig setup for the dispatcher
 $loader = new FilesystemLoader(__DIR__ . '/views/');
 $twig = new Environment($loader);
 
-/*
-* Dispatcher using a request with an accompanying route
-*/
 
+// Dispatcher that redirects the request to the correct Controller.
 $routeInfo = $dispatcher->dispatch($request->getMethod(), $request->getPathInfo());
 switch ($routeInfo[0]) {
+
+    // if the page can not be found an error page will be rendered.
     case FastRoute\Dispatcher::NOT_FOUND:
         $response = new Response(
             $twig->render('pages/errors/404.html.twig'), Response::HTTP_NOT_FOUND
@@ -47,6 +42,8 @@ switch ($routeInfo[0]) {
         $response->prepare($request);
         $response->send();
         break;
+
+        // if the page is unavailable for the user an error page will be rendered.
     case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
         $response = new Response(
             $twig->render('/pages/errors/405.html.twig'), Response::HTTP_METHOD_NOT_ALLOWED
@@ -55,25 +52,30 @@ switch ($routeInfo[0]) {
         $response->send();
         break;
 
+        // if the page is found, the linked routes will be
+        // used to redirect the request to the correct function
     case FastRoute\Dispatcher::FOUND:
-        $classPath = $routeInfo[1][0];
-        $method = $routeInfo[1][1];
-        $vars = $routeInfo[2];
+        $controllerPath = $routeInfo[1][0]; //controller to be called
+        $function = $routeInfo[1][1]; // function to be called
+        $parameters = $routeInfo[2]; // parameters to be passed
 
-        $controller = new $classPath;
-        $response = $controller->$method($vars);
+        $controller = new $controllerPath;
+        $response = $controller->$function($parameters);
 
         if ($response instanceof Response) {
             $response
                 ->prepare($request)
-                ->send();
+                ->send(); // redirect request to the correct controller + function.
         }
 
         break;
     default:
 
-        $response = new Response('Received unexpected response from dispatcher.', Response::HTTP_INTERNAL_SERVER_ERROR);
+        // Renders the 404 error page if all previous redirections fail.
+        $response = new Response(
+            $twig->render('pages/errors/404.html.twig'), Response::HTTP_NOT_FOUND
+        );
         $response->prepare($request);
         $response->send();
-        return;
+        break;
 }
