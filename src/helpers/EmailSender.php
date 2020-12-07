@@ -9,33 +9,43 @@ use PHPMailer\PHPMailer\Exception;
 
 class EmailSender {
 
-    public function sendEmail($recipient, $subject, $content): bool {
+    /**
+     * Sends an email to one or persons.
+     *
+     * @param $recipient array | string One or more recipients
+     * @param $subject string The email's subject.
+     * @param $content string The emails content in html format.
+     * @return bool
+     */
+    public function sendEmail($recipient, string $subject, string $content): bool {
 
         $mail = new PHPMailer(true);
         try {
 
-            $mail->isSMTP();                                            // Send using SMTP
-            $mail->Host = 'smtp.gmail.com';                    // Set the SMTP server to send through
-            $mail->SMTPAuth = true;                                   // Enable SMTP authentication
-            $mail->Username = $_ENV['MAIL_USERNAME'];                     // SMTP username
-            $mail->Password = $_ENV['MAIL_PASSWORD'];                              // SMTP password
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
-            $mail->Port = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+            $mail->isSMTP(); //select protocol
+            $mail->Host = 'smtp.gmail.com'; // select server (gmail)
+            $mail->SMTPAuth = true; // set authentication to true
+            $mail->Username = $_ENV['MAIL_USERNAME']; // username to gmail account
+            $mail->Password = $_ENV['MAIL_PASSWORD']; //password to gmail account
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; //sets encryption to TLS
+            $mail->Port = 587; //TCP port to connect to
 
-            //Recipients
+            // sender username (Neo Youthclub's gmail)
             $mail->setFrom($_ENV['MAIL_USERNAME'], 'Neo Youthclub');
 
-            // Content
-            $mail->isHTML(true);                                  // Set email format to HTML
+            $mail->isHTML(true); // sets content to html format
             $mail->Subject = $subject;
             $mail->Body = $content;
 
-            if (is_array($recipient)){
-                foreach($recipient as $member) {
+            // loops over the array if there are multiple recipients
+            // and sends the email to all of them
+            if (is_array($recipient)) {
+                foreach ($recipient as $member) {
                     $mail->addAddress($member);
                     $mail->send();
-                    $mail->clearAddresses();
+                    $mail->clearAddresses(); // clears all the recipients
                 }
+                // sends an email to the only recipient
             } else {
                 $mail->addAddress($recipient);
                 $mail->send();
@@ -45,8 +55,5 @@ class EmailSender {
             return false;
         }
         return true;
-    }
-
-    public function sendMultipleEmails(array $recipient, $subject, $content){
     }
 }

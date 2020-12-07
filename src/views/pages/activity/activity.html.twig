@@ -5,24 +5,26 @@
 {% block content %}
     <section class="ui center aligned middle aligned segment">
         {% for activity in activity %}
+
         <div class="jumbotron" xmlns="http://www.w3.org/1999/html">
             <h1 class="display-6">{{ activity.title }}</h1>
             <p class="lead">{{ activity.start_time|date("l d. M. H:i") }}
                 - {{ activity.end_time|date("l d. M. Y. H:i") }}</p>
             <div><b>Leader: </b>{{ activity.first_name }} {{ activity.last_name }} - {{ activity.email }} </div>
             <br>
-
             {% if attendanceStatus == true %}
+
                 <a href="/activities/{{ activity.activity_id }}/leave" class="negative ui button"
                    onclick="return confirm('Are you sure you want to leave this activity?');">Leave</a>
+
             {% else %}
+
                 <a href="/activities/{{ activity.activity_id }}/join" class="positive ui button"
                    onclick="return confirm('Are you sure you want to join this activity?');">Join</a>
+
             {% endif %}
-
-
             <div class="ui center aligned middle aligned segment">
-            <p>{{ activity.description }}</p>
+                <p>{{ activity.description }}</p>
             </div>
             <div class="ui segment middle aligned">
 
@@ -37,11 +39,12 @@
                             <div class="item">
                                 <div class="content">
                                     {% for attendee in attendees %}
+
                                         <i class="large user middle aligned icon"></i>
-                                        <a class="header"
-                                           href="/profile/{{ attendee.member_id }}">{{ attendee.first_name }} {{ attendee.last_name }}</a>
+                                        <div class="header">{{ attendee.first_name }} {{ attendee.last_name }}</div>
                                         <div class="description">
                                             Joined {{ attendee.join_time|date("d. M. Y. H:i") }}</div>
+
                                     {% endfor %}
                                 </div>
                             </div>

@@ -3,14 +3,14 @@
     Activities
 {% endblock %}
 
-
 {% block content %}
+
     <section class="ui center aligned middle aligned segment">
         <h1 class="ui header">
             <i class="futbol icon"></i>
             Upcoming Activities
         </h1>
-        <!-- All activities table -->
+        {# list all activities in a table #}
         <table class="ui selectable celled table">
             <thead>
                 <tr>
@@ -21,9 +21,9 @@
                 </tr>
             </thead>
             <tbody>
-
                 <tr>
                     {% for activity in activities %}
+
                     <td data-label="ID">{{ activity.activity_id }}</td>
                     <td data-label="Title"><a
                                 href="http://localhost:8081/activities/{{ activity.activity_id }}">{{ activity.title }}</a>
@@ -31,13 +31,13 @@
                     <td data-label="Start time">{{ activity.start_time|date("l d. M. Y. H:i") }}</td>
                     <td data-label="Leader">{{ activity.first_name }}</td>
                 </tr>
+
                 {% endfor %}
             </tbody>
         </table>
+        {# show add activity modal if user is admin #}
+        {% if session.get('role') == 4 %}
 
-        {% if session.get('userID') %}
-
-        <!-- Add activity modal with form -->
         <div class="ui button">
             Add activity
         </div>
@@ -88,7 +88,6 @@
     </section>
 
     {% endif %}
-
     <script>
         $('.ui.button').click(function () {
             $('.ui.modal').modal('show');

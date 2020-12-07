@@ -1,9 +1,10 @@
 <?php
 
 
-namespace App\controllers;
+namespace App\controllers\member;
 
 
+use App\controllers\BaseController;
 use Symfony\Component\HttpFoundation\Response;
 
 class AddMember extends BaseController {

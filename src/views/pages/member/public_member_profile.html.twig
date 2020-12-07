@@ -5,10 +5,13 @@
 {% block content %}
 
     {% for data in member %}
+
     <section class="ui center aligned middle aligned segment">
+
         {# Include profile page #}
-        {% include './includes/profile_template.html.twig' %}
+        {% include './includes/member_profile_template.html.twig' %}
     </section>
+
     {% endfor %}
 
 {% endblock %}

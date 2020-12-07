@@ -1,9 +1,10 @@
 <?php
 
 
-namespace App\models;
+namespace App\models\authentication;
 
 use App\helpers\PasswordGenerator;
+use App\models\Database;
 use mysqli_result;
 
 /**
@@ -16,9 +17,9 @@ use mysqli_result;
  */
 class User extends Database {
 
-    private const PEPPER = 'j8OkjXs804GSp2J7';
-
     /**
+     * @param $username
+     * @param $password
      * @return array | bool true on login success.
      */
     public function login($username, $password) {
@@ -31,9 +32,10 @@ class User extends Database {
     }
 
     /**
-     * @return array|null with user's credentials.
+     * @param $username
+     * @return array|null with authentication's credentials.
      */
-    public function getUserCredentials($username) {
+    public function getUserCredentials($username): ?array {
         $sql = "SELECT user_id, fk_member_id, password, username
                 FROM user WHERE username = ?";
         $stmt = $this->getConnection()->prepare($sql);
@@ -45,10 +47,11 @@ class User extends Database {
     }
 
     /**
+     * @param $password
      * @return string with peppered password.
      */
-    private function pepperPassword($password) {
-        return hash_hmac("sha256", $password, self::PEPPER);
+    private function pepperPassword($password): string {
+        return hash_hmac("sha256", $password, $_ENV['HASH_PEPPER']);
     }
 
     /**
@@ -75,9 +78,12 @@ class User extends Database {
 
     /**
      * Hashes password and calls on addUser()-function.
+     * @param $username
+     * @param $password
+     * @param $memberID
      * @return bool true on registration success.
      */
-    public function registerUser($username, $password, $memberID) {
+    public function registerUser($username, $password, $memberID): bool {
         $hashedPassword = password_hash($this->pepperPassword($password), PASSWORD_BCRYPT);
         $user = $this->addUser($username, $hashedPassword, $memberID);
         if ($user) {
@@ -88,10 +94,13 @@ class User extends Database {
     }
 
     /**
-     * Add user to DB.
-     * @return int above 1 if user was added to DB.
+     * Add authentication to DB.
+     * @param $username
+     * @param $password
+     * @param $memberID
+     * @return int above 1 if authentication was added to DB.
      */
-    private function addUser($username, $password, $memberID) {
+    private function addUser($username, $password, $memberID): int {
         $sql = "INSERT INTO user (username, password, fk_member_id) 
                 VALUES (?, ?, ?)";
         $stmt = $this->getConnection()->prepare($sql);
@@ -115,10 +124,11 @@ class User extends Database {
     }
 
     /**
-     * Removes user from DB.
-     * @return int above 1 if user was removed from DB.
+     * Removes authentication from DB.
+     * @param $userID
+     * @return int above 1 if authentication was removed from DB.
      */
-    public function removeUser($userID) {
+    public function removeUser($userID): int {
         $sql = "DELETE FROM user WHERE user_id = ?";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bind_param('i', $userID);
@@ -128,7 +138,7 @@ class User extends Database {
         return $result;
     }
 
-    public function checkUserExistence($memberID) {
+    public function checkUserExistence($memberID): int {
         $sql = "SELECT COUNT(1) AS SUM
                 FROM user 
                 WHERE fk_member_id = ?";

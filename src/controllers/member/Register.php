@@ -1,10 +1,11 @@
 <?php
 
 
-namespace App\controllers;
+namespace App\controllers\member;
 
-use App\models\Interest;
-use App\models\Member;
+use App\controllers\BaseController;
+use App\models\interest\Interest;
+use App\models\member\Member;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use App\helpers\UploadFile;
@@ -15,7 +16,7 @@ class Register extends BaseController {
 
     public function renderRegisterPage(): Response {
         if ($this->hasMemberPrivileges() == true
-            or $this->hasLeaderPrivileges() == true){
+            and $this->hasLeaderPrivileges() == true){
             return $this->methodNotAllowed();
         }
 
@@ -23,14 +24,14 @@ class Register extends BaseController {
         $interests = $interestModel->getAllInterests();
 
         return new Response(
-            $this->twig->render('pages/user/register.html.twig',
+            $this->twig->render('pages/authentication/register.html.twig',
             ['interests' => $interests])
         );
     }
 
     public function newUser() {
         if ($this->hasMemberPrivileges() == true
-            or $this->hasLeaderPrivileges() == true){
+            and $this->hasLeaderPrivileges() == true){
             return $this->methodNotAllowed();
         }
 
@@ -61,7 +62,7 @@ class Register extends BaseController {
 //        $memberdata['zipCode'] = $this->request->get('zip-code');
 //        $memberdata['interests'] = $this->request->get('interests');
 
-        //define user role
+        //define authentication role
         $role = 3;
         $memberModel = new Member();
         $registerMember = $memberModel->registerMember($memberData, $role);
@@ -73,7 +74,7 @@ class Register extends BaseController {
         } else {
             (new Session)->getFlashBag()->add('registrationError', 'Account could not be created');
             return new Response(
-                $this->twig->render('pages/user/register.html.twig')
+                $this->twig->render('pages/authentication/register.html.twig')
             );
         }
     }

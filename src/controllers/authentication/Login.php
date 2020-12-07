@@ -1,10 +1,12 @@
 <?php
 
 
-namespace App\controllers;
+namespace App\controllers\authentication;
 
-use App\models\Member;
-use App\models\User;
+use App\controllers\BaseController;
+
+use App\models\authentication\User;
+use App\models\member\Member;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -14,18 +16,18 @@ class Login extends BaseController {
 
     public function renderLoginPage(): Response {
         if ($this->hasMemberPrivileges() == true
-            or $this->hasLeaderPrivileges() == true){
+            and $this->hasLeaderPrivileges() == true){
             return $this->methodNotAllowed();
         }
 
         return new Response(
-            $this->twig->render('pages/user/login.html.twig')
+            $this->twig->render('pages/authentication/login.html.twig')
         );
     }
 
     public function login() {
         if ($this->hasMemberPrivileges() == true
-            or $this->hasLeaderPrivileges() == true){
+            and $this->hasLeaderPrivileges() == true){
             return $this->methodNotAllowed();
         }
 
@@ -47,14 +49,14 @@ class Login extends BaseController {
                 $session->getFlashBag()->add('loginError', 'Wrong password or username');
 
                 return new Response(
-                    $this->twig->render('/pages/user/login.html.twig')
+                    $this->twig->render('/pages/authentication/login.html.twig')
                 );
             }
         } else{
             $session->getFlashBag()->add('loginError', 'Password or username is missing.');
 
             return new Response(
-                $this->twig->render('/pages/user/login.html.twig')
+                $this->twig->render('/pages/authentication/login.html.twig')
             );
         }
     }
@@ -64,7 +66,7 @@ class Login extends BaseController {
 
         $memberModel = new Member();
         $userRoles = $memberModel->getSingleUserRoles($credentials['fk_member_id'])->fetch_assoc();
-        // highest role/privilege the user has eg. 4 is leader, 3 is member
+        // highest role/privilege the authentication has eg. 4 is leader, 3 is member
         //$highestRole = max($userRoles['fk_role_id']);
 
         $session->set('memberID', $credentials['fk_member_id']);

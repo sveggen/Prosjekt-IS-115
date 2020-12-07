@@ -12,32 +12,6 @@ class UploadFile {
     const MB = 1048576;
     private $errorMessages = array();
 
-
-    /**
-     * Returns path to currently saved profile image.
-     *
-     * @param $memberID
-     * @return string | false Path to profile image or false if none exist.
-     */
-    public function getProfileImage($memberID) {
-        $profileDirPath = "./assets/img/profile/" . $memberID . "/";
-        $iterator = new \FilesystemIterator($profileDirPath);
-        $notEmptyDir = $isDirEmpty = $iterator->valid();
-
-        if (file_exists($profileDirPath) && $notEmptyDir) {
-            $dir = opendir($profileDirPath);
-            while (false !== ($file = readdir($dir))) {
-                $pathInfo = pathinfo($profileDirPath . $file);
-                $filename = $pathInfo['filename'];
-                $extension = $pathInfo['extension'];
-            }
-            closedir($dir);
-            $profileImage = $profileDirPath . $filename . "." . $extension;
-            return $profileImage;
-        }
-        return false;
-    }
-
     /**
      * Uploads a new profile image linked to a member.
      *
@@ -76,10 +50,6 @@ class UploadFile {
         return false;
     }
 
-    /*
-     * @param UploadedFile $uploadedFile File to check size of.
-     * @return bool True if filesize is below limit, false if not.
-     */
     private function compareFileSizeToLimit(UploadedFile $uploadedFile): bool {
         $maxFileSize = 2 * self::MB;
         $fileSize = $uploadedFile->getSize();
@@ -93,12 +63,10 @@ class UploadFile {
         }
     }
 
-    /**
-     * @return array Containing all the error messages.
+    /*
+     * @param UploadedFile $uploadedFile File to check size of.
+     * @return bool True if filesize is below limit, false if not.
      */
-    public function getErrorMessages(): array {
-        return $this->errorMessages;
-    }
 
     /**
      * @param UploadedFile $uploadedFile File to check extension of.
@@ -117,9 +85,43 @@ class UploadFile {
         }
     }
 
-    private function deleteOldImage($filePath){
-        if (file_exists($filePath)){
+    /**
+     * Returns path to currently saved profile image.
+     *
+     * @param $memberID
+     * @return string | false Path to profile image or false if none exist.
+     */
+    public function getProfileImage($memberID) {
+        $profileDirPath = "./assets/img/profile/" . $memberID . "/";
+        if (file_exists($profileDirPath)){
+            $iterator = new \FilesystemIterator($profileDirPath);
+            $notEmptyDir = $isDirEmpty = $iterator->valid();
+        }
+
+        if (file_exists($profileDirPath) && $notEmptyDir) {
+            $dir = opendir($profileDirPath);
+            while (false !== ($file = readdir($dir))) {
+                $pathInfo = pathinfo($profileDirPath . $file);
+                $filename = $pathInfo['filename'];
+                $extension = $pathInfo['extension'];
+            }
+            closedir($dir);
+            $profileImage = $profileDirPath . $filename . "." . $extension;
+            return $profileImage;
+        }
+        return false;
+    }
+
+    private function deleteOldImage($filePath) {
+        if (file_exists($filePath)) {
             unlink($filePath);
         }
+    }
+
+    /**
+     * @return array Containing all the error messages.
+     */
+    public function getErrorMessages(): array {
+        return $this->errorMessages;
     }
 }

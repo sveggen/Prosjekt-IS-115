@@ -1,15 +1,16 @@
 <?php
 
 
-namespace App\controllers;
+namespace App\controllers\member;
 
 
+use App\controllers\BaseController;
 use App\helpers\EmailSender;
+use App\models\member\Member;
 use Symfony\Component\HttpFoundation\Response;
-use App\models\Member;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class Dashboard extends BaseController {
+class MemberDashboard extends BaseController {
 
 
     public function dashboard(): Response {
@@ -18,7 +19,7 @@ class Dashboard extends BaseController {
         }
 
         return new Response(
-            $this->twig->render('pages/member/dashboard.html.twig',
+            $this->twig->render('pages/member/member_dashboard.html.twig',
                 ['members' => $this->listMembers()]));
     }
 
@@ -63,7 +64,7 @@ class Dashboard extends BaseController {
         $sorted = $memberModel->getMembersSortPaymentStatus($query);
 
         return new Response(
-            $this->twig->render('pages/member/dashboard.html.twig',
+            $this->twig->render('pages/member/member_dashboard.html.twig',
                 ['members' => $sorted]));
     }
 

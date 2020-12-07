@@ -1,9 +1,10 @@
 <?php
 
 
-namespace App\controllers;
+namespace App\controllers\authentication;
 
 
+use App\controllers\BaseController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -12,7 +13,7 @@ class Logout extends BaseController {
 
     public function logout(): Response {
         if ($this->hasMemberPrivileges() == false
-            or $this->hasLeaderPrivileges() == false){
+            and $this->hasLeaderPrivileges() == false){
             return $this->methodNotAllowed();
         }
 

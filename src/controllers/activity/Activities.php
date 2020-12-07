@@ -1,9 +1,10 @@
 <?php
 
 
-namespace App\controllers;
+namespace App\controllers\activity;
 
-use App\models\Activity;
+use App\controllers\BaseController;
+use App\models\activity\Activity;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -11,7 +12,7 @@ class Activities extends BaseController {
 
     public function newActivity(): Response {
         if ($this->hasMemberPrivileges() == false
-            or $this->hasLeaderPrivileges() == false){
+            and $this->hasLeaderPrivileges() == false){
             return $this->methodNotAllowed();
         }
 
@@ -37,7 +38,8 @@ class Activities extends BaseController {
     }
 
     public function renderAllActivities(): Response {
-        if ($this->hasLeaderPrivileges() == false) {
+        if ($this->hasMemberPrivileges() == false
+            and $this->hasLeaderPrivileges() == false){
             return $this->methodNotAllowed();
         }
 
@@ -53,7 +55,7 @@ class Activities extends BaseController {
 
     public function joinActivity($activityID): Response {
         if ($this->hasMemberPrivileges() == false
-            or $this->hasLeaderPrivileges() == false){
+            and $this->hasLeaderPrivileges() == false){
             return $this->methodNotAllowed();
         }
 
@@ -77,7 +79,7 @@ class Activities extends BaseController {
 
     public function leaveActivity($activityID): Response {
         if ($this->hasMemberPrivileges() == false
-            or $this->hasLeaderPrivileges() == false){
+            and $this->hasLeaderPrivileges() == false){
             return $this->methodNotAllowed();
         }
 
@@ -93,7 +95,7 @@ class Activities extends BaseController {
 
     public function renderSingleActivity($id): Response {
         if ($this->hasMemberPrivileges() == false
-            or $this->hasLeaderPrivileges() == false){
+            and $this->hasLeaderPrivileges() == false){
             return $this->methodNotAllowed();
         }
 

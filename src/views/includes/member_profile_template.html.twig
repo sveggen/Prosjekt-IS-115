@@ -3,7 +3,7 @@
         <img src="{{ profileImage }}">
     </div>
     <div class="content">
-        <a class="header">{{ data.first_name }} {{ data.last_name }}</a>
+        <div class="header">{{ data.first_name }} {{ data.last_name }}</div>
         <div class="meta">
             <span class="date">Registered: {{ data.time_of_registration |date("d. M. Y. H:i") }}</span>
         </div>
@@ -82,5 +82,4 @@
             </div>
         </div>
     </div>
-
 </div>

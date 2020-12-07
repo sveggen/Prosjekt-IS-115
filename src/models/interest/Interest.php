@@ -1,8 +1,10 @@
 <?php
 
 
-namespace App\models;
+namespace App\models\interest;
 
+
+use App\models\Database;
 
 class Interest extends Database {
 
