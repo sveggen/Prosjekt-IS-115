@@ -30,13 +30,13 @@ return [
     ['GET', '/activities/{id:\d+}/leave', ['App\controllers\activity\SingleActivity', 'leaveActivity']],
 
     // ------------- authenticated - leader --------------------
-    ['GET', '/add-member', ['App\controllers\member\AddMember', 'renderAddMemberPage']],
-    ['POST', '/add-member', ['App\controllers\member\AddMember', 'addMember']],
+    ['GET', '/add-member', ['App\controllers\leader\AddMember', 'renderAddMemberPage']],
+    ['POST', '/add-member', ['App\controllers\leader\AddMember', 'addMember']],
 
     ['GET', '/activities/{id:\d+}/remove', ['App\controllers\activity\SingleActivity', 'removeActivity']],
 
-    ['GET', '/dashboard', ['App\controllers\member\MemberDashboard', 'renderMemberDashboard']],
-    ['POST', '/dashboard/send-email', ['App\controllers\member\MemberDashboard', 'sendEmailToMarked']],
-    ['GET', '/dashboard/search', ['App\controllers\member\MemberDashboard', 'distributeSearchQuery']]
+    ['GET', '/dashboard', ['App\controllers\leader\MemberDashboard', 'renderMemberDashboard']],
+    ['POST', '/dashboard/send-email', ['App\controllers\leader\MemberDashboard', 'sendEmailToMarked']],
+    ['GET', '/dashboard/search', ['App\controllers\leader\MemberDashboard', 'distributeSearchQuery']]
     // ------------------------------------------------
 ];

@@ -57,7 +57,7 @@ class Profile extends BaseController {
         $membersProfileImage = $uploadFile->getProfileImage($memberID);
 
         return new Response(
-            $this->twig->render('pages/member/edit_member_profile.html.twig',
+            $this->twig->render('pages/member/profile.html.twig',
                 ['member' => $member,
                     'profileImage' => $membersProfileImage,
                     'interests' => $membersInterests,

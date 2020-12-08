@@ -17,7 +17,7 @@ class Address extends Database
      */
     public function checkForValidZipCode($zipCode): bool {
         $result = $this->getZipcode($zipCode)->fetch_assoc();
-        if ($result['zipCode']){
+        if ($result['zip_code']){
             return true;
         } else {
             return false;

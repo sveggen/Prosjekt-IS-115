@@ -5,7 +5,7 @@ namespace App\controllers\authentication;
 
 use App\controllers\BaseController;
 
-use App\models\authentication\User;
+use App\models\user\User;
 use App\models\member\Member;
 use App\models\role\Role;
 use Symfony\Component\HttpFoundation\RedirectResponse;

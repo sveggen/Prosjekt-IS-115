@@ -24,7 +24,7 @@ class Register extends BaseController {
         $interests = $interestModel->getAllInterests();
 
         return new Response(
-            $this->twig->render('pages/authentication/register.html.twig',
+            $this->twig->render('pages/member/register.html.twig',
             ['interests' => $interests])
         );
     }
@@ -64,7 +64,7 @@ class Register extends BaseController {
         } else {
             (new Session)->getFlashBag()->add('registrationError', 'Account could not be created');
             return new Response(
-                $this->twig->render('pages/authentication/register.html.twig')
+                $this->twig->render('pages/member/register.html.twig')
             );
         }
     }
