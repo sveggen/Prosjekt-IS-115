@@ -6,6 +6,8 @@ namespace App\controllers\member;
 
 use App\controllers\BaseController;
 use App\helpers\EmailSender;
+use App\models\activity\Activity;
+use App\models\interest\Interest;
 use App\models\member\Member;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -38,16 +40,22 @@ class MemberDashboard extends BaseController {
             return $this->methodNotAllowed();
         }
 
+
+        $activityModel = new Activity();
+        $activities = $activityModel->getAllFutureActivities();
+
+       $listMembers =  (new Member)->getAllMembersAndAddress();
+        $interests = (new Interest)->getAllInterests();
+
         return new Response(
             $this->twig->render('pages/member/member_dashboard.html.twig',
-                ['members' => $this->listMembers()]));
+                ['members' => $listMembers,
+                    'interests' => $interests,
+                    'activities' => $activities]));
     }
 
-    private function listMembers() {
-        return (new Member)->getAllMembersAndAddress();
-    }
 
-    public function distributeSearchQuery() {
+    public function distributeSearchQuery(): Response {
         if ($this->hasLeaderPrivileges() == false) {
             return $this->methodNotAllowed();
         }
@@ -57,10 +65,10 @@ class MemberDashboard extends BaseController {
             case "payment-status":
                 return $this->filterPaymentStatus();
             case "interests":
-                return $this->filterOnInterests();
-            case 2:
-                echo "i equals 2";
-                break;
+                return $this->filterOnInterest();
+            case "activities":
+                return $this->filterOnActivity();
+
         } return $this->renderMemberDashboard();
 
     }
@@ -68,24 +76,56 @@ class MemberDashboard extends BaseController {
     private function filterPaymentStatus(): Response {
         $memberModel = new Member();
         $query = $this->request->query->get('payment-status');
-        $sorted = $memberModel->getMembersSortPaymentStatus($query);
-        $searchQuery = $query;
+        $membersSortedPayment = $memberModel->getMembersSortPaymentStatus($query);
 
+        if ($query == 1){
+            $searchQuery = "Payment status - Paid";
+        } elseif ($query == 0) {
+            $searchQuery = "Payment status - Not paid";
+        }
 
-        return new Response(
-            $this->twig->render('pages/member/member_dashboard.html.twig',
-                ['searchQuery' => $searchQuery,
-                'members' => $sorted]));
+        return $this->renderSearchResults($membersSortedPayment, $searchQuery);
     }
 
-    private function filterOnInterests(): Response {
+    private function filterOnInterest(): Response {
         $memberModel = new Member();
-        $query = $this->request->query->get('payment-status');
-        $sorted = $memberModel->getMembersSortPaymentStatus($query);
+        $interestID = $this->request->query->get('interests')[0];
+        $membersWithInterest = $memberModel->getAllMembersWithSpecificInterest($interestID);
+
+        $interestModel = new Interest();
+        $interestName = $interestModel->getInterestName($interestID)['type'];
+
+        $searchQuery = "Interest - " . $interestName;
+
+
+        return $this->renderSearchResults($membersWithInterest, $searchQuery);
+    }
+
+    private function filterOnActivity(): Response {
+        $activityModel = new Activity();
+
+        $activityID = $this->request->query->get('activities')[0];
+        $membersWithActivity = $activityModel->getActivityAttendees($activityID);
+
+        $searchQuery = "Interest - " . $membersWithActivity->fetch_assoc()['title'];
+
+
+        return $this->renderSearchResults($membersWithActivity, $searchQuery);
+    }
+
+    private function renderSearchResults($memberList, $searchQueryName): Response {
+        $activityModel = new Activity();
+        $activities = $activityModel->getAllFutureActivities();
+
+        $interestModel = new Interest();
+        $interests = $interestModel->getAllInterests();
 
         return new Response(
             $this->twig->render('pages/member/member_dashboard.html.twig',
-                ['members' => $sorted]));
+                ['searchQuery' => $searchQueryName,
+                    'members' => $memberList,
+                    'interests' => $interests,
+                    'activities' => $activities]));
     }
 
 }

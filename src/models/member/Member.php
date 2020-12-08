@@ -101,6 +101,21 @@ class Member extends Database {
         return $result;
     }
 
+    public function getAllMembersWithSpecificInterest($interestID) {
+        $sql = "SELECT * FROM member_interest
+                JOIN interest i on member_interest.fk_interest_id = i.interest_id
+                JOIN member m on member_interest.fk_member_id = m.member_id 
+                LEFT JOIN address a on m.fk_address_id = a.address_id
+                LEFT JOIN zip_code_register zcr on a.fk_zip_code_register = zcr.zip_code
+                WHERE interest_id = ?";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('i', $interestID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
+    }
+
     /**
      * Adds a member to the DB.
      */

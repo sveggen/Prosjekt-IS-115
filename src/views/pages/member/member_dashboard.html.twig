@@ -23,6 +23,7 @@
         </h1>
 
         {# Search filters #}
+        <div class="ui left aligned container">
         <form method="get" action="/dashboard/search">
             <label> Payment status
                 <select name="payment-status" class="ui dropdown" onchange="this.form.submit()">
@@ -32,19 +33,44 @@
                 </select>
             </label>
         </form>
+
         <form method="get" action="/dashboard/search">
             <label> Interests
-                <select name="interests" class="ui dropdown" onchange="this.form.submit()">
+                <select name="interests[]" class="ui dropdown" onchange="this.form.submit()">
+                    <option value="">Interests</option>
                     <option value="">None selected ..</option>
-                    <option value="0">Football</option>
-                    <option value="1">Potato</option>
+                    {% for interest in interests %}
+                        <option value="{{ interest.interest_id }}">{{ interest.type }}</option>
+                    {% endfor %}
                 </select>
             </label>
         </form>
 
-        <div class="ui header">
-            {{ searchQuery }}
+            <form method="get" action="/dashboard/search">
+                <label> Activities
+                    <select name="activities[]" class="ui dropdown" onchange="this.form.submit()">
+                        <option value="">Activities</option>
+                        <option value="">None selected ..</option>
+                        {% for activity in activities %}
+                            <option value="{{ activity.activity_id }}">
+                                {{ activity.title }} {{ activity.start_time | date("d. m. y.") }}</option>
+                        {% endfor %}
+
+                    </select>
+                </label>
+            </form>
         </div>
+
+        {# Current filter #}
+        <div class="ui center aligned middle aligned card">
+            <div class="content">
+        <div class="header">
+            Filter on: {{ searchQuery }}
+        </div>
+            </div>
+        </div>
+            <section>
+                <section class="ui center aligned middle aligned segment">
 
         {# Table listing members #}
         <table class="ui celled table" id="membersTable">
@@ -125,6 +151,7 @@
             </div>
         </div>
     </section>
+        </section>
     <script>
 
         // jQuery --------------------------------------------------------------------
