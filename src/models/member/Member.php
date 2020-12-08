@@ -24,7 +24,7 @@ class Member extends Database {
                 $memberData['email'], $memberData['phoneNumber'], $memberData['paymentStatus'],
                 $addressID, $memberData['gender'], $memberData['birthDate']);
 
-            (new User)->registerUser($memberData['email'], $memberData['password'], $memberID);
+            (new User)->registerUser($memberData['password'], $memberID);
 
             $this->addMemberRoles($memberID, $memberData['role']);
 
