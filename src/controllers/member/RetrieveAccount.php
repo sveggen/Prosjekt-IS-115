@@ -6,7 +6,7 @@ namespace App\controllers\member;
 use App\controllers\BaseController;
 use App\helpers\EmailSender;
 use App\helpers\Validate;
-use App\models\authentication\User;
+use App\models\user\User;
 use App\models\member\Member;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;

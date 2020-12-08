@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\controllers\member;
+namespace App\controllers\leader;
 
 
 use App\controllers\BaseController;
@@ -52,7 +52,7 @@ class MemberDashboard extends BaseController {
         $interests = (new Interest)->getAllInterests();
 
         return new Response(
-            $this->twig->render('pages/member/member_dashboard.html.twig',
+            $this->twig->render('pages/leader/member_dashboard.html.twig',
                 ['members' => $listMembers,
                     'interests' => $interests,
                     'activities' => $activities]));
@@ -120,7 +120,7 @@ class MemberDashboard extends BaseController {
         $interests = (new Interest)->getAllInterests();
 
         return new Response(
-            $this->twig->render('pages/member/member_dashboard.html.twig',
+            $this->twig->render('pages/leader/member_dashboard.html.twig',
                 ['searchQuery' => $searchQueryName,
                     'members' => $memberList,
                     'interests' => $interests,

@@ -13,7 +13,11 @@
                     <label>First name
                         <input type="text" name="first-name" placeholder="Ola">
                     </label>
+                    {% for message in session.getFlashbag().get('[firstName]') %}
+                        <div class="ui tiny red message">{{ message }}</div>
+                    {% endfor %}
                 </div>
+
                 <div class="field">
                     <label>Last name
                         <input type="text" name="last-name" placeholder="Nordmann">
@@ -40,6 +44,8 @@
             </div>
 
                 <div class="grouped fields">
+
+
                     <label>Gender</label>
                     <div class="field">
                         <div class="ui radio checkbox">
@@ -59,6 +65,9 @@
                             <label>Other</label>
                         </div>
                     </div>
+                    {% for message in session.getFlashbag().get('[gender]') %}
+                        <div class="ui tiny red message">{{ message }}</div>
+                    {% endfor %}
             </div>
             <div class="grouped fields">
                 <label>Member Subscription Payment Status</label>
@@ -152,80 +161,6 @@
 
             $('#roles-select')
             .dropdown();
-
-
-
-        // form validation
-        // ---------------------------------------
-        $('.ui.form')
-            .form({
-                fields: {
-                    username: {
-                        identifier: 'username',
-                        rules: [
-                            {
-                                type: 'empty',
-                                prompt: 'Please enter a username'
-                            }
-                        ]
-                    },
-                    email: {
-                        identifier: 'email',
-                        rules: [
-                            {
-                                type: 'email',
-                                prompt: 'Please enter a email'
-                            }
-                        ]
-                    },
-                    phonenumber: {
-                        identifier: 'phone-number',
-                        rules: [
-                            {
-                                type: 'length[8]',
-                                prompt: 'Please enter a valid phone number'
-                            }
-                        ]
-                    },
-                    gender: {
-                        identifier: 'gender',
-                        rules: [
-                            {
-                                type: 'checked',
-                                prompt: 'Please select a gender'
-                            }
-                        ]
-                    },
-                    streetaddress: {
-                        identifier: 'street-address',
-                        rules: [
-                            {
-                                type: 'empty',
-                                prompt: 'Please enter a street address'
-                            }
-                        ]
-                    },
-                    zipcode: {
-                        identifier: 'zip-code',
-                        rules: [
-                            {
-                                type: 'length[4]',
-                                prompt: 'Please enter a zip code'
-                            }
-                        ]
-                    },
-                    interests: {
-                        identifier: 'interests[]',
-                        rules: [
-                            {
-                                type: 'empty',
-                                prompt: 'Please select at least one interest'
-                            }
-                        ]
-                    },
-                }
-            })
-        ;
     </script>
 
 

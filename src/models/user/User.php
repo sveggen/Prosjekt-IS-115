@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\models\authentication;
+namespace App\models\user;
 
 use App\helpers\PasswordGenerator;
 use App\models\Database;

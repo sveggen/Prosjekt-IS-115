@@ -5,7 +5,7 @@ namespace App\models\member;
 
 
 use App\models\address\Address;
-use App\models\authentication\User;
+use App\models\user\User;
 use App\models\Database;
 use App\models\interest\Interest;
 use App\models\role\Role;
