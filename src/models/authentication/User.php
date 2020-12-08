@@ -18,12 +18,12 @@ use mysqli_result;
 class User extends Database {
 
     /**
-     * @param $username
+     * @param $email
      * @param $password
      * @return array | bool True on login success.
      */
-    public function login($username, $password) {
-        $user = $this->getUserCredentials($username);
+    public function login($email, $password) {
+        $user = $this->getUserCredentials($email);
         if (password_verify($this->pepperPassword($password), $user['password'])) {
             return $user;
         } else {
@@ -32,14 +32,16 @@ class User extends Database {
     }
 
     /**
-     * @param $username
+     * @param $email
      * @return array|null User's credentials.
      */
-    public function getUserCredentials($username): ?array {
-        $sql = "SELECT user_id, fk_member_id, password, username
-                FROM user WHERE username = ?";
+    public function getUserCredentials($email): ?array {
+        $sql = "SELECT  u.fk_member_id, u.password, m.email
+                FROM user u
+                LEFT JOIN member m on m.member_id = u.fk_member_id
+                WHERE email = ?";
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bind_param('s', $username);
+        $stmt->bind_param('s', $email);
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();
@@ -67,7 +69,7 @@ class User extends Database {
         $temporaryPassword = $passwordGenerator->generatePassword();
 
         $userModel = new User();
-        $createUser = $userModel->registerUser($email, $temporaryPassword, $memberID);
+        $createUser = $userModel->registerUser($temporaryPassword, $memberID);
 
         if ($createUser) {
             return $temporaryPassword;
@@ -78,14 +80,13 @@ class User extends Database {
 
     /**
      * Hashes password and calls on addUser()-function.
-     * @param $username
      * @param $password
      * @param $memberID
      * @return bool true on registration success.
      */
-    public function registerUser($username, $password, $memberID): bool {
+    public function registerUser($password, $memberID): bool {
         $hashedPassword = password_hash($this->pepperPassword($password), PASSWORD_BCRYPT);
-        $user = $this->addUser($username, $hashedPassword, $memberID);
+        $user = $this->addUser($hashedPassword, $memberID);
         if ($user) {
             return true;
         } else {
@@ -96,16 +97,15 @@ class User extends Database {
     /**
      * Add user to DB.
      *
-     * @param $username
      * @param $password
      * @param $memberID
      * @return int above 1 if authentication was added to DB.
      */
-    private function addUser($username, $password, $memberID): int {
-        $sql = "INSERT INTO user (username, password, fk_member_id) 
-                VALUES (?, ?, ?)";
+    private function addUser($password, $memberID): int {
+        $sql = "INSERT INTO user (password, fk_member_id) 
+                VALUES (?, ?)";
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bind_param('ssi', $username, $password, $memberID);
+        $stmt->bind_param('si', $password, $memberID);
         $stmt->execute();
         $result = $stmt->affected_rows;
         $stmt->close();

@@ -20,11 +20,6 @@
             </div>
             </div>
             <div class="field">
-                <label>Username
-                    <input type="text" name="username" placeholder="mike.pence">
-                </label>
-            </div>
-            <div class="field">
                 <label>Password
                     <input type="password" name="password" placeholder="*******">
                 </label>
@@ -95,7 +90,6 @@
                     {% for interest in interests %}
                         <option value="{{ interest.interest_id }}">{{ interest.type }}</option>
                     {% endfor %}
-
                 </select>
             </div>
             <script>
