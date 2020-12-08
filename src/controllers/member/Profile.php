@@ -5,10 +5,11 @@ namespace App\controllers\member;
 
 
 use App\controllers\BaseController;
-use App\helpers\UploadFile;
+use App\helpers\FileHandler;
 use App\models\activity\Activity;
 use App\models\interest\Interest;
 use App\models\member\Member;
+use App\models\role\Role;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -42,7 +43,9 @@ class Profile extends BaseController {
         $memberModel = new Member();
         $member = $memberModel->getSingleMemberAndAddress($memberID);
         $membersInterests = $memberModel->getAllMembersInterests($memberID);
-        $membersRoles = $memberModel->getSingleUserRoles($memberID);
+
+        $roleModel = new Role();
+        $membersRoles = $roleModel->getSingleMemberRoles($memberID);
 
         $interestModel = new Interest();
         $allAvailableActivities = $interestModel->getAllInterests();
@@ -50,7 +53,7 @@ class Profile extends BaseController {
         $activityModel = new Activity();
         $membersActivities = $activityModel->getAllMembersActivities($memberID);
 
-        $uploadFile = new UploadFile;
+        $uploadFile = new FileHandler;
         $membersProfileImage = $uploadFile->getProfileImage($memberID);
 
         return new Response(
@@ -76,14 +79,14 @@ class Profile extends BaseController {
     /**
      * Updates the users profile image.
      *
-     * @param int $profileID
+     * @param array $profileID
      * @return Response
      */
-    public function updateProfileImage(int $profileID): Response {
+    public function updateProfileImage(array $profileID): Response {
         $session = new Session();
         $memberID = $session->get('memberID');
         $image = $this->request->files->get('image');
-        $uploadFile = new UploadFile;
+        $uploadFile = new FileHandler;
         $uploadProfileImage = $uploadFile->uploadProfileImage($image, $memberID);
 
         if ($uploadProfileImage) {
@@ -100,10 +103,10 @@ class Profile extends BaseController {
     /**
      * Deletes a member from the Database.
      *
-     * @param $memberID int The members identification.
+     * @param $memberID array The members identification.
      * @return RedirectResponse|Response
      */
-    public function deleteMember($memberID){
+    public function deleteMember(array $memberID){
         if ($this->hasMemberPrivileges() == false
             and $this->hasLeaderPrivileges() == false) {
             return $this->methodNotAllowed();

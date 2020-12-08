@@ -4,6 +4,7 @@
 {% endblock %}
 {% block content %}
 
+    {# Add member form #}
     <section class="ui segment">
         <form class="ui form" action="" method="post" enctype="multipart/form-data">
             <h4 class="ui dividing header">Add member</h4>
@@ -19,6 +20,7 @@
                     </label>
                 </div>
             </div>
+            <div class="two fields">
             <div class="field">
                 <label>Email
                     <input type="email" name="email" placeholder="olanordmann@mail.no">
@@ -29,33 +31,52 @@
                     <input type="tel" name="phone-number" pattern="[0-9]{8}" placeholder="12345678">
                 </label>
             </div>
+            </div>
+            <div class="three fields">
             <div class="field">
                 <label>Birth date
                     <input type="date" name="birth-date" min="1900-01-01" max="2010-01-01" placeholder>
                 </label>
             </div>
 
+                <div class="grouped fields">
+                    <label>Gender</label>
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            <input type="radio" value="male" name="gender">
+                            <label>Male</label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            <input type="radio" value="female" name="gender">
+                            <label>Female</label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            <input type="radio" value="other" name="gender">
+                            <label>Other</label>
+                        </div>
+                    </div>
+            </div>
             <div class="grouped fields">
-                <label>Gender</label>
+                <label>Member Subscription Payment Status</label>
                 <div class="field">
                     <div class="ui radio checkbox">
-                        <input type="radio" value="male" name="gender">
-                        <label>Male</label>
+                        <input type="radio" value="0" name="payment-status">
+                        <label>Not paid</label>
                     </div>
                 </div>
                 <div class="field">
                     <div class="ui radio checkbox">
-                        <input type="radio" value="female" name="gender">
-                        <label>Female</label>
-                    </div>
-                </div>
-                <div class="field">
-                    <div class="ui radio checkbox">
-                        <input type="radio" value="other" name="gender">
-                        <label>Other</label>
+                        <input type="radio" value="1" name="payment-status">
+                        <label>Paid</label>
                     </div>
                 </div>
             </div>
+            </div>
+
             <div class="two fields">
                 <div class="field">
                     <label>Street address
@@ -68,9 +89,10 @@
                     </label>
                 </div>
             </div>
+            <div class="two fields">
             <div class="field">
-                <label for="multi-select"> Interests </label>
-                <select name="interests[]" class="ui search selection dropdown" multiple="" id="multi-select">
+                <label for="interests-select"> Interests </label>
+                <select name="interests[]" class="ui search selection dropdown" multiple="" id="interests-select">
                     <option value="">Interests</option>
                     {% for interest in interests %}
                         <option value="{{ interest.interest_id }}">{{ interest.type }}</option>
@@ -78,31 +100,61 @@
 
                 </select>
             </div>
-            <script>
-                $('#multi-select')
-                    .dropdown()
-                ;
-            </script>
             <br>
+            <div class="field">
+                <label for="roles-select"> Roles </label>
+                <select name="roles[]" class="ui search selection dropdown" multiple="" id="roles-select">
+                    <option value="">Roles</option>
+                    {% for role in roles %}
+                        <option value="{{ role.role_id }}">{{ role.privilege | capitalize }}</option>
+                    {% endfor %}
+
+                </select>
+            </div>
+            </div>
             <button class="ui blue submit button" name="submit" type="submit">Add member</button>
             <div class="ui error message" id="error-add-member"></div>
         </form>
-        {% if session.getFlashbag().has('registrationError') %}
+
+        {# Error/Success message handling #}
+        {% if session.getFlashbag().has('addMemberError') %}
             <div class="ui error message">
-                <i class="close icon"></i>
                 <div class="header">
-                    Registration failed
+                    Adding member failed
                 </div>
                 <ul class="list">
-                    {% for message in session.getFlashbag().get('registrationError') %}
+                    {% for message in session.getFlashbag().get('addMemberError') %}
                         <li>{{ message }}</li>
                     {% endfor %}
                 </ul>
             </div>
         {% endif %}
-    </section>
 
+        {% if session.getFlashbag().has('addMemberSuccess') %}
+            <div class="ui success message">
+                <div class="header">
+                    Adding member was successful
+                </div>
+                <ul class="list">
+                    {% for message in session.getFlashbag().get('addMemberSuccess') %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+    </section>
     <script>
+
+        // initialises dropdown menus
+            $('#interests-select')
+            .dropdown();
+
+            $('#roles-select')
+            .dropdown();
+
+
+
         // form validation
         // ---------------------------------------
         $('.ui.form')

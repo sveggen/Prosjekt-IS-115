@@ -7,7 +7,7 @@ namespace App\helpers;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class UploadFile {
+class FileHandler {
 
     const MB = 1048576;
     private $errorMessages = array();
@@ -38,8 +38,9 @@ class UploadFile {
                 //moves temporary file to members directory
                 $tempFile = $uploadedFile->move($profileDirPath, $filename);
 
-                //defines path to members directory and filename
-                $profileImagePath = $profileDirPath . $memberID . "-profile." . $tempFile->getExtension();
+                // defines path to members directory and assigns the file a unique id as filename to
+                // force update the image cache on website
+                $profileImagePath = $profileDirPath . uniqid() . "." . $tempFile->getExtension();
 
                 //moves file to members directory and renames file
                 $tempFile->move($profileDirPath, $profileImagePath);

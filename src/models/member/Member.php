@@ -4,10 +4,11 @@
 namespace App\models\member;
 
 
-
 use App\models\address\Address;
 use App\models\authentication\User;
 use App\models\Database;
+use App\models\interest\Interest;
+use App\models\role\Role;
 
 
 class Member extends Database {
@@ -18,6 +19,10 @@ class Member extends Database {
      */
     public function registerMember($memberData) {
         try {
+
+            //start transaction
+            //$this->getConnection()->autocommit(false);
+
             $addressID = (new Address)->addAddress($memberData['streetAddress'], $memberData['zipCode']);
 
             $memberID = $this->addMember($memberData['firstName'], $memberData['lastName'],
@@ -26,15 +31,45 @@ class Member extends Database {
 
             (new User)->registerUser($memberData['password'], $memberID);
 
-            $this->addMemberRoles($memberID, $memberData['role']);
+            (new Role)->addMemberRole($memberID, $memberData['role']);
 
-            $this->addMemberInterests($memberID, $memberData['interests']);
+            (new Interest)->addMemberInterests($memberID, $memberData['interests']);
 
+             // commit transaction if no exceptions are thrown
+            $this->getConnection()->commit();
+            $this->getConnection()->autocommit(true);
             return $memberID;
         } catch (\Exception $e) {
             return false;
         }
     }
+
+    public function adminRegisterMember($memberData){
+        try {
+
+            //start transaction
+            //$this->getConnection()->autocommit(false);
+
+            $addressID = (new Address)->addAddress($memberData['streetAddress'], $memberData['zipCode']);
+
+            $memberID = $this->addMember($memberData['firstName'], $memberData['lastName'],
+                $memberData['email'], $memberData['phoneNumber'], $memberData['paymentStatus'],
+                $addressID, $memberData['gender'], $memberData['birthDate']);
+
+
+            (new Role)->addMemberRoles($memberID, $memberData['roles']);
+            (new Interest)->addMemberInterests($memberID, $memberData['interests']);
+
+            // commit transaction if no exceptions are thrown
+            //$this->getConnection()->commit();
+            //$this->getConnection()->autocommit(true);
+            return $memberID;
+        } catch (\Exception $e) {
+            return false;
+        }
+
+    }
+
 
 
     /**
@@ -63,28 +98,6 @@ class Member extends Database {
         $result = $stmt->get_result();
         $stmt->close();
         return $result;
-    }
-
-    /**
-     * Adds a members interests to the DB.
-     * @param $memberID
-     * @param $interests
-     * @return bool
-     */
-    public function addMemberInterests($memberID, $interests): bool {
-        $sql = "INSERT INTO member_interest (fk_member_id, fk_interest_id) VALUES (?, ?)";
-        $this->getConnection()->begin_transaction();
-        foreach ($interests as $interest) {
-            $stmt = $this->getConnection()->prepare($sql);
-            $stmt->bind_param('is', $memberID, $interest);
-            $stmt->execute();
-            $stmt->close();
-        }
-        if ($this->getConnection()->commit()) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
 
@@ -136,6 +149,8 @@ class Member extends Database {
     }
 
     public function getTotalMembers(): int {
+
+        $this->getConnection()->autocommit(true);
         $sql = "SELECT COUNT(*) AS SUM FROM member_role 
                 WHERE fk_role_id = 3";
         $stmt = $this->getConnection()->prepare($sql);
@@ -158,7 +173,7 @@ class Member extends Database {
 
     public function getSingleMemberID(string $email){
         $sql = "SELECT member_id FROM member 
-                    WHERE email = ?";
+                WHERE email = ?";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bind_param('s', $email);
         $stmt->execute();
@@ -167,16 +182,6 @@ class Member extends Database {
         return $result['member_id'];
 }
 
-
-    public function addMemberRoles(int $memberID, int $roleID){
-        $sql = "INSERT INTO member_role (fk_member_id, fk_role_id) VALUES (?, ?)";
-        $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bind_param("ii", $memberID, $roleID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $stmt->close();
-        return $result;
-}
 
     public function getMembersSortPaymentStatus(int $paymentStatus){
         $sql = "SELECT * FROM member 
@@ -191,18 +196,6 @@ class Member extends Database {
         return $result;
     }
 
-    public function getSingleUserRoles(int $memberID){
-        $sql = "SELECT * FROM member_role 
-                JOIN role i on member_role.fk_role_id = i.role_id
-                JOIN member m on m.member_id = member_role.fk_member_id
-                WHERE member_id = ?";
-        $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bind_param('i', $memberID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $stmt->close();
-        return $result;
-    }
 
     /**
      * Deletes a member from the Database.
@@ -212,7 +205,7 @@ class Member extends Database {
      */
     public function deleteMember($memberID): int {
         $sql = "DELETE FROM member
-            WHERE member.member_id = ?";
+                WHERE member.member_id = ?";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bind_param('i', $memberID);
         $stmt->execute();

@@ -129,7 +129,7 @@ class Activity extends Database {
 
     public function removeActivity($activityID): int {
         $sql = "DELETE FROM activity
-                WHERE activity.activity_id= ?";
+                WHERE activity.activity_id = ?";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bind_param('i', $activityID);
         $stmt->execute();

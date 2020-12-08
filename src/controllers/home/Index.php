@@ -13,13 +13,10 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class Index extends BaseController {
 
     public function renderStartPage(): Response {
+
         $totalMembers = $this->getCurrentMemberTotal();
         $totalLeaders = $this->getCurrentLeaderTotal();
         $totalActivities = $this->getUpcomingActivitiesTotal();
-
-        $interests = array(2, 3);
-        $memberModel = new Member();
-        $memberModel->addMemberInterests(4, $interests);
 
         return new Response(
             $this->twig->render('pages/home/index.html.twig',

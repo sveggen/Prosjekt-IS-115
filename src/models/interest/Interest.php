@@ -28,4 +28,29 @@ class Interest extends Database {
         return $result;
     }
 
+    /**
+     * Adds a members interests to the DB.
+     * @param $memberID
+     * @param $interests
+     * @return bool
+     */
+    public function addMemberInterests($memberID, $interests): bool {
+        $sql = "INSERT INTO member_interest (fk_member_id, fk_interest_id) 
+                VALUES (?, ?)";
+        $this->getConnection()->begin_transaction();
+        foreach ($interests as $interest) {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->bind_param('is', $memberID, $interest);
+            $stmt->execute();
+            $stmt->close();
+        }
+        if ($this->getConnection()->commit()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
 }

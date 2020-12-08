@@ -36,7 +36,7 @@ class User extends Database {
      * @return array|null User's credentials.
      */
     public function getUserCredentials($email): ?array {
-        $sql = "SELECT  u.fk_member_id, u.password, m.email
+        $sql = "SELECT u.fk_member_id, u.password, m.email
                 FROM user u
                 LEFT JOIN member m on m.member_id = u.fk_member_id
                 WHERE email = ?";
@@ -112,32 +112,7 @@ class User extends Database {
         return $result;
     }
 
-    /**
-     * @return false|mysqli_result Array of all users in DB.
-     */
-    public function getAllUsers() {
-        $sql = "SELECT * FROM user";
-        $stmt = $this->getConnection()->prepare($sql);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $stmt->close();
-        return $result;
-    }
 
-    /**
-     * Removes user from DB.
-     * @param $userID
-     * @return int above 1 if user was removed from DB.
-     */
-    public function removeUser($userID): int {
-        $sql = "DELETE FROM user WHERE user_id = ?";
-        $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bind_param('i', $userID);
-        $stmt->execute();
-        $result = $stmt->affected_rows;
-        $stmt->close();
-        return $result;
-    }
 
     public function checkUserExistence($memberID): int {
         $sql = "SELECT COUNT(1) AS SUM
