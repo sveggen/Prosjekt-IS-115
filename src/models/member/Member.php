@@ -156,7 +156,7 @@ class Member extends Database {
     }
 
 
-    public function getSingleMemberID($email){
+    public function getSingleMemberID(string $email){
         $sql = "SELECT member_id FROM member 
                     WHERE email = ?";
         $stmt = $this->getConnection()->prepare($sql);
@@ -168,7 +168,7 @@ class Member extends Database {
 }
 
 
-    public function addMemberRoles($memberID, $roleID){
+    public function addMemberRoles(int $memberID, int $roleID){
         $sql = "INSERT INTO member_role (fk_member_id, fk_role_id) VALUES (?, ?)";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bind_param("ii", $memberID, $roleID);
@@ -178,7 +178,7 @@ class Member extends Database {
         return $result;
 }
 
-    public function getMembersSortPaymentStatus($paymentStatus){
+    public function getMembersSortPaymentStatus(int $paymentStatus){
         $sql = "SELECT * FROM member 
                 LEFT JOIN address a on member.fk_address_id = a.address_id
                 LEFT JOIN zip_code_register zcr on a.fk_zip_code_register = zcr.zip_code
@@ -191,7 +191,7 @@ class Member extends Database {
         return $result;
     }
 
-    public function getSingleUserRoles($memberID){
+    public function getSingleUserRoles(int $memberID){
         $sql = "SELECT * FROM member_role 
                 JOIN role i on member_role.fk_role_id = i.role_id
                 JOIN member m on m.member_id = member_role.fk_member_id
@@ -204,6 +204,23 @@ class Member extends Database {
         return $result;
     }
 
+    /**
+     * Deletes a member from the Database.
+     *
+     * @param $memberID
+     * @return int
+     */
+    public function deleteMember($memberID): int {
+        $sql = "DELETE FROM member
+            WHERE member.member_id = ?";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('i', $memberID);
+        $stmt->execute();
+        $result = $stmt->affected_rows;
+        $stmt->close();
+        return $result;
+
+    }
 
 
 }

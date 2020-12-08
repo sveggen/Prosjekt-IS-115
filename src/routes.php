@@ -16,11 +16,12 @@ return [
     ['GET', '/retrieve-account', ['App\controllers\member\RetrieveAccount', 'renderRetrieveAccountPage']],
     ['POST', '/retrieve-account', ['App\controllers\member\RetrieveAccount', 'retrieveAccount']],
 
-    // ---------------- authenticated ----------------
+    // ---------------- authenticated member/leader ----------------
     ['GET', '/logout', ['App\controllers\authentication\Logout', 'logout']],
 
     ['POST', '/profile/{id:\d+}', ['App\controllers\member\Profile', 'updateProfileImage']],
     ['GET', '/profile/{id:\d+}', ['App\controllers\member\Profile', 'renderMemberProfile']],
+    ['GET', '/profile/{id:\d+}/delete', ['App\controllers\member\Profile', 'deleteMember']],
 
     ['GET', '/activities', ['App\controllers\activity\Activities', 'renderAllActivities']],
     ['POST', '/activities', ['App\controllers\activity\Activities', 'newActivity']],
@@ -28,7 +29,7 @@ return [
     ['GET', '/activities/{id:\d+}/join', ['App\controllers\activity\SingleActivity', 'joinActivity']],
     ['GET', '/activities/{id:\d+}/leave', ['App\controllers\activity\SingleActivity', 'leaveActivity']],
 
-    // ------------- admin pages --------------------
+    // ------------- leader pages --------------------
     ['GET', '/add-member', ['App\controllers\member\AddMember', 'renderAddMemberPage']],
 
     ['GET', '/activities/{id:\d+}/remove', ['App\controllers\activity\SingleActivity', 'removeActivity']],

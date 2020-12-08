@@ -31,10 +31,22 @@ class AddMember extends BaseController {
      */
     public function addMember(): Response {
 
-        // get request paramters
+        $memberData = [
+            'firstName' => $this->request->get('first-name'),
+            'lastName' => $this->request->get('last-name'),
+            'email' => $this->request->get('email'),
+            'phoneNumber' => $this->request->get('phone-number'),
+            'birthDate' => $this->request->get('birth-date'),
+            'gender' => $this->request->get('gender'),
+            'streetAddress' => $this->request->get('street-address'),
+            'zipCode' => $this->request->get('zip-code'),
+            'interests' => $this->request->get('interests'),
+            'paymentStatus' => $this->request->get('payment-status'),
+            'role' => $this->request->get('roles'),
+        ];
 
         $memberModel = new Member();
-        $addMember = $memberModel->adminMemberRegistration();
+        $addMember = $memberModel->adminRegisterMember($memberData);
 
         $session = new Session();
 

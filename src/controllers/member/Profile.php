@@ -76,10 +76,10 @@ class Profile extends BaseController {
     /**
      * Updates the users profile image.
      *
-     * @param $profileID
+     * @param int $profileID
      * @return Response
      */
-    public function updateProfileImage($profileID): Response {
+    public function updateProfileImage(int $profileID): Response {
         $session = new Session();
         $memberID = $session->get('memberID');
         $image = $this->request->files->get('image');
@@ -95,5 +95,32 @@ class Profile extends BaseController {
             }
         }
         return $this->renderMemberProfile($profileID);
+    }
+
+    /**
+     * Deletes a member from the Database.
+     *
+     * @param $memberID int The members identification.
+     * @return RedirectResponse|Response
+     */
+    public function deleteMember($memberID){
+        if ($this->hasMemberPrivileges() == false
+            and $this->hasLeaderPrivileges() == false) {
+            return $this->methodNotAllowed();
+        }
+
+        $session = new Session();
+
+        $memberModel = new Member();
+        $deleteMember = $memberModel->deleteMember($memberID['id']);
+
+        if ($deleteMember){
+            return new RedirectResponse("/");
+        } else {
+            $session->getFlashBag()->add('profileError','Could not delete profile, please try again');
+            return $this->renderMemberProfile($memberID);
+        }
+
+
     }
 }

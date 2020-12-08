@@ -5,13 +5,11 @@ namespace App\models;
 
 use mysqli;
 
-abstract class Database
-{
+abstract class Database {
 
     private $database;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->database = $this->connect();
     }
 
@@ -38,4 +36,5 @@ abstract class Database
     protected function getConnection(): mysqli {
         return $this->database;
     }
+
 }

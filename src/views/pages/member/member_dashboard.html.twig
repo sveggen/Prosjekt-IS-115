@@ -53,7 +53,7 @@
                         <option value="">None selected ..</option>
                         {% for activity in activities %}
                             <option value="{{ activity.activity_id }}">
-                                {{ activity.title }} {{ activity.start_time | date("d. m. y.") }}</option>
+                                {{ activity.title }} - {{ activity.start_time | date("d. m. y.") }}</option>
                         {% endfor %}
 
                     </select>
@@ -69,8 +69,8 @@
         </div>
             </div>
         </div>
-            <section>
-                <section class="ui center aligned middle aligned segment">
+
+        <section class="ui center aligned middle aligned segment">
 
         {# Table listing members #}
         <table class="ui celled table" id="membersTable">
@@ -98,7 +98,7 @@
                     <td data-label="Email">{{ member.email }}</td>
                     <td data-label="Street Address">{{ member.street_address }}, {{ member.zip_code }}</td>
                     <td data-label="City"> {{ member.city | title }}</td>
-                    <td data-label="Registered">{{ member.time_of_registration |date("d. M. Y. H:i") }}</td>
+                    <td data-label="Registered">{{ member.time_of_registration |date("d. M. Y.") }}</td>
                 </tr>
 
                 {% endfor %}
@@ -111,7 +111,7 @@
                     <th></th>
                     <th></th>
                     <th colspan="4">
-                        <button class="ui button" id="openMailModal">
+                        <button class="ui button" id="openMailModal" hidden>
                             Send Email
                         </button>
                         <button class="ui small button" id="markAll">
@@ -171,13 +171,6 @@
 
         //defines the checkboxes on the site
         const checkboxes = $("input[type='checkbox']");
-
-        const button = $('.ui.button')
-
-        //enables all disabled buttons when a checkbox have been marked
-        checkboxes.click(function () {
-            button.attr("disabled", !checkboxes.is(":checked"));
-        });
 
 
         //mark all
