@@ -13,6 +13,14 @@
                     <div class="sub header"></div>
                 </div>
             </h2>
+
+            {% if session.get('memberID') != data.member_id %}
+                <a href="/profile/{{ data.member_id }}/delete" class="negative ui button"
+                   onclick="return confirm('Are you sure you want to delete this member?');">
+                    <i class="trash alternate middle aligned icon"></i>
+                    Delete</a>
+            {% endif %}
+
             <div class="ui horizontal segments">
                 <div class="ui segment">
                     <div class="ui header">Public profile</div>
@@ -144,7 +152,7 @@
                         </script>
 
                         <br>
-                        <button class="ui blue submit button" name="submit" type="submit">Register</button>
+                        <button class="ui blue submit button" name="submit" type="submit">Edit member</button>
                         <div class="ui error message" id="error-register"></div>
                     </form>
 

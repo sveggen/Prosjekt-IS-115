@@ -35,16 +35,20 @@ class MemberDashboard extends BaseController {
         }
     }
 
+    /**
+     * Renders the Member Dashboard.
+     *
+     * @return Response
+     */
     public function renderMemberDashboard(): Response {
         if ($this->hasLeaderPrivileges() == false) {
             return $this->methodNotAllowed();
         }
 
+        $activities = (new Activity)->getAllFutureActivities();
 
-        $activityModel = new Activity();
-        $activities = $activityModel->getAllFutureActivities();
+        $listMembers = (new Member)->getAllMembersAndAddress();
 
-       $listMembers =  (new Member)->getAllMembersAndAddress();
         $interests = (new Interest)->getAllInterests();
 
         return new Response(
@@ -55,6 +59,12 @@ class MemberDashboard extends BaseController {
     }
 
 
+    /**
+     * Redirects a search query to the respective
+     * function based on the request name
+     *
+     * @return Response
+     */
     public function distributeSearchQuery(): Response {
         if ($this->hasLeaderPrivileges() == false) {
             return $this->methodNotAllowed();
@@ -69,16 +79,24 @@ class MemberDashboard extends BaseController {
             case "activities":
                 return $this->filterOnActivity();
 
-        } return $this->renderMemberDashboard();
+        }
+        return $this->renderMemberDashboard();
 
     }
 
+    /**
+     * Filters the member list on members who have paid/not paid
+     * their member fee.
+     *
+     * @return Response
+     */
     private function filterPaymentStatus(): Response {
-        $memberModel = new Member();
         $query = $this->request->query->get('payment-status');
+
+        $memberModel = new Member();
         $membersSortedPayment = $memberModel->getMembersSortPaymentStatus($query);
 
-        if ($query == 1){
+        if ($query == 1) {
             $searchQuery = "Payment status - Paid";
         } elseif ($query == 0) {
             $searchQuery = "Payment status - Not paid";
@@ -87,38 +105,19 @@ class MemberDashboard extends BaseController {
         return $this->renderSearchResults($membersSortedPayment, $searchQuery);
     }
 
-    private function filterOnInterest(): Response {
-        $memberModel = new Member();
-        $interestID = $this->request->query->get('interests')[0];
-        $membersWithInterest = $memberModel->getAllMembersWithSpecificInterest($interestID);
-
-        $interestModel = new Interest();
-        $interestName = $interestModel->getInterestName($interestID)['type'];
-
-        $searchQuery = "Interest - " . $interestName;
-
-
-        return $this->renderSearchResults($membersWithInterest, $searchQuery);
-    }
-
-    private function filterOnActivity(): Response {
-        $activityModel = new Activity();
-
-        $activityID = $this->request->query->get('activities')[0];
-        $membersWithActivity = $activityModel->getActivityAttendees($activityID);
-
-        $searchQuery = "Interest - " . $membersWithActivity->fetch_assoc()['title'];
-
-
-        return $this->renderSearchResults($membersWithActivity, $searchQuery);
-    }
-
+    /**
+     * Render the Member Dashboard with a specific member listing,
+     * and a string representing the search query.
+     *
+     * @param $memberList
+     * @param $searchQueryName
+     * @return Response
+     */
     private function renderSearchResults($memberList, $searchQueryName): Response {
-        $activityModel = new Activity();
-        $activities = $activityModel->getAllFutureActivities();
 
-        $interestModel = new Interest();
-        $interests = $interestModel->getAllInterests();
+        $activities = (new Activity)->getAllFutureActivities();
+
+        $interests = (new Interest)->getAllInterests();
 
         return new Response(
             $this->twig->render('pages/member/member_dashboard.html.twig',
@@ -126,6 +125,46 @@ class MemberDashboard extends BaseController {
                     'members' => $memberList,
                     'interests' => $interests,
                     'activities' => $activities]));
+    }
+
+    /**
+     * Filters the member list on all members who
+     * likes a specific interest.
+     *
+     * @return Response
+     */
+    private function filterOnInterest(): Response {
+        $interestID = $this->request->query->get('interests')[0];
+
+        $memberModel = new Member();
+        $membersWithInterest = $memberModel->getAllMembersWithSpecificInterest($interestID);
+
+        $interestModel = new Interest();
+        $interestName = $interestModel->getInterestName($interestID)['type'];
+
+        $searchQuery = "Interest - " . $interestName;
+
+        return $this->renderSearchResults($membersWithInterest, $searchQuery);
+    }
+
+    /**
+     * Filters the member list on all members
+     * which are attending a specific activity.
+     *
+     * @return Response
+     */
+    private function filterOnActivity(): Response {
+        $activityID = $this->request->query->get('activities')[0];
+
+        $activityModel = new Activity();
+        $membersWithActivity = $activityModel->getActivityAttendees($activityID);
+        $activity = $activityModel->getActivity($activityID)->fetch_assoc();
+        $activityTitle = $activity['title'];
+        $activityStartDate = date("d. m. y. ", strtotime($activity['start_time']));
+
+        $searchQuery = "Activity - " . $activityTitle . " " . $activityStartDate;
+
+        return $this->renderSearchResults($membersWithActivity, $searchQuery);
     }
 
 }

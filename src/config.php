@@ -3,10 +3,14 @@
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
 require_once __DIR__ . '/../vendor/autoload.php';
+
+// sets default timezone
+date_default_timezone_set('CET');
 
 // Initialises the request variable with all the PHP-super globals.
 $request = Request::createFromGlobals();
@@ -28,6 +32,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
 // Twig setup for the dispatcher
 $loader = new FilesystemLoader(__DIR__ . '/views/');
 $twig = new Environment($loader);
+$twig->addGlobal('session', new Session);
 
 
 // Dispatcher that redirects the request to the correct Controller.
