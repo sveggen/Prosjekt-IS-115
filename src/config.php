@@ -20,7 +20,6 @@ $request = Request::createFromGlobals();
 $dotenv = new Dotenv();
 $dotenv->load(__DIR__ . '/../.env');
 
-
 // Fetches all the website's routes
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     $routes = require __DIR__ . '/routes.php';

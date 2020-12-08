@@ -8,7 +8,7 @@ use App\models\interest\Interest;
 use App\models\member\Member;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use App\helpers\UploadFile;
+use App\helpers\FileHandler;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class Register extends BaseController {
@@ -48,7 +48,7 @@ class Register extends BaseController {
             'gender' => $this->request->get('gender'),
             'streetAddress' => $this->request->get('street-address'),
             'zipCode' => $this->request->get('zip-code'),
-            'interests' => $this->request->get('interests'),
+            'interests' => (array)$this->request->get('interests'),
             'paymentStatus' => 0,
                 'role' => 3, // ordinary member,
         ];
@@ -58,7 +58,7 @@ class Register extends BaseController {
         $registerMember = $memberModel->registerMember($memberData);
 
         if ($registerMember) {
-            $fileUpload = new UploadFile();
+            $fileUpload = new FileHandler();
             $fileUpload->uploadProfileImage($image, $registerMember);
             return new RedirectResponse('http://localhost:8081/login');
         } else {

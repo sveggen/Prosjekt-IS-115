@@ -7,6 +7,7 @@ use App\controllers\BaseController;
 
 use App\models\authentication\User;
 use App\models\member\Member;
+use App\models\role\Role;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -77,8 +78,8 @@ class Login extends BaseController {
      * assigns this role to the session object
      */
     private function getUserRole($memberID): string {
-        $memberModel = new Member();
-        $userRoles = $memberModel->getSingleUserRoles($memberID);
+        $roleModel = new Role();
+        $userRoles = $roleModel->getSingleMemberRoles($memberID);
 
         // evaluates the users roles - assigns the users role with
         // the highest privilege to the session object.
