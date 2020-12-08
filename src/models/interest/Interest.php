@@ -17,4 +17,15 @@ class Interest extends Database {
         return $result;
     }
 
+    public function getInterestName($interestID): ?array {
+        $sql = "SELECT type FROM interest
+                WHERE interest_id = ?";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('i', $interestID);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return $result;
+    }
+
 }

@@ -73,6 +73,8 @@ class Activity extends Database {
     public function getActivityAttendees($id){
         $sql = "SELECT * FROM member_activity 
                 JOIN member m on member_activity.fk_member_id = m.member_id
+                LEFT JOIN address a on m.fk_address_id = a.address_id
+                LEFT JOIN zip_code_register zcr on a.fk_zip_code_register = zcr.zip_code
                 WHERE member_activity.fk_activity_id = ?";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bind_param('i', $id);
