@@ -1,7 +1,7 @@
 <?php
 
-// all the websites routes, listed in the format of request-type, URL-path with
-// accepted parameters and their format, path to handling controller, name of handling function.
+// all the websites routes, listed in the format of 1. request-type, 2. URL-path with
+// accepted parameters and their format, 3. path to handling controller, 4. name of handling function.
 return [
 
     // --------------- unauthenticated ------------
@@ -19,20 +19,25 @@ return [
     // ---------------- authenticated -  member/leader ----------------
     ['GET', '/logout', ['App\controllers\authentication\Logout', 'logout']],
 
-    ['POST', '/profile/{id:\d+}', ['App\controllers\member\Profile', 'updateProfileImage']],
-    ['GET', '/profile/{id:\d+}', ['App\controllers\member\Profile', 'renderMemberProfile']],
-    ['GET', '/profile/{id:\d+}/delete', ['App\controllers\member\Profile', 'deleteMember']],
+    ['POST', '/profile/{memberID:\d+}', ['App\controllers\member\Profile', 'updateProfileImage']],
+    ['POST', '/profile/{memberID:\d+}/update', ['App\controllers\member\Profile', 'updateProfile']],
+    ['POST', '/profile/{memberID:\d+}/update-password', ['App\controllers\member\Profile', 'updatePassword']],
+    ['GET', '/profile/{memberID:\d+}', ['App\controllers\member\Profile', 'renderMemberProfile']],
 
     ['GET', '/activities', ['App\controllers\activity\Activities', 'renderAllActivities']],
-    ['GET', '/activities/{id:\d+}', ['App\controllers\activity\SingleActivity', 'renderSingleActivity']],
-    ['GET', '/activities/{id:\d+}/join', ['App\controllers\activity\SingleActivity', 'joinActivity']],
-    ['GET', '/activities/{id:\d+}/leave', ['App\controllers\activity\SingleActivity', 'leaveActivity']],
+    ['GET', '/activities/{activityID:\d+}', ['App\controllers\activity\SingleActivity', 'renderSingleActivity']],
+    ['GET', '/activities/{activityID:\d+}/join', ['App\controllers\activity\SingleActivity', 'joinActivity']],
+    ['GET', '/activities/{activityID:\d+}/leave', ['App\controllers\activity\SingleActivity', 'leaveActivity']],
 
     // ------------- authenticated - leader --------------------
     ['GET', '/add-member', ['App\controllers\leader\AddMember', 'renderAddMemberPage']],
     ['POST', '/add-member', ['App\controllers\leader\AddMember', 'addMember']],
 
-    ['GET', '/activities/{id:\d+}/remove', ['App\controllers\activity\SingleActivity', 'removeActivity']],
+    ['POST', '/profile/{memberID:\d+}/update-role', ['App\controllers\member\Profile', 'updateRoles']],
+    ['GET', '/profile/{memberID:\d+}/delete', ['App\controllers\member\Profile', 'deleteMember']],
+
+    ['GET', '/activities/{activityID:\d+}/remove/{memberID:\d+}', ['App\controllers\activity\SingleActivity', 'removeMemberFromActivity']],
+    ['GET', '/activities/{activityID:\d+}/remove', ['App\controllers\activity\SingleActivity', 'removeActivity']],
     ['POST', '/activities/add', ['App\controllers\activity\Activities', 'newActivity']],
 
     ['GET', '/dashboard', ['App\controllers\leader\MemberDashboard', 'renderMemberDashboard']],

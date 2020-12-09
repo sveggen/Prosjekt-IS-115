@@ -14,7 +14,7 @@
                 </div>
             </h2>
 
-            {# Error/Success message handling #}
+            {# Error message handling #}
             {% for message in session.getFlashbag().get('profileUpdateError') %}
 
                 <div class="ui negative message">
@@ -24,7 +24,9 @@
                 </div>
 
             {% endfor %}
-            {% for message in session.getFlashbag().get('UpdateSuccess') %}
+
+            {# Success message handling #}
+            {% for message in session.getFlashbag().get('profileUpdateSuccess') %}
 
                 <div class="ui success message">
                     <ul class="list">
@@ -34,7 +36,7 @@
 
             {% endfor %}
 
-            {# Show delete profile button if user is a leader and not his/her own account #}
+            {# Show delete profile button if user is a leader and this is not his/her own account #}
             {% if session.get('memberID') != data.member_id and session.get('role') == 'leader' %}
                 <a href="/profile/{{ data.member_id }}/delete" class="negative ui right floated button"
                    onclick="return confirm('Are you sure you want to delete this member?');">
@@ -50,130 +52,231 @@
                     {# Include profile page #}
                     {% include './includes/member/public_profile.include.html.twig' %}
 
-                {# Update profile forms #}
+                    {#- ------- Update profile forms -----  -#}
                 </div>
                 <div class="ui segment">
                     <div class="ui header">Edit Profile</div>
                     <div class="ui divider"></div>
 
                     {# Update profile image form #}
-                    <h4 class="ui dividing header">Change Profile Picture</h4>
-                    <form action="/profile/{{ data.member_id }}" method="post" enctype="multipart/form-data">
-                        <div class="field">
-                            <label>Profile image
-                                <input type="file" name="image">
-                            </label>
-                        </div>
-                        <br>
-                        <button class="ui blue submit button" name="submit" type="submit">Change Profile Picture</button>
-                    </form>
-                    <div class="ui divider"></div>
+                    <div class="ui segment">
+                        <p></p>
+                        <div class="ui divider"></div>
+                        <p></p>
+                        <h4 class="ui horizontal divider">
+                            Edit Profile image
+                        </h4>
+                        <form action="/profile/{{ data.member_id }}" method="post" enctype="multipart/form-data">
+                            <div class="field">
+                                <label>Profile image
+                                    <input type="file" name="image">
+                                </label>
+                            </div>
+                            <br>
+                            <button class="ui blue submit button" name="submit" type="submit">Change Profile Picture
+                            </button>
+                        </form>
+                    </div>
+
+                    {# Update password #}
+                    <div class="ui segment">
+                        <p></p>
+                        <div class="ui divider"></div>
+                        <p></p>
+                        <h4 class="ui horizontal divider">
+                            Edit password
+                        </h4>
+                        <form class="ui form" action="/profile/{{ data.member_id }}/update-password" method="post">
+                            <div class="field">
+                                <label>Old password
+                                    <input type="password" name="old-password" placeholder="*******">
+                                </label>
+                            </div>
+                            <div class="two fields">
+                                <div class="field">
+                                    <label>New password
+                                        <input type="password" name="new-password" placeholder="*******">
+                                    </label>
+                                </div>
+
+                                <div class="field">
+                                    <label>Confirm new password
+                                        <input type="password" name="confirm-password" placeholder="*******">
+                                    </label>
+                                </div>
+                            </div>
+                            <button class="ui blue submit button" name="submit" type="submit">Change Password
+                            </button>
+                        </form>
+                    </div>
+
 
                     {# Update profile information form #}
-                    <form class="ui form" action="" method="post">
-                        <h4 class="ui dividing header">Edit profile information</h4>
-                        <div class="two fields">
-                            <div class="field">
-                                <label>First name
-                                    <input type="text" name="first-name" placeholder="Ola">
-                                </label>
-                            </div>
-                            <div class="field">
-                                <label>Last name
-                                    <input type="text" name="last-name" placeholder="Nordmann">
-                                </label>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label>Email
-                                <input type="email" name="email" placeholder="olanordmann@mail.no">
-                            </label>
-                        </div>
-                        <div class="two fields">
-                        <div class="field">
-                            <label>Password
-                                <input type="password" name="password" placeholder="*******">
-                            </label>
-                        </div>
-                        <div class="field">
-                            <label>Confirm password
-                                <input type="password" name="confirm-password" placeholder="*******">
-                            </label>
-                        </div>
-                        </div>
-                        <div class="field">
-                            <label>Phone number
-                                <input type="tel" name="phone-number" pattern="[0-9]{8}" placeholder="12345678">
-                            </label>
-                        </div>
-                        <div class="two fields">
-                        <div class="field">
-                            <label>Birth date
-                                <input type="date" name="birth-date" min="1900-01-01" max="2010-01-01" placeholder>
-                            </label>
-                        </div>
-
-                        <div class="grouped fields">
-                            <label>Gender</label>
-                            <div class="field">
-                                <div class="ui radio checkbox">
-                                    <input type="radio" value="male" name="gender">
-                                    <label>Male</label>
+                    <div class="ui segment">
+                        <p></p>
+                        <div class="ui divider"></div>
+                        <p></p>
+                        <h4 class="ui horizontal divider">
+                            Edit Profile Information
+                        </h4>
+                        <form class="ui form" action="/profile/{{ data.member_id }}/update" method="post">
+                            <div class="two fields">
+                                <div class="field">
+                                    <label>First name
+                                        <input type="text" name="first-name" value="{{ data.first_name }}"
+                                               placeholder="Ola">
+                                    </label>
+                                </div>
+                                <div class="field">
+                                    <label>Last name
+                                        <input type="text" name="last-name" value="{{ data.last_name }}"
+                                               placeholder="Nordmann">
+                                    </label>
                                 </div>
                             </div>
                             <div class="field">
-                                <div class="ui radio checkbox">
-                                    <input type="radio" value="female" name="gender">
-                                    <label>Female</label>
-                                </div>
-                            </div>
-                            <div class="field">
-                                <div class="ui radio checkbox">
-                                    <input type="radio" value="other" name="gender">
-                                    <label>Other</label>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                        <div class="two fields">
-                            <div class="field">
-                                <label>Street address
-                                    <input type="text" name="street-address" placeholder="Volleveien 12">
+                                <label>Email
+                                    <input type="email" name="email" value="{{ data.email }}"
+                                           placeholder="olanordmann@mail.no">
                                 </label>
                             </div>
                             <div class="field">
-                                <label>Zip code
-                                    <input type="text" name="zip-code" placeholder="0001">
+                                <label>Phone number
+                                    <input type="tel" name="phone-number" value="{{ data.phone_number }}"
+                                           pattern="[0-9]{8}" placeholder="12345678">
                                 </label>
                             </div>
-                        </div>
-                        <div class="field">
-                            <label for="multi-select"> Interests </label>
-                            <select name="interests[]" class="ui search selection dropdown" multiple="" id="multi-select">
-                                <option value="">Interests</option>
-                                {% for availableInterest in allAvailableActivities %}
-                                    <option value="{{ availableInterest.interest_id }}">{{ availableInterest.type }}</option>
-                                {% endfor %}
+                            <div class="two fields">
+                                <div class="field">
+                                    <label>Birth date
+                                        <input type="date" name="birth-date" value="{{ data.birth_date }}"
+                                               min="1900-01-01" max="2010-01-01" placeholder>
+                                    </label>
+                                </div>
 
-                            </select>
-                        </div>
+                                <div class="grouped fields">
+                                    <label>Gender</label>
+                                    <div class="field">
+                                        <div class="ui radio checkbox">
+                                            <input type="radio" value="male" name="gender"
+                                                    {% if data.gender == "male" %}
+                                                        checked="checked"
+                                                    {% endif %}
+                                            ><label>Male</label>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui radio checkbox">
+                                            <input type="radio" value="female" name="gender"
+                                                    {% if data.gender == "female" %}
+                                                        checked="checked"
+                                                    {% endif %}
+                                            ><label>Female</label>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui radio checkbox">
+                                            <input type="radio" value="other" name="gender"
+                                                    {% if data.gender == "other" %}
+                                                        checked="checked"
+                                                    {% endif %}
+                                            ><label>Other</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="two fields">
+                                <div class="field">
+                                    <label>Street address
+                                        <input type="text" name="street-address" value="{{ data.street_address }}"
+                                               placeholder="Volleveien 12">
+                                    </label>
+                                </div>
+                                <div class="field">
+                                    <label>Zip code
+                                        <input type="text" name="zip-code" value="{{ data.zip_code }}"
+                                               placeholder="0001">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label for="multi-select"> Interests </label>
+                                <select name="interests[]" class="ui search selection dropdown" multiple=""
+                                        id="multi-select-interests">
+                                    <option value="">Interests</option>
+                                    {% for availableInterest in availableInterests %}
+                                        <option value="{{ availableInterest.interest_id }}"
+                                                {% for memberInterest in interests %}
+                                                    {# if member is already registered with the the interest
+                                                    in the database - mark it as selected in the dropdown menu #}
+                                                    {% if memberInterest.interest_id == availableInterest.interest_id %}
+                                                        selected
+                                                    {% endif %}
+                                                {% endfor %}
+                                        >
+                                            {{ availableInterest.type }}
+                                        </option>
+                                    {% endfor %}
 
-                        <script>
-                            $('#multi-select')
-                                .dropdown()
-                            ;
-                        </script>
 
-                        <br>
-                        <button class="ui blue submit button" name="submit" type="submit">Edit member</button>
-                        <div class="ui error message" id="error-register"></div>
-                    </form>
+                                </select>
+                            </div>
+                            <br>
+                            <button class="ui blue submit button" name="submit" type="submit">Edit member</button>
+                            <div class="ui error message" id="error-register"></div>
+                        </form>
+
+                    </div>
+
+                    {# Show "update roles"-form if the member is a leaer #}
+                    {% if session.get('role') == 'leader' %}
+                    <div class="ui segment">
+                        <p></p>
+                        <div class="ui divider"></div>
+                        <p></p>
+                        <h4 class="ui horizontal divider">
+                            Update Roles
+                        </h4>
+                        <form class="ui form" action="/profile/{{ data.member_id }}/update-role" method="post">
+                            <div class="field">
+                                <label for="multi-select-roles"> Roles </label>
+                                <select name="roles[]" class="ui search selection dropdown" multiple=""
+                                        id="multi-select-roles">
+                                    <option value="">Roles</option>
+                                    {% for availableRole in availableRoles %}
+                                        <option value="{{ availableRole.role_id }}"
+                                                {% for memberRole in memberRoles %}
+                                                    {# if member is already registered with the the role
+                                                    in the database - mark it as selected in the dropdown menu #}
+                                                    {% if memberRole.role_id == availableRole.role_id %}
+                                                        selected
+                                                    {% endif %}
+                                                {% endfor %}
+                                        >
+                                            {{ availableRole.privilege | capitalize }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button class="ui blue submit button" name="submit" type="submit">Edit Roles</button>
+                        </form>
+                    </div>
+                    {# End of "update role"-form #}
+                    {% endif %}
 
                 </div>
             </div>
         </section>
 
         <script>
+            // initialises dropdowns
+            $('#multi-select-interests')
+                .dropdown();
+
+            $('#multi-select-roles')
+                .dropdown();
+
+            // form validation to check if passwords match
             $('.ui.form')
                 .form({
                     fields: {
@@ -181,7 +284,7 @@
                             identifier: 'confirm-password',
                             rules: [
                                 {
-                                    type: 'match[password]',
+                                    type: 'match[new-password]',
                                     prompt: 'Passwords do not match'
                                 },
                             ]

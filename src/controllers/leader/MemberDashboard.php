@@ -14,16 +14,22 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class MemberDashboard extends BaseController {
 
-    public function sendEmailToMarked(): Response {
+    /**
+     * Sends an email to all the members
+     * who have been checked in the checkbox.
+     *
+     * @return Response
+     */
+    public function sendEmailToSelected(): Response {
         if ($this->hasLeaderPrivileges() == false) {
             return $this->methodNotAllowed();
         }
 
-        $sendEmail = new EmailSender();
-        $recipients = $this->request->get('markedMembers');
+        $recipients = $this->request->get('selectedMembers');
         $subject = $this->request->get('subject');
         $content = $this->request->get('content');
 
+        $sendEmail = new EmailSender();
         if ($sendEmail->sendEmail($recipients, $subject, $content)) {
             (new Session)->getFlashBag()->add('dashboardSuccess', 'Email was sent successfully');
             return $this->renderMemberDashboard();
@@ -45,19 +51,11 @@ class MemberDashboard extends BaseController {
             return $this->methodNotAllowed();
         }
 
-        $activities = (new Activity)->getAllFutureActivities();
-
+        $searchQuery = "";
         $listMembers = (new Member)->getAllMembersAndAddress();
 
-        $interests = (new Interest)->getAllInterests();
-
-        return new Response(
-            $this->twig->render('pages/leader/member_dashboard.html.twig',
-                ['members' => $listMembers,
-                    'interests' => $interests,
-                    'activities' => $activities]));
+        return $this->renderSearchResults($listMembers, $searchQuery);
     }
-
 
     /**
      * Redirects a search query to the respective
@@ -78,7 +76,8 @@ class MemberDashboard extends BaseController {
                 return $this->filterOnInterest();
             case "activities":
                 return $this->filterOnActivity();
-
+            case "gender":
+                return $this->filterOnGender();
         }
         return $this->renderMemberDashboard();
 
@@ -94,7 +93,7 @@ class MemberDashboard extends BaseController {
         $query = $this->request->query->get('payment-status');
 
         $memberModel = new Member();
-        $membersSortedPayment = $memberModel->getMembersSortPaymentStatus($query);
+        $membersSortedByPayment = $memberModel->getMembersSortPaymentStatus($query);
 
         if ($query == 1) {
             $searchQuery = "Payment status - Paid";
@@ -102,7 +101,7 @@ class MemberDashboard extends BaseController {
             $searchQuery = "Payment status - Not paid";
         }
 
-        return $this->renderSearchResults($membersSortedPayment, $searchQuery);
+        return $this->renderSearchResults($membersSortedByPayment, $searchQuery);
     }
 
     /**
@@ -165,6 +164,22 @@ class MemberDashboard extends BaseController {
         $searchQuery = "Activity - " . $activityTitle . " " . $activityStartDate;
 
         return $this->renderSearchResults($membersWithActivity, $searchQuery);
+    }
+
+    /**
+     * Filters the member list on a given gender.
+     *
+     * @return Response
+     */
+    private function filterOnGender(): Response {
+        $gender = $this->request->query->get('gender');
+
+        $memberModel = new Member();
+        $membersWithSpecificGender = $memberModel->getMembersWithSpecificGender($gender);
+
+        $searchQuery = "Gender - " . ucfirst($gender);
+
+        return $this->renderSearchResults($membersWithSpecificGender, $searchQuery);
     }
 
 }

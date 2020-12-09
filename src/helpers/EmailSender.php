@@ -10,12 +10,13 @@ use PHPMailer\PHPMailer\Exception;
 class EmailSender {
 
     /**
-     * Sends an email to one or persons.
+     * Sends an email to one or more persons from a predefined
+     * Gmail-address.
      *
      * @param $recipient array | string One or more recipients
-     * @param $subject string The email's subject.
-     * @param $content string The emails content in html format.
-     * @return bool
+     * @param $subject string The email's subject
+     * @param $content string The email's content in HTML-format
+     * @return bool True if email was sent, false if not
      */
     public function sendEmail($recipient, string $subject, string $content): bool {
 
@@ -30,15 +31,14 @@ class EmailSender {
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; //sets encryption to TLS
             $mail->Port = 587; //TCP port to connect to
 
-            // sender username (Neo Youthclub's gmail)
+            // Sender's gmail account (Neo Youth Club's gmail)
             $mail->setFrom($_ENV['MAIL_USERNAME'], 'Neo Youthclub');
 
             $mail->isHTML(true); // sets content to html format
             $mail->Subject = $subject;
             $mail->Body = $content;
 
-            // loops over the array if there are multiple recipients
-            // and sends the email to all of them
+            // sends the email to multiple recipients
             if (is_array($recipient)) {
                 foreach ($recipient as $member) {
                     $mail->addAddress($member);

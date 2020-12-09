@@ -13,7 +13,6 @@ class Validate {
     private $errorMessages = array();
 
 
-
     /**
      * Validates a given email.
      *
@@ -34,6 +33,25 @@ class Validate {
             $memberModel = new Member();
             $emailInUse = $memberModel->getSingleMemberID($email);
             if ($emailInUse) {
+                $error = "The email address is already taken";
+                return array_push($this->errorMessages, $error);
+            }
+        } return false;
+    }
+
+
+    /**
+     * Compares if the two emails are the same
+     *
+     * @param $ownEmail
+     * @param $newEmail
+     * @return false|int
+     */
+    public function validateOwnEmailOrNotInUse($ownEmail, $newEmail){
+        if ($this->validateEmail($newEmail)){
+            $memberModel = new Member();
+            $emailInUse = $memberModel->getSingleMemberID($newEmail);
+            if ($emailInUse && $ownEmail != $newEmail ) {
                 $error = "The email address is already taken";
                 return array_push($this->errorMessages, $error);
             }
@@ -197,7 +215,7 @@ class Validate {
     }
 
     public function validateActivityDescription($description){
-        if (str_word_count($description) > 4){
+        if (str_word_count($description) >= 2){
             return true;
         } else {
             $error = "The description must contain at least 4 words.";

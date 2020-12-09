@@ -9,7 +9,6 @@ use App\models\Database;
 class Role extends Database {
 
 
-
     public function getAllRoles() : \mysqli_result {
         $sql = "SELECT * FROM role";
         $stmt = $this->getConnection()->prepare($sql);
@@ -60,6 +59,29 @@ class Role extends Database {
         return $result;
     }
 
+    public function updateMemberRoles($memberID, $roles): bool {
+        $this->getConnection()->begin_transaction();
+        // delete all existing roles from the DB.
+        $deleteSql = "DELETE FROM member_role WHERE fk_member_id = ?";
+        $deleteStmt = $this->getConnection()->prepare($deleteSql);
+        $deleteStmt->bind_param('i', $memberID);
+        $deleteStmt->execute();
+        $deleteStmt->close();
 
+        // insert all the roles into the DB.
+        $addSql = "INSERT INTO member_role (fk_role_id, fk_member_id)
+                    VALUES (?, ?)";
+        foreach ($roles as $roleID) {
+            $addStmt = $this->getConnection()->prepare($addSql);
+            $addStmt->bind_param('ii',  $roleID, $memberID);
+            $addStmt->execute();
+            $addStmt->close();
+        }
+        if ($this->getConnection()->commit()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 }

@@ -1,10 +1,11 @@
 <div class="ui stackable menu">
-    <header class="ui header item"><a href="/"> Neo Youthclub </a></header>
+    <header class="ui header item"><a href="/">Neo Youth Club </a></header>
 
     {# Navbar if member is logged in #}
     {% if  session.get('memberID') %}
         <a id="profile" class="item" href="/profile/{{ session.get('memberID') }}"> Profile </a>
         <a id="activities" class="item" href="/activities"> Activities </a>
+
         {# show the leader sites if the user is leader #}
         {% if session.get('role') == 'leader' %}
             <a id="members" class="item" href="/dashboard"> Member Dashboard </a>
@@ -12,8 +13,11 @@
         {% endif %}
     {% endif %}
     <div class="right menu">
+
+        {# Show logout button if member/leader is logged in #}
         {% if  session.get('memberID') %}
             <a class="ui item" id="about" href="/logout"> Logout </a>
+
             {# Navbar if member is not logged in #}
         {% else %}
             <a id="register" class="item" href="/retrieve-account"> Retrieve account </a>

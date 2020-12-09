@@ -114,13 +114,13 @@ class Activity extends Database {
         return (int)$result['SUM'];
     }
 
-    public function getAllMembersActivities($memberID) {
+    public function getSingleMemberActivities($memberID) {
         $sql = "SELECT * FROM member_activity
                 JOIN activity i on member_activity.fk_activity_id = i.activity_id
                 JOIN member m on member_activity.fk_member_id = m.member_id
-                WHERE member_id = ? AND  start_time >= CURTIME()";
+                WHERE member_id = ? AND start_time >= CURTIME()";
         $stmt = $this->getConnection()->prepare($sql);
-         $stmt->bind_param('i', $memberID);
+        $stmt->bind_param('i', $memberID);
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();

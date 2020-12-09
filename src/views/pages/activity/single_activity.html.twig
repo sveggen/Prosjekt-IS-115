@@ -5,24 +5,25 @@
 {% block content %}
     <section class="ui center aligned middle aligned segment">
 
-                {% for message in session.getFlashbag().get('activityFailure') %}
-                    <div class="ui negative message">
-                        <div class="header">
-                            {{ message }}
-                        </div>
-                    </div>
-                {% endfor %}
+        {# Error message handling #}
+        {% for message in session.getFlashbag().get('activityFailure') %}
+            <div class="ui negative message">
+                <div class="header">
+                    {{ message }}
+                </div>
+            </div>
+        {% endfor %}
 
-
-
+        {# Display activity information #}
         {% for activity in activity %}
 
         <div class="jumbotron" xmlns="http://www.w3.org/1999/html">
-                <h1 class="display-6">{{ activity.title }}</h1>
+            <h1 class="display-6">{{ activity.title }}</h1>
             <p class="lead">{{ activity.start_time|date("l d. M. H:i") }}
                 - {{ activity.end_time|date("l d. M. Y. H:i") }}</p>
             <div><b>Leader: </b>{{ activity.first_name }} {{ activity.last_name }} - {{ activity.email }} </div>
             <br>
+            {# Show join/leave button depending if member is attending the activity or not #}
             {% if attendanceStatus == true %}
 
                 <a href="/activities/{{ activity.activity_id }}/leave" class="negative ui button"
@@ -56,13 +57,28 @@
                         <div class="ui relaxed divided list center">
                             <div class="item">
                                 <div class="content">
+
+                                    {# List all attendees of the activity #}
                                     {% for attendee in attendees %}
 
                                         <i class="large user middle aligned icon"></i>
-                                        <div class="header">{{ attendee.first_name }} {{ attendee.last_name }}</div>
+                                        <div class="header">{{ attendee.first_name }} {{ attendee.last_name }}
+
+                                        </div>
                                         <div class="description">
                                             Joined {{ attendee.join_time|date("d. M. Y. H:i") }}</div>
 
+
+                                        {# If user is leader, add remove attendee button #}
+                                        {% if session.get('role') == 'leader' %}
+                                            <a href="/activities/{{ activity.activity_id }}/remove/{{ attendee.member_id }}"
+                                               class="negative mini ui button middle aligned" onclick="return
+                                                confirm('Are you sure you want to remove this attendee from the activity?');">
+                                                <i class="trash alternate middle aligned icon"></i>
+                                                Remove</a>
+                                            <br>
+                                            <br>
+                                        {% endif %}
                                     {% endfor %}
                                 </div>
                             </div>
@@ -73,6 +89,7 @@
         </div>
     </section>
     <script>
+        // init accordion
         $('.ui.accordion')
             .accordion();
     </script>

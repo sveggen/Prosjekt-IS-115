@@ -22,30 +22,45 @@
             Members
         </h1>
 
-        {# Search filters #}
+
+        {# Payment-status filter #}
         <div class="ui left aligned container">
-        <form method="get" action="/dashboard/search">
-            <label> Payment status <br>
-                <select name="payment-status" class="ui dropdown" onchange="this.form.submit()">
-                    <option value="">None selected ..</option>
-                    <option value="0">Not Paid</option>
-                    <option value="1">Paid</option>
-                </select>
-            </label>
-        </form>
+            <form method="get" action="/dashboard/search">
+                <label> Payment status <br>
+                    <select name="payment-status" class="ui dropdown" onchange="this.form.submit()">
+                        <option value="">None selected ..</option>
+                        <option value="0">Not Paid</option>
+                        <option value="1">Paid</option>
+                    </select>
+                </label>
+            </form>
 
-        <form method="get" action="/dashboard/search">
-            <label> Interests <br>
-                <select name="interests[]" class="ui dropdown" onchange="this.form.submit()">
-                    <option value="">Interests</option>
-                    <option value="">None selected ..</option>
-                    {% for interest in interests %}
-                        <option value="{{ interest.interest_id }}">{{ interest.type }}</option>
-                    {% endfor %}
-                </select>
-            </label>
-        </form>
+            {# Gender filter #}
+            <form method="get" action="/dashboard/search">
+                <label> Gender <br>
+                    <select name="gender" class="ui dropdown" onchange="this.form.submit()">
+                        <option value="">None selected ..</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </label>
+            </form>
 
+            {# Interests filter #}
+            <form method="get" action="/dashboard/search">
+                <label> Interests <br>
+                    <select name="interests[]" class="ui dropdown" onchange="this.form.submit()">
+                        <option value="">Interests</option>
+                        <option value="">None selected ..</option>
+                        {% for interest in interests %}
+                            <option value="{{ interest.interest_id }}">{{ interest.type }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </form>
+
+            {# Activties filter #}
             <form method="get" action="/dashboard/search">
                 <label> Activities <br>
                     <select name="activities[]" class="ui dropdown" onchange="this.form.submit()">
@@ -53,6 +68,7 @@
                         <option value="">None selected ..</option>
                         {% for activity in activities %}
                             <option value="{{ activity.activity_id }}">
+                                {# Include both tile and start time do differntiate activities #}
                                 {{ activity.title }} - {{ activity.start_time | date("d. m. y.") }}</option>
                         {% endfor %}
 
@@ -64,98 +80,99 @@
         {# Current filter display #}
         <div class="ui centered card">
             <div class="content">
-        <div class="header">
-            Filter on: {{ searchQuery }}
-        </div>
+                <div class="header">
+                    Filter on: {{ searchQuery }}
+                </div>
             </div>
         </div>
 
         <section class="ui center aligned middle aligned segment">
 
-        {# Table listing members #}
-        <table class="ui celled table" id="membersTable">
-            <thead>
-                <tr>
-                    <th>Select</th>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Address</th>
-                    <th>City</th>
-                    <th>Registered</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    {% for member in members %}
+            {# Table listing all members #}
+            <table class="ui celled table" id="membersTable">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>City</th>
+                        <th>Registered</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
 
-                    <td class="checkbox">
-                        <input type="checkbox" form="send-email" name="markedMembers[]" value="{{ member.email }}">
-                    </td>
-                    <td data-label="ID">{{ member.member_id }}</td>
-                    <td data-label="Name"> <a
-                                href="http://localhost:8081/profile/{{ member.member_id }}">{{ member.first_name }} {{ member.last_name }} </a></td>
-                    <td data-label="Email">{{ member.email }}</td>
-                    <td data-label="Street Address">{{ member.street_address }}, {{ member.zip_code }}</td>
-                    <td data-label="City"> {{ member.city | title }}</td>
-                    <td data-label="Registered">{{ member.time_of_registration |date("d. M. Y.") }}</td>
-                </tr>
+                        {% for member in members %}
 
-                {% endfor %}
-            </tbody>
+                        <td class="checkbox">
+                            <input type="checkbox" form="send-email" name="selectedMembers[]"
+                                   value="{{ member.email }}">
+                        </td>
+                        <td data-label="ID">{{ member.member_id }}</td>
+                        <td data-label="Name"><a
+                                    href="http://localhost:8081/profile/{{ member.member_id }}">{{ member.first_name }} {{ member.last_name }} </a>
+                        </td>
+                        <td data-label="Email">{{ member.email }}</td>
+                        <td data-label="Street Address">{{ member.street_address }}, {{ member.zip_code }}</td>
+                        <td data-label="City"> {{ member.city | title }}</td>
+                        <td data-label="Registered">{{ member.time_of_registration |date("d. M. Y.") }}</td>
+                    </tr>
 
-            {# Footer menu #}
-            <tfoot class="full-width">
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th colspan="4">
-                        <button class="ui button" id="openMailModal" hidden>
-                            Send Email
-                        </button>
-                        <button class="ui small button" id="markAll">
-                            Mark all
-                        </button>
-                        <button class="ui small button" id="unMarkAll">
-                            Unmark all
-                        </button>
-                    </th>
-                </tr>
-            </tfoot>
-        </table>
+                    {% endfor %}
+                </tbody>
 
-        {# Send email Modal #}
-        <div class="ui modal">
-            <i class="close icon"></i>
-            <div class="header">
-                Send Email
+                {# Footer menu #}
+                <tfoot class="full-width">
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th colspan="4">
+                            <button class="ui button" id="openMailModal" hidden>
+                                Send Email
+                            </button>
+                            <button class="ui small button" id="markAll">
+                                Mark all
+                            </button>
+                            <button class="ui small button" id="unMarkAll">
+                                Unmark all
+                            </button>
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+
+            {# Send email Modal #}
+            <div class="ui modal">
+                <i class="close icon"></i>
+                <div class="header">
+                    Send Email
+                </div>
+                <div class="content">
+                    <form class="ui form" id="send-email" action="/dashboard/send-email" method="post">
+                        <div class="field">
+                        </div>
+                        <div class="field">
+                            <label>Subject
+                                <input type="text" name="subject" placeholder="Email subject...">
+                            </label>
+                        </div>
+                        <div class="field">
+                            <label>Content
+                                <textarea name="content" placeholder="Email content..."
+                                          rows="4"></textarea>
+                            </label>
+                        </div>
+                        <button class="ui primary button" form="send-email" type="submit">Send Email</button>
+                    </form>
+                </div>
             </div>
-            <div class="content">
-                <form class="ui form" id="send-email" action="/dashboard/send-email" method="post">
-                    <div class="field">
-                    </div>
-                    <div class="field">
-                        <label>Subject
-                            <input type="text" name="subject" placeholder="Email subject...">
-                        </label>
-                    </div>
-                    <div class="field">
-                        <label>Content
-                            <textarea name="content" placeholder="Email content..."
-                                      rows="4"></textarea>
-                        </label>
-                    </div>
-                    <button class="ui primary button" form="send-email" type="submit">Send Email</button>
-                </form>
-            </div>
-        </div>
-    </section>
         </section>
+    </section>
     <script>
-
-        // jQuery --------------------------------------------------------------------
-        // links button to Mail-modal
+        // links button to Send Mail-modal
         $('#openMailModal').click(function () {
             $('.ui.modal').modal('show');
         });
@@ -172,17 +189,15 @@
         //defines the checkboxes on the site
         const checkboxes = $("input[type='checkbox']");
 
-
-        //mark all
+        //initialises "select all members"-button
         $('#markAll').click(function () {
             checkboxes.prop('checked', true);
         });
 
-        //unmark all
+        //initialises "unselect all members"-button
         $('#unMarkAll').click(function () {
             checkboxes.prop('checked', false);
         })
-
     </script>
 
 {% endblock %}

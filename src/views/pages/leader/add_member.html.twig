@@ -13,11 +13,7 @@
                     <label>First name
                         <input type="text" name="first-name" placeholder="Ola">
                     </label>
-                    {% for message in session.getFlashbag().get('[firstName]') %}
-                        <div class="ui tiny red message">{{ message }}</div>
-                    {% endfor %}
                 </div>
-
                 <div class="field">
                     <label>Last name
                         <input type="text" name="last-name" placeholder="Nordmann">
@@ -25,27 +21,24 @@
                 </div>
             </div>
             <div class="two fields">
-            <div class="field">
-                <label>Email
-                    <input type="email" name="email" placeholder="olanordmann@mail.no">
-                </label>
-            </div>
-            <div class="field">
-                <label>Phone number
-                    <input type="tel" name="phone-number" pattern="[0-9]{8}" placeholder="12345678">
-                </label>
-            </div>
+                <div class="field">
+                    <label>Email
+                        <input type="email" name="email" placeholder="olanordmann@mail.no">
+                    </label>
+                </div>
+                <div class="field">
+                    <label>Phone number
+                        <input type="tel" name="phone-number" pattern="[0-9]{8}" placeholder="12345678">
+                    </label>
+                </div>
             </div>
             <div class="three fields">
-            <div class="field">
-                <label>Birth date
-                    <input type="date" name="birth-date" min="1900-01-01" max="2010-01-01" placeholder>
-                </label>
-            </div>
-
+                <div class="field">
+                    <label>Birth date
+                        <input type="date" name="birth-date" min="1900-01-01" max="2010-01-01" placeholder>
+                    </label>
+                </div>
                 <div class="grouped fields">
-
-
                     <label>Gender</label>
                     <div class="field">
                         <div class="ui radio checkbox">
@@ -65,27 +58,23 @@
                             <label>Other</label>
                         </div>
                     </div>
-                    {% for message in session.getFlashbag().get('[gender]') %}
-                        <div class="ui tiny red message">{{ message }}</div>
-                    {% endfor %}
-            </div>
-            <div class="grouped fields">
-                <label>Member Subscription Payment Status</label>
-                <div class="field">
-                    <div class="ui radio checkbox">
-                        <input type="radio" value="0" name="payment-status">
-                        <label>Not paid</label>
+                </div>
+                <div class="grouped fields">
+                    <label>Member Subscription Payment Status</label>
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            <input type="radio" value="0" name="payment-status">
+                            <label>Not paid</label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            <input type="radio" value="1" name="payment-status">
+                            <label>Paid</label>
+                        </div>
                     </div>
                 </div>
-                <div class="field">
-                    <div class="ui radio checkbox">
-                        <input type="radio" value="1" name="payment-status">
-                        <label>Paid</label>
-                    </div>
-                </div>
             </div>
-            </div>
-
             <div class="two fields">
                 <div class="field">
                     <label>Street address
@@ -99,27 +88,27 @@
                 </div>
             </div>
             <div class="two fields">
-            <div class="field">
-                <label for="interests-select"> Interests </label>
-                <select name="interests[]" class="ui search selection dropdown" multiple="" id="interests-select">
-                    <option value="">Interests</option>
-                    {% for interest in interests %}
-                        <option value="{{ interest.interest_id }}">{{ interest.type }}</option>
-                    {% endfor %}
+                <div class="field">
+                    <label for="interests-select"> Interests </label>
+                    <select name="interests[]" class="ui search selection dropdown" multiple="" id="interests-select">
+                        <option value="">Interests</option>
+                        {% for interest in interests %}
+                            <option value="{{ interest.interest_id }}">{{ interest.type }}</option>
+                        {% endfor %}
 
-                </select>
-            </div>
-            <br>
-            <div class="field">
-                <label for="roles-select"> Roles </label>
-                <select name="roles[]" class="ui search selection dropdown" multiple="" id="roles-select">
-                    <option value="">Roles</option>
-                    {% for role in roles %}
-                        <option value="{{ role.role_id }}">{{ role.privilege | capitalize }}</option>
-                    {% endfor %}
+                    </select>
+                </div>
+                <br>
+                <div class="field">
+                    <label for="roles-select"> Roles </label>
+                    <select name="roles[]" class="ui search selection dropdown" multiple="" id="roles-select">
+                        <option value="">Roles</option>
+                        {% for role in roles %}
+                            <option value="{{ role.role_id }}">{{ role.privilege | capitalize }}</option>
+                        {% endfor %}
 
-                </select>
-            </div>
+                    </select>
+                </div>
             </div>
             <button class="ui blue submit button" name="submit" type="submit">Add member</button>
             <div class="ui error message" id="error-add-member"></div>
@@ -154,12 +143,11 @@
 
     </section>
     <script>
-
         // initialises dropdown menus
-            $('#interests-select')
+        $('#interests-select')
             .dropdown();
 
-            $('#roles-select')
+        $('#roles-select')
             .dropdown();
     </script>
 

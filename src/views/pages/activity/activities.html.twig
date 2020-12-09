@@ -32,7 +32,7 @@
             </div>
         {% endif %}
 
-        {# list all activities in a table #}
+        {# list all activities in table #}
         <table class="ui selectable celled table">
             <thead>
                 <tr>
@@ -57,7 +57,8 @@
                 {% endfor %}
             </tbody>
         </table>
-        {# show add activity modal if user is admin #}
+
+        {# show add activity modal if user is leader #}
         {% if session.get('role') == 'leader' %}
 
         <div class="ui button">
@@ -112,6 +113,8 @@
 
     {% endif %}
     <script>
+
+        // init modal
         $('.ui.button').click(function () {
             $('.ui.modal').modal('show');
         });
