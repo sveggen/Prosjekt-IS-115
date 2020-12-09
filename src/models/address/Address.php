@@ -11,7 +11,8 @@ class Address extends Database
 {
 
     /**
-     * Returns true if zipcode is valid, false if not.
+     * Checks if a given zip code is valid.
+     *
      * @param $zipCode
      * @return bool
      */
@@ -26,6 +27,7 @@ class Address extends Database
 
     /**
      * Adds an address to the database.
+     *
      * @param $streetAddress
      * @param $zipCode
      * @return int
@@ -35,13 +37,15 @@ class Address extends Database
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bind_param("ss", $streetAddress, $zipCode);
         $stmt->execute();
-        $insertId = $this->getConnection()->insert_id;
+        $addressID = $this->getConnection()->insert_id;
         $stmt->close();
-        return (int)$insertId;
+        return (int) $addressID;
     }
 
     /**
-     * Returns data from Zipcoderegister base on input as zipcode.
+     * Returns the identical zip code to the inputted zip code, if
+     * the zip code exists in the database.
+     *
      * @param $zipCode
      * @return false|mysqli_result
      */

@@ -5,22 +5,23 @@ namespace App\models\user;
 
 use App\helpers\PasswordGenerator;
 use App\models\Database;
-use mysqli_result;
 
 /**
+ * Handles all the logic-related operations for a user -
+ * which is connecting.
+ *
  * Class User
  * @package App\models
  *
- * Handles all the logic-related operations for a user,
- * which is the entity related to all authentication in the Youth Club.
- * All users are connected to a "member" in the database (which holds all personal information).
  */
 class User extends Database {
 
     /**
+     * Compares password against hashed password.
+     *
      * @param $email
      * @param $password
-     * @return array | bool True on login success.
+     * @return array | bool
      */
     public function login($email, $password) {
         $user = $this->getUserCredentials($email);
@@ -31,6 +32,13 @@ class User extends Database {
         }
     }
 
+    /**
+     *
+     *
+     * @param $newPassword
+     * @param $memberID
+     * @return bool
+     */
   public function updatePassword($newPassword, $memberID): bool {
       $hashedPassword = password_hash($this->pepperPassword($newPassword), PASSWORD_BCRYPT);
       $user = $this->changePassword($hashedPassword, $memberID);
@@ -138,7 +146,12 @@ class User extends Database {
     }
 
 
-
+    /**
+     * Checks if a user exists in the database.
+     *
+     * @param $memberID mixed Members ID.
+     * @return int
+     */
     public function checkUserExistence($memberID): int {
         $sql = "SELECT COUNT(1) AS SUM
                 FROM user 

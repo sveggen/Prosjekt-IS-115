@@ -62,14 +62,13 @@
                                     {% for attendee in attendees %}
 
                                         <i class="large user middle aligned icon"></i>
-                                        <div class="header">{{ attendee.first_name }} {{ attendee.last_name }}
+                                        <div class="header">{{ attendee.first_name | title }} {{ attendee.last_name | title }}
 
                                         </div>
                                         <div class="description">
                                             Joined {{ attendee.join_time|date("d. M. Y. H:i") }}</div>
 
-
-                                        {# If user is leader, add remove attendee button #}
+                                        {# If user is leader, add a "remove attendee from activity"-button #}
                                         {% if session.get('role') == 'leader' %}
                                             <a href="/activities/{{ activity.activity_id }}/remove/{{ attendee.member_id }}"
                                                class="negative mini ui button middle aligned" onclick="return

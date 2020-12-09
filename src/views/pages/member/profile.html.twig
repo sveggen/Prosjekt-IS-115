@@ -3,7 +3,7 @@
     Profile
 {% endblock %}
 {% block content %}
-    {% for data in member %}
+    {% for member in member %}
 
         <section class="ui center aligned middle aligned segment">
             <h2 class="ui icon header">
@@ -36,9 +36,9 @@
 
             {% endfor %}
 
-            {# Show delete profile button if user is a leader and this is not his/her own account #}
-            {% if session.get('memberID') != data.member_id and session.get('role') == 'leader' %}
-                <a href="/profile/{{ data.member_id }}/delete" class="negative ui right floated button"
+            {# Show "delete profile"-button if user is a leader and this is not his/her own account #}
+            {% if session.get('memberID') != member.member_id and session.get('role') == 'leader' %}
+                <a href="/profile/{{ member.member_id }}/delete" class="negative ui right floated button"
                    onclick="return confirm('Are you sure you want to delete this member?');">
                     <i class="trash alternate middle aligned icon"></i>
                     Delete Member</a>
@@ -49,10 +49,10 @@
                     <div class="ui header">Public profile</div>
                     <div class="ui divider"></div>
 
-                    {# Include profile page #}
+                    {# Include the "public profile"-page #}
                     {% include './includes/member/public_profile.include.html.twig' %}
 
-                    {#- ------- Update profile forms -----  -#}
+                {#- ------- Update profile forms -----  -#}
                 </div>
                 <div class="ui segment">
                     <div class="ui header">Edit Profile</div>
@@ -66,7 +66,7 @@
                         <h4 class="ui horizontal divider">
                             Edit Profile image
                         </h4>
-                        <form action="/profile/{{ data.member_id }}" method="post" enctype="multipart/form-data">
+                        <form action="/profile/{{ member.member_id }}" method="post" enctype="multipart/form-data">
                             <div class="field">
                                 <label>Profile image
                                     <input type="file" name="image">
@@ -78,7 +78,7 @@
                         </form>
                     </div>
 
-                    {# Update password #}
+                    {# Update password form#}
                     <div class="ui segment">
                         <p></p>
                         <div class="ui divider"></div>
@@ -86,7 +86,7 @@
                         <h4 class="ui horizontal divider">
                             Edit password
                         </h4>
-                        <form class="ui form" action="/profile/{{ data.member_id }}/update-password" method="post">
+                        <form class="ui form" action="/profile/{{ member.member_id }}/update-password" method="post">
                             <div class="field">
                                 <label>Old password
                                     <input type="password" name="old-password" placeholder="*******">
@@ -119,47 +119,49 @@
                         <h4 class="ui horizontal divider">
                             Edit Profile Information
                         </h4>
-                        <form class="ui form" action="/profile/{{ data.member_id }}/update" method="post">
+                        <form class="ui form" action="/profile/{{ member.member_id }}/update" method="post">
                             <div class="two fields">
                                 <div class="field">
                                     <label>First name
-                                        <input type="text" name="first-name" value="{{ data.first_name }}"
+                                        <input type="text" name="first-name" value="{{ member.first_name }}"
                                                placeholder="Ola">
                                     </label>
                                 </div>
                                 <div class="field">
                                     <label>Last name
-                                        <input type="text" name="last-name" value="{{ data.last_name }}"
+                                        <input type="text" name="last-name" value="{{ member.last_name }}"
                                                placeholder="Nordmann">
                                     </label>
                                 </div>
                             </div>
                             <div class="field">
                                 <label>Email
-                                    <input type="email" name="email" value="{{ data.email }}"
+                                    <input type="email" name="email" value="{{ member.email }}"
                                            placeholder="olanordmann@mail.no">
                                 </label>
                             </div>
                             <div class="field">
                                 <label>Phone number
-                                    <input type="tel" name="phone-number" value="{{ data.phone_number }}"
+                                    <input type="tel" name="phone-number" value="{{ member.phone_number }}"
                                            pattern="[0-9]{8}" placeholder="12345678">
                                 </label>
                             </div>
                             <div class="two fields">
                                 <div class="field">
                                     <label>Birth date
-                                        <input type="date" name="birth-date" value="{{ data.birth_date }}"
+                                        <input type="date" name="birth-date" value="{{ member.birth_date }}"
                                                min="1900-01-01" max="2010-01-01" placeholder>
                                     </label>
                                 </div>
 
+                                {# if member is of one of the genders below,
+                                the gender will be checked off dynamically #}
                                 <div class="grouped fields">
                                     <label>Gender</label>
                                     <div class="field">
                                         <div class="ui radio checkbox">
                                             <input type="radio" value="male" name="gender"
-                                                    {% if data.gender == "male" %}
+                                                    {% if member.gender == "male" %}
                                                         checked="checked"
                                                     {% endif %}
                                             ><label>Male</label>
@@ -168,7 +170,7 @@
                                     <div class="field">
                                         <div class="ui radio checkbox">
                                             <input type="radio" value="female" name="gender"
-                                                    {% if data.gender == "female" %}
+                                                    {% if member.gender == "female" %}
                                                         checked="checked"
                                                     {% endif %}
                                             ><label>Female</label>
@@ -177,7 +179,7 @@
                                     <div class="field">
                                         <div class="ui radio checkbox">
                                             <input type="radio" value="other" name="gender"
-                                                    {% if data.gender == "other" %}
+                                                    {% if member.gender == "other" %}
                                                         checked="checked"
                                                     {% endif %}
                                             ><label>Other</label>
@@ -188,13 +190,13 @@
                             <div class="two fields">
                                 <div class="field">
                                     <label>Street address
-                                        <input type="text" name="street-address" value="{{ data.street_address }}"
+                                        <input type="text" name="street-address" value="{{ member.street_address }}"
                                                placeholder="Volleveien 12">
                                     </label>
                                 </div>
                                 <div class="field">
                                     <label>Zip code
-                                        <input type="text" name="zip-code" value="{{ data.zip_code }}"
+                                        <input type="text" name="zip-code" value="{{ member.zip_code }}"
                                                placeholder="0001">
                                     </label>
                                 </div>
@@ -204,11 +206,12 @@
                                 <select name="interests[]" class="ui search selection dropdown" multiple=""
                                         id="multi-select-interests">
                                     <option value="">Interests</option>
+                                    {# Loads dropdown with all available interests #}
                                     {% for availableInterest in availableInterests %}
                                         <option value="{{ availableInterest.interest_id }}"
                                                 {% for memberInterest in interests %}
                                                     {# if member is already registered with the the interest
-                                                    in the database - mark it as selected in the dropdown menu #}
+                                                    it will be selected in the dropdown menu #}
                                                     {% if memberInterest.interest_id == availableInterest.interest_id %}
                                                         selected
                                                     {% endif %}
@@ -237,17 +240,18 @@
                         <h4 class="ui horizontal divider">
                             Update Roles
                         </h4>
-                        <form class="ui form" action="/profile/{{ data.member_id }}/update-role" method="post">
+                        <form class="ui form" action="/profile/{{ member.member_id }}/update-role" method="post">
                             <div class="field">
                                 <label for="multi-select-roles"> Roles </label>
                                 <select name="roles[]" class="ui search selection dropdown" multiple=""
                                         id="multi-select-roles">
                                     <option value="">Roles</option>
+                                    {# Loads dropdown with all available roles #}
                                     {% for availableRole in availableRoles %}
                                         <option value="{{ availableRole.role_id }}"
                                                 {% for memberRole in memberRoles %}
                                                     {# if member is already registered with the the role
-                                                    in the database - mark it as selected in the dropdown menu #}
+                                                    in the database it will be selected in the dropdown menu #}
                                                     {% if memberRole.role_id == availableRole.role_id %}
                                                         selected
                                                     {% endif %}
@@ -261,6 +265,7 @@
                             <button class="ui blue submit button" name="submit" type="submit">Edit Roles</button>
                         </form>
                     </div>
+
                     {# End of "update role"-form #}
                     {% endif %}
 
@@ -269,10 +274,11 @@
         </section>
 
         <script>
-            // initialises dropdowns
+            // initialises interests dropdown
             $('#multi-select-interests')
                 .dropdown();
 
+            // initialises roles dropdown
             $('#multi-select-roles')
                 .dropdown();
 

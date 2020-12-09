@@ -6,9 +6,18 @@ namespace App\models\role;
 
 use App\models\Database;
 
+/**
+ * Model for the "role"-table in the Database.
+ *
+ * Class Role
+ * @package App\models\role
+ */
 class Role extends Database {
 
 
+    /**
+     * @return \mysqli_result All roles from the DB.
+     */
     public function getAllRoles() : \mysqli_result {
         $sql = "SELECT * FROM role";
         $stmt = $this->getConnection()->prepare($sql);
@@ -18,6 +27,13 @@ class Role extends Database {
         return $result;
     }
 
+    /**
+     * Adds multiple roles linked to a given user to the DB.
+     *
+     * @param $memberID
+     * @param $roles array A list of role ID's,
+     * @return bool
+     */
     public function addMemberRoles($memberID, $roles): bool {
         $sql = "INSERT INTO member_role (fk_member_id, fk_role_id) 
                 VALUES (?, ?)";
@@ -35,6 +51,12 @@ class Role extends Database {
         }
     }
 
+    /**
+     * Returns all the roles a given member has.
+     *
+     * @param int $memberID
+     * @return false|\mysqli_result
+     */
     public function getSingleMemberRoles(int $memberID){
         $sql = "SELECT * FROM member_role 
                 JOIN role i on member_role.fk_role_id = i.role_id
@@ -48,6 +70,13 @@ class Role extends Database {
         return $result;
     }
 
+    /**
+     * Adds a single role to a single member in the database.
+     *
+     * @param int $memberID
+     * @param int $roleID
+     * @return false|\mysqli_result
+     */
     public function addMemberRole(int $memberID, int $roleID){
         $sql = "INSERT INTO member_role (fk_member_id, fk_role_id) 
                 VALUES (?, ?)";
@@ -59,6 +88,13 @@ class Role extends Database {
         return $result;
     }
 
+    /**
+     * Updates a given members roles in the database.
+     *
+     * @param $memberID
+     * @param $roles
+     * @return bool
+     */
     public function updateMemberRoles($memberID, $roles): bool {
         $this->getConnection()->begin_transaction();
         // delete all existing roles from the DB.
@@ -77,6 +113,7 @@ class Role extends Database {
             $addStmt->execute();
             $addStmt->close();
         }
+        // commit both SQL-queries
         if ($this->getConnection()->commit()) {
             return true;
         } else {
