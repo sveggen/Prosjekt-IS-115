@@ -14,7 +14,11 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class Login extends BaseController {
 
-
+    /**
+     * Renders the login page.
+     *
+     * @return Response
+     */
     public function renderLoginPage(): Response {
         if ($this->hasMemberPrivileges() == true
             and $this->hasLeaderPrivileges() == true) {
@@ -68,7 +72,7 @@ class Login extends BaseController {
     }
 
     /**
-     * Returns true if any of the tests fail
+     * Validates all fields of login form.
      *
      * @param $email
      * @param $password
@@ -91,7 +95,8 @@ class Login extends BaseController {
     }
 
     /**
-     * Sets variables for the user.
+     * Sets the required session
+     * variables for the user.
      *
      * @param $credentials
      */
@@ -106,15 +111,17 @@ class Login extends BaseController {
     }
 
     /**
+     * Gets the user's role with the highest privilege.
+     *
      * @param $memberID
-     * @return string Gets the user's role with the highest privilege.
+     * @return string
      */
     private function getUserRole($memberID): string {
         $roleModel = new Role();
         $userRoles = $roleModel->getSingleMemberRoles($memberID);
 
-        // evaluates the users roles - assigns the user's role with
-        // the highest privilege to the Session object.
+        // evaluates the users roles and returns the user's role with
+        // the highest privilege
         $role = "";
         while ($row = $userRoles->fetch_assoc()){
             if ($row['privilege'] == 'leader') {

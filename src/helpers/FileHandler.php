@@ -7,6 +7,13 @@ namespace App\helpers;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+/**
+ * Handles all operations in connection to file uploads,
+ * downloads, directory traversals, mostly for image files.
+ *
+ * Class FileHandler
+ * @package App\helpers
+ */
 class FileHandler {
 
     const MB = 1048576;

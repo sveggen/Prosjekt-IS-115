@@ -51,6 +51,8 @@ class MemberDashboard extends BaseController {
             return $this->methodNotAllowed();
         }
 
+        // this variable represents the "currently"
+        // activated filter/search query
         $searchQuery = "";
         $listMembers = (new Member)->getAllMembersAndAddress();
 
@@ -95,9 +97,12 @@ class MemberDashboard extends BaseController {
         $memberModel = new Member();
         $membersSortedByPayment = $memberModel->getMembersSortPaymentStatus($query);
 
-        if ($query == 1) {
+        $paid = 1;
+        $notPaid = 0;
+
+        if ($query == $paid) {
             $searchQuery = "Payment status - Paid";
-        } elseif ($query == 0) {
+        } elseif ($query == $notPaid) {
             $searchQuery = "Payment status - Not paid";
         }
 
@@ -106,7 +111,7 @@ class MemberDashboard extends BaseController {
 
     /**
      * Render the Member Dashboard with a specific member listing,
-     * and a string representing the search query.
+     * and a string representing the active search query.
      *
      * @param $memberList
      * @param $searchQueryName
@@ -157,8 +162,10 @@ class MemberDashboard extends BaseController {
 
         $activityModel = new Activity();
         $membersWithActivity = $activityModel->getActivityAttendees($activityID);
-        $activity = $activityModel->getActivity($activityID)->fetch_assoc();
+        $activity = $activityModel->getActivityAndLeader($activityID)->fetch_assoc();
         $activityTitle = $activity['title'];
+
+        // adds the activity start date to easier differ between different activities
         $activityStartDate = date("d. m. y. ", strtotime($activity['start_time']));
 
         $searchQuery = "Activity - " . $activityTitle . " " . $activityStartDate;

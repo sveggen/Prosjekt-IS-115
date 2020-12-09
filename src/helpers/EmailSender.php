@@ -7,6 +7,12 @@ namespace App\helpers;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+/**
+ * Deals with the distribution of dynamic emails.
+ *
+ * Class EmailSender
+ * @package App\helpers
+ */
 class EmailSender {
 
     /**
