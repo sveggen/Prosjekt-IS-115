@@ -31,6 +31,31 @@ class User extends Database {
         }
     }
 
+  public function updatePassword($newPassword, $memberID): bool {
+      $hashedPassword = password_hash($this->pepperPassword($newPassword), PASSWORD_BCRYPT);
+      $user = $this->changePassword($hashedPassword, $memberID);
+      if ($user) {
+          return true;
+      } else {
+          return false;
+      }
+  }
+
+  public function changePassword($hashedPassword, $memberID): int {
+      $sql = "UPDATE user 
+                SET password = ? 
+                WHERE fk_member_id = ?";
+      $stmt = $this->getConnection()->prepare($sql);
+      $stmt->bind_param('ss', $hashedPassword, $memberID);
+      $stmt->execute();
+      $result = $stmt->affected_rows;
+      $stmt->close();
+      return $result;
+  }
+
+
+
+
     /**
      * @param $email
      * @return array|null User's credentials.

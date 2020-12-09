@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class Activities extends BaseController {
 
+
+
     public function newActivity(): Response {
         if ($this->hasLeaderPrivileges() == false) {
             return $this->methodNotAllowed();

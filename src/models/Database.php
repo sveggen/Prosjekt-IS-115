@@ -31,7 +31,7 @@ abstract class Database {
     }
 
     /**
-     * @return mysqli Entrypoint to the DB.
+     * @return mysqli
      */
     protected function getConnection(): mysqli {
         return $this->database;

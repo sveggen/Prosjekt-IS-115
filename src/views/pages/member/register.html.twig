@@ -8,16 +8,16 @@
         <form class="ui form" action="" method="post" id="register-form" enctype="multipart/form-data">
             <h4 class="ui dividing header">Register</h4>
             <div class="two fields">
-            <div class="field">
-                <label>First name
-                    <input type="text" name="first-name" placeholder="Ola">
-                </label>
-            </div>
-            <div class="field">
-                <label>Last name
-                    <input type="text" name="last-name" placeholder="Nordmann">
-                </label>
-            </div>
+                <div class="field">
+                    <label>First name
+                        <input type="text" name="first-name" placeholder="Ola">
+                    </label>
+                </div>
+                <div class="field">
+                    <label>Last name
+                        <input type="text" name="last-name" placeholder="Nordmann">
+                    </label>
+                </div>
             </div>
             <div class="field">
                 <label>Password
@@ -104,7 +104,7 @@
                     Already have an account?
                 </a>
                 <a href="/retrieve-account" class="item">
-                    Already a member of Neo Youthclub, <br> but do not have your log-in credentials?
+                    Already a member of Neo Youth Club, <br> but do not have your log-in credentials?
                 </a>
             </div>
             <div class="ui error message" id="error-register"></div>
@@ -125,6 +125,7 @@
     </section>
 
     <script>
+        // form validation to check if passwords match
         $('.ui.form')
             .form({
                 fields: {

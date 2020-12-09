@@ -8,14 +8,14 @@
         <form class="ui form" action="" method="post">
             <h4 class="ui dividing header">Retrieve Account</h4>
             <div class="ui paragraph">
-                If you are a member of Neo Youthclub
+                If you are a member of Neo Youth Club
                 but have not accessed your account yet, <br> we can send a temporary password
                 to your email.
             </div>
-            <div class="ui divider"> </div>
+            <div class="ui divider"></div>
             <div class="field">
                 <label>Email
-                <input type="text" name="email" placeholder="name@email.com">
+                    <input type="text" name="email" placeholder="name@email.com">
                 </label>
             </div>
             <button class="ui blue submit button" name="submit" type="submit">Retrieve account</button>
@@ -24,7 +24,7 @@
                     Already have an account? Click here
                 </a>
                 <a href="/register" class="item">
-                    Not a member of Neo youthclub? Click here
+                    Not a member of Neo Youth Club? Click here
                 </a>
             </div>
             <div class="ui error message" id="error-register"></div>
@@ -32,9 +32,9 @@
         {% if session.getFlashbag().has('retrieveUserSuccess') %}
 
             <div class="ui success message">
-                    {% for message in session.getFlashbag().get('retrieveUserSuccess') %}
-                        {{ message }}
-                    {% endfor %}
+                {% for message in session.getFlashbag().get('retrieveUserSuccess') %}
+                    {{ message }}
+                {% endfor %}
             </div>
 
         {% endif %}

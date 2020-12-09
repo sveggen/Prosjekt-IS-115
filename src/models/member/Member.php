@@ -35,7 +35,7 @@ class Member extends Database {
 
             (new Interest)->addMemberInterests($memberID, $memberData['interests']);
 
-             // commit transaction if no exceptions are thrown
+            // commit transaction if no exceptions are thrown
             $this->getConnection()->commit();
             $this->getConnection()->autocommit(true);
             return $memberID;
@@ -44,10 +44,27 @@ class Member extends Database {
         }
     }
 
-    public function adminRegisterMember($memberData){
+    /**
+     * Adds a member to the DB.
+     */
+    public function addMember($firstName, $lastName, $email, $phoneNumber,
+                              $paymentStatus, $addressID, $gender, $birthDate) {
+        $timeOfRegistration = date('Y-m-d H:i:s');
+        $sql = "INSERT INTO member (first_name, last_name, email, 
+                phone_number, subscription_status, fk_address_id, 
+                time_of_registration, gender, birth_date) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param("ssssiisss", $firstName, $lastName, $email,
+            $phoneNumber, $paymentStatus, $addressID, $timeOfRegistration, $gender, $birthDate);
+        $stmt->execute();
+        $insertId = $this->getConnection()->insert_id;
+        $stmt->close();
+        return (int)$insertId;
+    }
+
+    public function adminRegisterMember($memberData) {
         try {
-            //start transaction
-            //$this->getConnection()->autocommit(false);
 
             $addressID = (new Address)->addAddress($memberData['streetAddress'], $memberData['zipCode']);
 
@@ -58,9 +75,6 @@ class Member extends Database {
             (new Role)->addMemberRoles($memberID, $memberData['roles']);
             (new Interest)->addMemberInterests($memberID, $memberData['interests']);
 
-            // commit transaction if no exceptions are thrown
-            //$this->getConnection()->commit();
-            //$this->getConnection()->autocommit(true);
             return $memberID;
         } catch (\Exception $e) {
             return false;
@@ -68,18 +82,55 @@ class Member extends Database {
 
     }
 
-    public function updateMemberInformation(){
+    /**
+     *
+     *
+     * @param $memberData
+     * @return false|\mysqli_result
+     */
+    public function updateMemberInformation($memberData) {
+        $this->getConnection()->begin_transaction();
+        // delete all existing interests from the DB.
+        $deleteInterestsSql = "DELETE FROM member_interest WHERE fk_member_id = ?";
+        $deleteInterestsStmt = $this->getConnection()->prepare($deleteInterestsSql);
+        $deleteInterestsStmt->bind_param('i', $memberData['memberID']);
+        $deleteInterestsStmt->execute();
+        $deleteInterestsStmt->close();
 
-        // TO DO
+        // insert all the new interests into the DB.
+        $addInterestsSql = "INSERT INTO member_interest (fk_interest_id, fk_member_id)
+                            VALUES (?, ?)";
+        foreach ($memberData['interests'] as $interestID) {
+            $addInterestsStmt = $this->getConnection()->prepare($addInterestsSql);
+            $addInterestsStmt->bind_param('ii', $interestID, $memberData['memberID']);
+            $addInterestsStmt->execute();
+            $addInterestsStmt->close();
+        }
 
+        $sql = "UPDATE member m
+                inner join address a on m.fk_address_id = a.address_id
+                SET a.street_address= ?, a.fk_zip_code_register = ?,
+                    m.first_name = ?, m.last_name = ?, m.email = ?,
+                    m.phone_number = ?, m.gender = ?, m.birth_date = ?
+                WHERE member_id = ?";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('ssssssssi', $memberData['streetAddress'], $memberData['zipCode'],
+            $memberData['firstName'], $memberData['lastName'],
+            $memberData['email'], $memberData['phoneNumber'], $memberData['gender'],
+            $memberData['birthDate'], $memberData['memberID']);
+        $stmt->execute();
+        $stmt->close();
+        if ($this->getConnection()->commit() == true) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-
     /**
-     * Returns all data from member, address and zip_code_register
-     * JOIN-ed on member.
+     * Returns all members with their address.
      */
-    public function getAllMembersAndAddress(){
+    public function getAllMembersAndAddress() {
         $sql = "SELECT * FROM member
                 LEFT JOIN address a on member.fk_address_id = a.address_id
                 LEFT JOIN zip_code_register zcr on a.fk_zip_code_register = zcr.zip_code";
@@ -90,7 +141,7 @@ class Member extends Database {
         return $result;
     }
 
-    public function getSingleMemberAndAddress($memberID){
+    public function getSingleMemberAndAddress($memberID) {
         $sql = "SELECT * FROM member
                 LEFT JOIN address a on member.fk_address_id = a.address_id
                 LEFT JOIN zip_code_register zcr on a.fk_zip_code_register = zcr.zip_code
@@ -103,8 +154,18 @@ class Member extends Database {
         return $result;
     }
 
+    public function getSingleMemberEmail($memberID) {
+        $sql = "SELECT email FROM member
+                WHERE member_id = (?)";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('s', $memberID);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return $result['email'];
+    }
 
-    public function getAllMembersInterests($memberID) {
+    public function getSingleMemberInterests($memberID) {
         $sql = "SELECT * FROM member_interest
                 JOIN interest i on member_interest.fk_interest_id = i.interest_id
                 JOIN member m on member_interest.fk_member_id = m.member_id 
@@ -132,25 +193,6 @@ class Member extends Database {
         return $result;
     }
 
-    /**
-     * Adds a member to the DB.
-     */
-    public function addMember($firstName, $lastName, $email, $phoneNumber,
-                               $paymentStatus, $addressID, $gender, $birthDate) {
-        $timeOfRegistration = date('Y-m-d H:i:s');
-        $sql = "INSERT INTO member (first_name, last_name, email, 
-                phone_number, subscription_status, fk_address_id, 
-                time_of_registration, gender, birth_date) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bind_param("ssssiisss", $firstName, $lastName, $email,
-            $phoneNumber, $paymentStatus, $addressID, $timeOfRegistration, $gender, $birthDate);
-        $stmt->execute();
-        $insertId = $this->getConnection()->insert_id;
-        $stmt->close();
-        return (int)$insertId;
-    }
-
     public function getTotalMembers(): int {
 
         $this->getConnection()->autocommit(true);
@@ -174,7 +216,7 @@ class Member extends Database {
     }
 
 
-    public function getSingleMemberID(string $email){
+    public function getSingleMemberID(string $email) {
         $sql = "SELECT member_id FROM member 
                 WHERE email = ?";
         $stmt = $this->getConnection()->prepare($sql);
@@ -183,10 +225,10 @@ class Member extends Database {
         $result = $stmt->get_result()->fetch_assoc();
         $stmt->close();
         return $result['member_id'];
-}
+    }
 
 
-    public function getMembersSortPaymentStatus(int $paymentStatus){
+    public function getMembersSortPaymentStatus(int $paymentStatus) {
         $sql = "SELECT * FROM member 
                 LEFT JOIN address a on member.fk_address_id = a.address_id
                 LEFT JOIN zip_code_register zcr on a.fk_zip_code_register = zcr.zip_code
@@ -216,6 +258,19 @@ class Member extends Database {
         $stmt->close();
         return $result;
 
+    }
+
+    public function getMembersWithSpecificGender($gender) {
+        $sql = "SELECT * FROM member 
+                LEFT JOIN address a on member.fk_address_id = a.address_id
+                LEFT JOIN zip_code_register zcr on a.fk_zip_code_register = zcr.zip_code
+                WHERE gender = ?";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bind_param('s', $gender);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
     }
 
 

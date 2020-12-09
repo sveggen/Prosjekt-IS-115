@@ -1,100 +1,120 @@
 <section class="ui left aligned segment">
-<div class="ui centered card fluid">
-    <div class="image centered ui medium">
-        <img src="../{{ profileImage }}">
-    </div>
-    <div class="content">
-        <div class="header">{{ data.first_name }} {{ data.last_name }}</div>
-        <div class="meta">
-            <span class="date">Registered: {{ data.time_of_registration |date("d. M. Y. H:i") }}</span>
+    <div class="ui centered card fluid">
+        <div class="image centered ui medium">
+            <img src="/{{ profileImage }}">
         </div>
-        <div class="ui divider"></div>
-        <div class="ui list">
-            <div class="item">
-                <i class="address card icon"></i>
-                <div class="content">
-                    <label> <b>Member-ID:</b>
-                    {{ data.member_id }}
-                    </label>
-                </div>
+        <div class="content">
+            <div class="header">{{ data.first_name }} {{ data.last_name }}</div>
+            <div class="meta">
+                <span class="date">Registered: {{ data.time_of_registration |date("d. M. Y. H:i") }}</span>
             </div>
             <div class="ui divider"></div>
-            <div class="item">
-                <i class="map marker alternate icon"></i>
-                <div class="content">
-                    <label> <b>Address:</b>
-                    {{ data.street_address }}, {{ data.zip_code }}, {{ data.city | title }}
-                    </label>
+            <div class="ui list">
+                <div class="item">
+                    <i class="address card icon"></i>
+                    <div class="content">
+                        <label> <b>Member-ID:</b>
+                            {{ data.member_id }}
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <div class="ui divider"></div>
-            <div class="item">
-                <i class="mail icon"></i>
-                <div class="content">
-                    <label> <b>Email:</b>
-                    <a href="mailto:{{ data.email }}">{{ data.email }}</a>
-                    </label>
+                <div class="ui divider"></div>
+                <div class="item">
+                    <i class="calendar alternate outline card icon"></i>
+                    <div class="content">
+                        <label> <b>Birth date:</b>
+                            {{ data.birth_date|date("d.m.Y") }}
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <div class="ui divider"></div>
-            <div class="item">
-                <i class="phone icon"></i>
-                <div class="content">
-                    <label> <b>Phone number:</b>
-                    +47 {{ data.phone_number }}
-                    </label>
+
+                <div class="ui divider"></div>
+                <div class="item">
+                    <i class="venus mars card icon"></i>
+                    <div class="content">
+                        <label> <b>Gender:</b>
+                            {{ data.gender | capitalize }}
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <div class="ui divider"></div>
-            <div class="item">
-                <i class="money icon"></i>
-                <div class="content">
-                    <label> <b>Payment status:</b>
-                    {% if data.subscription_status == 1 %}
-                        Paid
-                    {% else %}
-                        Not paid
-                    {% endif %}
-                    </label>
+
+                <div class="ui divider"></div>
+                <div class="item">
+                    <i class="map marker alternate icon"></i>
+                    <div class="content">
+                        <label> <b>Address:</b>
+                            {{ data.street_address }}, {{ data.zip_code }}, {{ data.city | title }}
+                        </label>
+                    </div>
+                </div>
+                <div class="ui divider"></div>
+                <div class="item">
+                    <i class="mail icon"></i>
+                    <div class="content">
+                        <label> <b>Email:</b>
+                            <a href="mailto:{{ data.email }}">{{ data.email }}</a>
+                        </label>
+                    </div>
+                </div>
+                <div class="ui divider"></div>
+                <div class="item">
+                    <i class="phone icon"></i>
+                    <div class="content">
+                        <label> <b>Phone number:</b>
+                            +47 {{ data.phone_number }}
+                        </label>
+                    </div>
+                </div>
+                <div class="ui divider"></div>
+                <div class="item">
+                    <i class="money icon"></i>
+                    <div class="content">
+                        <label> <b>Payment status:</b>
+                            {% if data.subscription_status == 1 %}
+                                Paid
+                            {% else %}
+                                Not paid
+                            {% endif %}
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="extra content">
+        <div class="content">
          <span class="left floated">
         <b>Interests:</b>
       </span>
-        <div class="ui horizontal list">
-            <div class="item">|
-                {% for interest in interests %}
-                    {{ interest.type }} |
-                {% endfor %}
+            <div class="ui horizontal list">
+                <div class="item">|
+                    {% for interest in interests %}
+                        {{ interest.type }} |
+                    {% endfor %}
+                </div>
             </div>
         </div>
-    </div>
-    <div class="extra content">
+        <div class="content">
          <span class="left floated">
-        <b>Activities:</b>
+        <b>Upcoming activities:</b>
       </span>
-        <div class="ui horizontal list">
-            <div class="item">|
-                {% for activity in activities %}
-                    {{ activity.title }} |
-                {% endfor %}
+            <div class="ui horizontal list">
+                <div class="item">|
+                    {% for activity in activities %}
+                        <a href="/activities/{{ activity.activity_id }}"> {{ activity.title }} </a>|
+                    {% endfor %}
+                </div>
             </div>
         </div>
-    </div>
-    <div class="extra content">
+        <div class="content">
          <span class="left floated">
         <b>Roles:</b>
       </span>
-        <div class="ui horizontal list">
-            <div class="item">|
-                {% for role in roles %}
-                    {{ role.privilege | capitalize }} |
-                {% endfor %}
+            <div class="ui horizontal list">
+                <div class="item">|
+                    {% for role in memberRoles %}
+                        {{ role.privilege | capitalize }} |
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
-</div>
 </section>

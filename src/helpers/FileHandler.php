@@ -15,11 +15,11 @@ class FileHandler {
     /**
      * Uploads a new profile image linked to a member.
      *
-     * @param $file File Profile Image.
-     * @param $memberID int members MemberID
+     * @param $file File | UploadedFile File containing profile image
+     * @param $memberID int The members ID
      * @return bool True if image was uploaded, false if not.
      */
-    public function uploadProfileImage($file, $memberID): bool {
+    public function uploadProfileImage($file, int $memberID): bool {
         $profileDirPath = "./assets/img/profile/" . $memberID . "/";
 
         if ($file instanceof UploadedFile) {
@@ -42,7 +42,7 @@ class FileHandler {
                 // force update the image cache on website
                 $profileImagePath = $profileDirPath . uniqid() . "." . $tempFile->getExtension();
 
-                //moves file to members directory and renames file
+                //moves file to the member's directory and renames file
                 $tempFile->move($profileDirPath, $profileImagePath);
 
                 return true;
@@ -51,11 +51,18 @@ class FileHandler {
         return false;
     }
 
+    /**
+     * Checks if the file supplied has a
+     * file size beneath the preset limit.
+     *
+     * @param UploadedFile $uploadedFile
+     * @return bool
+     */
     private function compareFileSizeToLimit(UploadedFile $uploadedFile): bool {
-        $maxFileSize = 2 * self::MB;
+        $maxFileSizeInBytes = 2 * self::MB;
         $fileSize = $uploadedFile->getSize();
 
-        if ($fileSize < $maxFileSize) {
+        if ($fileSize < $maxFileSizeInBytes) {
             return true;
         } else {
             $sizeError = "Filesize exceeds limit";
@@ -64,13 +71,11 @@ class FileHandler {
         }
     }
 
-    /*
-     * @param UploadedFile $uploadedFile File to check size of.
-     * @return bool True if filesize is below limit, false if not.
-     */
-
     /**
-     * @param UploadedFile $uploadedFile File to check extension of.
+     * Checks if the file supplied has an extension
+     * which is on the site's list of accepted extensions.
+     *
+     * @param UploadedFile $uploadedFile Image file
      * @return bool True if extension is allowed, false if not.
      */
     private function checkExtension(UploadedFile $uploadedFile): bool {
@@ -94,13 +99,16 @@ class FileHandler {
      */
     public function getProfileImage($memberID) {
         $profileDirPath = "./assets/img/profile/" . $memberID . "/";
+        // checks if directory exists and returns true/false
         if (file_exists($profileDirPath)){
             $iterator = new \FilesystemIterator($profileDirPath);
-            $notEmptyDir = $isDirEmpty = $iterator->valid();
+            $notEmptyDir = $iterator->valid();
         }
 
-        if (file_exists($profileDirPath) && $notEmptyDir) {
+        // if directory exists and is not empty
+        if (file_exists($profileDirPath) && $notEmptyDir == true) {
             $dir = opendir($profileDirPath);
+            // iterate through files in dir
             while (false !== ($file = readdir($dir))) {
                 $pathInfo = pathinfo($profileDirPath . $file);
                 $filename = $pathInfo['filename'];
@@ -113,14 +121,20 @@ class FileHandler {
         return false;
     }
 
-    private function deleteOldImage($filePath) {
+    /**
+     * Deletes an old image in a given path
+     * if the image exists.
+     *
+     * @param $filePath string Path to the image-file.
+     */
+    private function deleteOldImage(string $filePath) {
         if (file_exists($filePath)) {
             unlink($filePath);
         }
     }
 
     /**
-     * @return array Containing all the error messages.
+     * @return array List of all error messages.
      */
     public function getErrorMessages(): array {
         return $this->errorMessages;

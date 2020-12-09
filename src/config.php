@@ -12,10 +12,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // sets default timezone
 date_default_timezone_set('CET');
 
-// Initialises the request variable with all the PHP-super globals.
+// Initialises the request variable with all the PHP-super globals
 $request = Request::createFromGlobals();
 
-// Links Environment variables set in the dotenv-file
+// Links Environment variables set in the dotenv-file.
 // in the root-dir, to the $_ENV global variable.
 $dotenv = new Dotenv();
 $dotenv->load(__DIR__ . '/../.env');
@@ -28,13 +28,14 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     }
 });
 
-// Twig setup for the dispatcher
+// Twig setup for the dispatcher.
 $loader = new FilesystemLoader(__DIR__ . '/views/');
 $twig = new Environment($loader);
+// adds the Session-object to twig as a global.
 $twig->addGlobal('session', new Session);
 
 
-// Dispatcher that redirects the request to the correct Controller.
+// Dispatcher that redirects a request to the correct Controller.
 $routeInfo = $dispatcher->dispatch($request->getMethod(), $request->getPathInfo());
 switch ($routeInfo[0]) {
 
@@ -56,8 +57,8 @@ switch ($routeInfo[0]) {
         $response->send();
         break;
 
-        // if the page is found, the linked routes will be
-        // used to redirect the request to the correct function
+        // if the page is found, the previously fetched routes will be
+        // used to redirect the request to the correct function.
     case FastRoute\Dispatcher::FOUND:
         $controllerPath = $routeInfo[1][0]; //controller to be called
         $function = $routeInfo[1][1]; // function to be called
@@ -69,7 +70,8 @@ switch ($routeInfo[0]) {
         if ($response instanceof Response) {
             $response
                 ->prepare($request)
-                ->send(); // redirect request to the correct controller + function.
+                ->send(); // redirect request to the correct controller
+                          // + function with parameters.
         }
 
         break;
