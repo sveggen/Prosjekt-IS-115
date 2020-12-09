@@ -26,7 +26,9 @@ class RetrieveAccount extends BaseController {
     }
 
     /**
-     * Creates a authentication-account for a given member and sends a temporary password
+     * Creates an authentication-account (user-table)
+     * - which contains a password and a member ID,
+     * for a given member and sends a temporary password
      * to the members email address.
      *
      * @return Response renders Flash message and retrieve authentication page.
@@ -44,13 +46,14 @@ class RetrieveAccount extends BaseController {
         $userModel = $userModel = new User();
         $userExists = $userModel->checkUserExistence($memberID);
 
-        //checks if member exists and if an associated authentication does not exist.
+        //checks if member exists and if an associated authentication does not exists
         if ($memberID && !$userExists) {
             // create authentication with temporary password
             $temporaryPassword = $userModel->createUserAndPassword($memberID, $email);
 
             //checks if temporary password was created
             if ($temporaryPassword) {
+                // email is not sent if the member already is registered with a password.
                 $this->sendTemporaryPasswordEmail($email, $temporaryPassword);
             }
         }
@@ -65,6 +68,12 @@ class RetrieveAccount extends BaseController {
         );
     }
 
+    /**
+     * Sends an email with to the member with the generated password.
+     *
+     * @param $email
+     * @param $temporaryPassword
+     */
     private function sendTemporaryPasswordEmail($email, $temporaryPassword) {
         if ((new Validate)->validateEmail($email)) {
 

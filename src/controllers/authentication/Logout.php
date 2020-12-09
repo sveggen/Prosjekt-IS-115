@@ -19,6 +19,7 @@ class Logout extends BaseController {
     public function logout(): Response {
 
         $session = new Session();
+        // clears all session variables related to the site
         $session->clear();
         $session->getFlashBag()->add('authentication', 'Successfully logged out');
 

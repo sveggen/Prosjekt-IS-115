@@ -20,10 +20,6 @@ class Login extends BaseController {
      * @return Response
      */
     public function renderLoginPage(): Response {
-        if ($this->hasMemberPrivileges() == true
-            and $this->hasLeaderPrivileges() == true) {
-            return $this->methodNotAllowed();
-        }
 
         return new Response(
             $this->twig->render('pages/authentication/login.html.twig')
@@ -37,10 +33,6 @@ class Login extends BaseController {
      * @return RedirectResponse|Response
      */
     public function login() {
-        if ($this->hasMemberPrivileges() == true
-            and $this->hasLeaderPrivileges() == true) {
-            return $this->methodNotAllowed();
-        }
 
         $session = new Session();
 

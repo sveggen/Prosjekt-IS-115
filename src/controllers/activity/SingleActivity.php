@@ -12,6 +12,15 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class SingleActivity extends BaseController {
 
+    /**
+     * Removes a member from a given activity, aka. unsubscribes the
+     * member from the attendance list of the activity.
+     *
+     * NOTE: This function can only be triggered by the user self.
+     *
+     * @param $requestParameters
+     * @return Response
+     */
     public function leaveActivity($requestParameters): Response {
         if ($this->hasMemberPrivileges() == false
             and $this->hasLeaderPrivileges() == false) {
@@ -28,6 +37,13 @@ class SingleActivity extends BaseController {
         return $this->renderSingleActivity($requestParameters);
     }
 
+    /**
+     * Renders a single activity based on the activity ID retrieved from the
+     * request.
+     *
+     * @param $requestParameters
+     * @return Response
+     */
     public function renderSingleActivity($requestParameters): Response {
         if ($this->hasMemberPrivileges() == false
             and $this->hasLeaderPrivileges() == false) {
@@ -52,6 +68,17 @@ class SingleActivity extends BaseController {
         );
     }
 
+
+    /**
+     *
+     * Adds a member to a given activity, aka. subscribes the
+     * to the attendance list of the activity.
+     *
+     * NOTE: This function can only be triggered by the user self.
+     *
+     * @param $requestParameters
+     * @return Response
+     */
     public function joinActivity($requestParameters): Response {
         if ($this->hasMemberPrivileges() == false
             and $this->hasLeaderPrivileges() == false) {
@@ -60,12 +87,12 @@ class SingleActivity extends BaseController {
 
         $session = new Session();
         $memberID = $session->get('memberID');
+        // current time
         $joinTime = date('Y-m-d H:i:s');
         $activityModel = new Activity();
 
         $activityID = $requestParameters['activityID'];
 
-        //$emptyActivitySlots = $activityModel->getEmptySlotsInActivity($activityID);
         $joinActivity = $activityModel->addActivityMember($memberID, $activityID, $joinTime);
 
         if ($joinActivity) {
@@ -76,6 +103,13 @@ class SingleActivity extends BaseController {
 
     }
 
+    /**
+     * Removes an activity completely from
+     * the activity list and database.
+     *
+     * @param $requestParameters
+     * @return Response
+     */
     public function removeActivity($requestParameters): Response {
         if ($this->hasLeaderPrivileges() == false) {
             return $this->methodNotAllowed();
@@ -97,6 +131,13 @@ class SingleActivity extends BaseController {
         }
     }
 
+    /**
+     * Removes a member which have joined an activity
+     * - from said activity.
+     *
+     * @param $requestParameters
+     * @return Response
+     */
     public function removeMemberFromActivity($requestParameters): Response {
         if ($this->hasLeaderPrivileges() == false) {
             return $this->methodNotAllowed();

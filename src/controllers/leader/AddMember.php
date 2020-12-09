@@ -11,6 +11,12 @@ use App\models\role\Role;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ *  Only leaders have access to this class
+ *
+ * Class AddMember
+ * @package App\controllers\leader
+ */
 class AddMember extends BaseController {
 
     /**
@@ -70,7 +76,6 @@ class AddMember extends BaseController {
      * @return Response
      */
     public function renderAddMemberPage(): Response {
-        // only leaders have access to this function
         if ($this->hasLeaderPrivileges() == false) {
             return $this->methodNotAllowed();
         }

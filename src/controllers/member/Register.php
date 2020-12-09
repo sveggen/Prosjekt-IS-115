@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class Register extends BaseController {
 
     /**
-     *
+     * Render the register page.
      *
      * @return Response
      */
@@ -26,6 +26,7 @@ class Register extends BaseController {
         }
 
         $interestModel = new Interest();
+        // interests are used to populated dropdown menu
         $interests = $interestModel->getAllInterests();
 
         return new Response(
@@ -34,6 +35,13 @@ class Register extends BaseController {
         );
     }
 
+    /**
+     * Registers a new member to the youth club if all required
+     * fields have been submitted correctly.
+     *
+     * @return RedirectResponse|Response
+     * @throws \Exception
+     */
     public function registerMember() {
         if ($this->hasMemberPrivileges() == true
             and $this->hasLeaderPrivileges() == true){
@@ -59,7 +67,7 @@ class Register extends BaseController {
 
         $session = new Session();
 
-        // validates all the members of the memberData array.
+        // validates all the fields of the memberData array.
         $errorMessages = $this->validateRegisterMemberForm($memberData);
 
         // checks if the list of error messages is not empty
@@ -76,6 +84,7 @@ class Register extends BaseController {
 
         if ($registerMember) {
             $fileUpload = new FileHandler();
+            // uploads the members profile image to the server
             $fileUpload->uploadProfileImage($image, $registerMember);
             return new RedirectResponse('http://localhost:8081/login');
         } else {

@@ -12,6 +12,14 @@ use App\models\member\Member;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ * This class is the controller for the "Member Dashboard".
+ *
+ * Only leaders have access to this class
+ *
+ * Class MemberDashboard
+ * @package App\controllers\leader
+ */
 class MemberDashboard extends BaseController {
 
     /**
@@ -95,6 +103,7 @@ class MemberDashboard extends BaseController {
         $query = $this->request->query->get('payment-status');
 
         $memberModel = new Member();
+        // get all members sorted on a given payment status
         $membersSortedByPayment = $memberModel->getMembersSortPaymentStatus($query);
 
         $paid = 1;
@@ -118,7 +127,6 @@ class MemberDashboard extends BaseController {
      * @return Response
      */
     private function renderSearchResults($memberList, $searchQueryName): Response {
-
         $activities = (new Activity)->getAllFutureActivities();
 
         $interests = (new Interest)->getAllInterests();

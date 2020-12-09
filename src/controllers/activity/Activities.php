@@ -12,14 +12,18 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class Activities extends BaseController {
 
 
-
+    /**
+     * Creates a new activity after the connected
+     * form has been submitted.
+     *
+     * @return Response
+     */
     public function newActivity(): Response {
         if ($this->hasLeaderPrivileges() == false) {
             return $this->methodNotAllowed();
         }
 
-        // get parameters from "add activity"-form
-        // through POST request
+        // Retrieve all parameters from the "add activity"-form
         $newActivityForm = [
             'title' => $this->request->get('title'),
             'startTime' => $this->request->get('start-time'),
@@ -30,6 +34,7 @@ class Activities extends BaseController {
 
         $session = new Session();
 
+        // validates the form
         $errorMessages = $this->validateNewActivityForm($newActivityForm);
         // checks if the list of error messages is not empty
         if (!empty($errorMessages)) {
@@ -83,7 +88,8 @@ class Activities extends BaseController {
     }
 
     /**
-     * Render all activities
+     * Render all activities that have a start date
+     * in the future counted from the current time.
      *
      * @return Response
      */
@@ -94,6 +100,7 @@ class Activities extends BaseController {
         }
 
         $activityModel = new Activity();
+        // retrieves all activities with an upcoming start date
         $allActivities = $activityModel->getAllFutureActivities();
 
         return new Response(
