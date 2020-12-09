@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class Index extends BaseController {
 
+
     public function renderStartPage(): Response {
 
         $totalMembers = $this->getCurrentMemberTotal();

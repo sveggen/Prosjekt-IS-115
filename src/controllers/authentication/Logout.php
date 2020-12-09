@@ -11,6 +11,11 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class Logout extends BaseController {
 
+    /**
+     * Logs the member out of the system.
+     *
+     * @return Response
+     */
     public function logout(): Response {
 
         $session = new Session();

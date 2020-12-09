@@ -8,8 +8,16 @@ use App\models\address\Address;
 use App\models\member\Member;
 use DateTime;
 
+/**
+ * Contains functions for variable validation.
+ *
+ * Class Validate
+ * @package App\helpers
+ */
 class Validate {
 
+    // array of error messages that can
+    // be retrieved and outputted
     private $errorMessages = array();
 
 
@@ -28,6 +36,12 @@ class Validate {
         }
     }
 
+    /**
+     * Checks if an email is in use by another member.
+     *
+     * @param $email
+     * @return false|int
+     */
     public function validateEmailInUse($email){
         if ($this->validateEmail($email)){
             $memberModel = new Member();
@@ -41,7 +55,9 @@ class Validate {
 
 
     /**
-     * Compares if the two emails are the same
+     * Checks if an email is in use by another member,
+     * and if it is the member self who is registered with
+     * the email.
      *
      * @param $ownEmail
      * @param $newEmail
@@ -51,6 +67,8 @@ class Validate {
         if ($this->validateEmail($newEmail)){
             $memberModel = new Member();
             $emailInUse = $memberModel->getSingleMemberID($newEmail);
+            // will return true if member is registered with email,
+            // or no other member is
             if ($emailInUse && $ownEmail != $newEmail ) {
                 $error = "The email address is already taken";
                 return array_push($this->errorMessages, $error);
@@ -58,8 +76,19 @@ class Validate {
         } return false;
     }
 
+    /**
+     * Validates if a given password is longer than 4 characters.
+     *
+     * @param $password
+     * @return bool|int
+     */
     public function validatePassword($password){
-        // TO DO
+        if (strlen($password) > 4){
+            return true;
+        } else {
+            $error =  "The password must be longer than 4 characters";
+            return array_push($this->errorMessages, $error);
+        }
     }
 
     /**
@@ -69,6 +98,7 @@ class Validate {
      * @return bool|int
      */
     public function validatePhoneNumber($phoneNumber) {
+        // regex is numbers only and exactly 8 numbers.
         if (preg_match('/[0-9]{8}/', $phoneNumber)){
             return true;
         } else {
@@ -136,6 +166,12 @@ class Validate {
         }
     }
 
+    /**
+     * Validates if a title has at least 2 characters.
+     *
+     * @param $title
+     * @return bool|int
+     */
     public function validateTitle($title){
         $characters = 2;
         if (strlen($title) > $characters){
@@ -156,9 +192,16 @@ class Validate {
         }
     }
 
+    /**
+     * Validates if a given address is valid
+     * and contains at least 4 characters.
+     *
+     * @param $adress
+     * @return bool|int
+     */
     public function validateAddress($adress){
         $characters = 4;
-        if (strlen($adress) > $characters){
+        if (strlen($adress) >= $characters){
             return true;
         } else {
             $error = "The street address must be longer than $characters characters";
@@ -166,6 +209,12 @@ class Validate {
         }
     }
 
+    /**
+     * Validates if a given zip code is valid.
+     *
+     * @param $zipCode
+     * @return bool|int
+     */
     public function validateZipCode($zipCode){
         $addressModel = new Address();
         $findZipCode = $addressModel->checkForValidZipCode($zipCode);
@@ -177,17 +226,29 @@ class Validate {
         }
     }
 
+    /**
+     * Validates if agicen payment status is either paid or not paid.
+     *
+     * @param $paymentStatus
+     * @return bool|int
+     */
     public function validatePaymentStatus($paymentStatus){
-        $min = 0;
-        $max = 1;
+        $min = 0; // not paid
+        $max = 1; // paid
         if (($min <= $paymentStatus) && ($paymentStatus <= $max)){
             return true;
         } else {
-            $error = "There must be chosen a payment status of paid / not paid";
+            $error = "There must be chosen a payment status of paid/not paid";
             return array_push($this->errorMessages, $error);
         }
     }
 
+    /**
+     * Validates if at least one interest has been selected.
+     *
+     * @param array $interests
+     * @return bool|int
+     */
     public function validateInterests (array $interests) {
         if (empty($interests)) {
             $error = "There must be selected at least one interest";
@@ -197,6 +258,12 @@ class Validate {
         }
     }
 
+    /**
+     * Validates if at least one role has been selected.
+     *
+     * @param $roles
+     * @return bool|int
+     */
     public function validateRoles ($roles){
         if (empty($roles)) {
             $error = "There must be selected at least one role";
@@ -214,8 +281,16 @@ class Validate {
         return $this->errorMessages;
     }
 
+    /**
+     * Validates if an activity description contains more than 2 words.
+     *
+     * @param $description
+     * @return bool|int
+     */
     public function validateActivityDescription($description){
-        if (str_word_count($description) >= 2){
+        $minimumWords = 2;
+        // counts the number of words in the description
+        if (str_word_count($description) >= $minimumWords){
             return true;
         } else {
             $error = "The description must contain at least 4 words.";
@@ -223,6 +298,12 @@ class Validate {
         }
     }
 
+    /**
+     * Validates if a number is above 0.
+     *
+     * @param $number
+     * @return bool|int
+     */
     public function validatePositiveNumber($number){
         if ($number > 0) {
             return true;
@@ -232,11 +313,17 @@ class Validate {
         }
     }
 
+    /**
+     * Validates if a given password is empty or not.
+     *
+     * @param $password
+     * @return bool|int
+     */
     public function validatePasswordNotEmpty($password) {
         if (!empty($password)) {
             return true;
         } else {
-            $error = "The password cant be empty.";
+            $error = "The password can't be empty.";
             return array_push($this->errorMessages, $error);
         }
     }

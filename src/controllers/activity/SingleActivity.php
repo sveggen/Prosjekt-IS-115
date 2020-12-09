@@ -36,7 +36,7 @@ class SingleActivity extends BaseController {
         $activityID = $requestParameters['activityID'];
 
         $activityModel = new Activity();
-        $activity = $activityModel->getActivity($activityID);
+        $activity = $activityModel->getActivityAndLeader($activityID);
         $attendees = $activityModel->getActivityAttendees($activityID);
         $attendeesCount = $attendees->num_rows;
 

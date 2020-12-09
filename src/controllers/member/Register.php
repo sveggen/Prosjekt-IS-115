@@ -14,7 +14,11 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class Register extends BaseController {
 
-
+    /**
+     *
+     *
+     * @return Response
+     */
     public function renderRegisterPage(): Response {
         if ($this->hasMemberPrivileges() == true
             and $this->hasLeaderPrivileges() == true){

@@ -11,6 +11,12 @@ use Twig\Environment;
 use Twig\Extension\CoreExtension;
 use Twig\Loader\FilesystemLoader;
 
+/**
+ * Parent class for all controllers.
+ *
+ * Class BaseController
+ * @package App\controllers
+ */
 abstract class BaseController {
 
     protected $request;
@@ -28,6 +34,7 @@ abstract class BaseController {
      * Setup for Symfony HttpFoundation
      */
     private function symfonyHttpFoundationSetup() {
+        // loads the "request"-variable with all the PHP-superglobals.
         $this->request = Request::createFromGlobals();
     }
 
@@ -46,10 +53,16 @@ abstract class BaseController {
         $this->twig->addGlobal('session', new Session);
     }
 
+    /**
+     * Checks if a given member has "leader"-privileges,
+     * based on the "role" session variable.
+     *
+     * @return bool
+     */
     protected function hasLeaderPrivileges(): bool {
         $session = new Session();
         $role = $session->get('role');
-        // if the members role is "leader"
+        // return true if the member's role is "leader"
         if ($this->getMemberSession() && $role == 'leader') {
             return true;
         } else {
@@ -57,6 +70,12 @@ abstract class BaseController {
         }
     }
 
+    /**
+     * Checks if a given member is logged in, based
+     * on the "memberID"-session object.
+     *
+     * @return bool
+     */
     private function getMemberSession(): bool {
         $session = new Session();
         $memberID = $session->get('memberID');
@@ -68,10 +87,16 @@ abstract class BaseController {
 
     }
 
+    /**
+     * Checks if a given member has "member"-privileges,
+     * based on the "role" session variable.
+     *
+     * @return bool
+     */
     protected function hasMemberPrivileges(): bool {
         $session = new Session();
         $role = $session->get('role');
-        // if the members role is "member"
+        // return true if the member's role is "member"
         if ($this->getMemberSession() && $role == 'member') {
             return true;
         } else {
@@ -79,6 +104,9 @@ abstract class BaseController {
         }
     }
 
+    /**
+     * Redirects the user to the Method Not Allowed Error-page.
+     */
     protected function methodNotAllowed(): Response {
         return new Response(
             $this->twig->render('pages/errors/405.html.twig'));

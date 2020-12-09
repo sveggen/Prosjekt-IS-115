@@ -21,7 +21,7 @@ class AddMember extends BaseController {
             return $this->methodNotAllowed();
         }
 
-        // get data from all the fields in the "add member-form
+        // get data from all the fields in the "add member"-form
         // from the POST-request.
         $memberData = [
             'firstName' => $this->request->get('first-name'),
@@ -39,7 +39,7 @@ class AddMember extends BaseController {
 
         $session = new Session();
 
-        // validates all the members of the memberData array.
+        // validates all the fields of the memberData array.
         $errorMessages = $this->validateFields($memberData);
 
         // checks if the list of error messages is not empty
@@ -89,7 +89,7 @@ class AddMember extends BaseController {
     }
 
     /**
-     * Validates the every field from the "Add member" form.
+     * Validates every field from the "Add member"-form.
      *
      * @param array $memberData An array containing all the field values.
      * @return array|false A list of error message,
