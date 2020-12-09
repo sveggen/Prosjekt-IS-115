@@ -112,7 +112,8 @@
                         </td>
                         <td data-label="ID">{{ member.member_id }}</td>
                         <td data-label="Name"><a
-                                    href="http://localhost:8081/profile/{{ member.member_id }}">{{ member.first_name }} {{ member.last_name }} </a>
+                                    href="http://localhost:8081/profile/{{ member.member_id }}">
+                                {{ member.first_name | title }} {{ member.last_name | title }} </a>
                         </td>
                         <td data-label="Email">{{ member.email }}</td>
                         <td data-label="Street Address">{{ member.street_address }}, {{ member.zip_code }}</td>

@@ -4,9 +4,10 @@
             <img src="/{{ profileImage }}">
         </div>
         <div class="content">
-            <div class="header">{{ data.first_name }} {{ data.last_name }}</div>
+            {#  "title" makes first and last name have capital letters in each new word #}
+            <div class="header">{{ member.first_name | title }} {{ member.last_name | title }}</div>
             <div class="meta">
-                <span class="date">Registered: {{ data.time_of_registration |date("d. M. Y. H:i") }}</span>
+                <span class="date">Registered: {{ member.time_of_registration |date("d. M. Y. H:i") }}</span>
             </div>
             <div class="ui divider"></div>
             <div class="ui list">
@@ -14,7 +15,7 @@
                     <i class="address card icon"></i>
                     <div class="content">
                         <label> <b>Member-ID:</b>
-                            {{ data.member_id }}
+                            {{ member.member_id }}
                         </label>
                     </div>
                 </div>
@@ -23,7 +24,7 @@
                     <i class="calendar alternate outline card icon"></i>
                     <div class="content">
                         <label> <b>Birth date:</b>
-                            {{ data.birth_date|date("d.m.Y") }}
+                            {{ member.birth_date|date("d.m.Y") }}
                         </label>
                     </div>
                 </div>
@@ -33,7 +34,7 @@
                     <i class="venus mars card icon"></i>
                     <div class="content">
                         <label> <b>Gender:</b>
-                            {{ data.gender | capitalize }}
+                            {{ member.gender | capitalize }}
                         </label>
                     </div>
                 </div>
@@ -43,7 +44,7 @@
                     <i class="map marker alternate icon"></i>
                     <div class="content">
                         <label> <b>Address:</b>
-                            {{ data.street_address }}, {{ data.zip_code }}, {{ data.city | title }}
+                            {{ member.street_address }}, {{ member.zip_code }}, {{ member.city | title }}
                         </label>
                     </div>
                 </div>
@@ -52,7 +53,7 @@
                     <i class="mail icon"></i>
                     <div class="content">
                         <label> <b>Email:</b>
-                            <a href="mailto:{{ data.email }}">{{ data.email }}</a>
+                            <a href="mailto:{{ member.email }}">{{ member.email }}</a>
                         </label>
                     </div>
                 </div>
@@ -61,7 +62,7 @@
                     <i class="phone icon"></i>
                     <div class="content">
                         <label> <b>Phone number:</b>
-                            +47 {{ data.phone_number }}
+                            +47 {{ member.phone_number }}
                         </label>
                     </div>
                 </div>
@@ -70,7 +71,7 @@
                     <i class="money icon"></i>
                     <div class="content">
                         <label> <b>Payment status:</b>
-                            {% if data.subscription_status == 1 %}
+                            {% if member.subscription_status == 1 %}
                                 Paid
                             {% else %}
                                 Not paid
