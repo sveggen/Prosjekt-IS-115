@@ -11,7 +11,7 @@ return [
     ['POST', '/login', ['App\controllers\authentication\Login', 'login']],
 
     ['GET', '/register', ['App\controllers\member\Register', 'renderRegisterPage']],
-    ['POST', '/register', ['App\controllers\member\Register', 'newUser']],
+    ['POST', '/register', ['App\controllers\member\Register', 'registerMember']],
 
     ['GET', '/retrieve-account', ['App\controllers\member\RetrieveAccount', 'renderRetrieveAccountPage']],
     ['POST', '/retrieve-account', ['App\controllers\member\RetrieveAccount', 'retrieveAccount']],
@@ -24,7 +24,6 @@ return [
     ['GET', '/profile/{id:\d+}/delete', ['App\controllers\member\Profile', 'deleteMember']],
 
     ['GET', '/activities', ['App\controllers\activity\Activities', 'renderAllActivities']],
-    ['POST', '/activities', ['App\controllers\activity\Activities', 'newActivity']],
     ['GET', '/activities/{id:\d+}', ['App\controllers\activity\SingleActivity', 'renderSingleActivity']],
     ['GET', '/activities/{id:\d+}/join', ['App\controllers\activity\SingleActivity', 'joinActivity']],
     ['GET', '/activities/{id:\d+}/leave', ['App\controllers\activity\SingleActivity', 'leaveActivity']],
@@ -34,6 +33,7 @@ return [
     ['POST', '/add-member', ['App\controllers\leader\AddMember', 'addMember']],
 
     ['GET', '/activities/{id:\d+}/remove', ['App\controllers\activity\SingleActivity', 'removeActivity']],
+    ['POST', '/activities/add', ['App\controllers\activity\Activities', 'newActivity']],
 
     ['GET', '/dashboard', ['App\controllers\leader\MemberDashboard', 'renderMemberDashboard']],
     ['POST', '/dashboard/send-email', ['App\controllers\leader\MemberDashboard', 'sendEmailToMarked']],

@@ -173,5 +173,23 @@
             </div>
         </section>
 
+        <script>
+            $('.ui.form')
+                .form({
+                    fields: {
+                        confirmpassword: {
+                            identifier: 'confirm-password',
+                            rules: [
+                                {
+                                    type: 'match[password]',
+                                    prompt: 'Passwords do not match'
+                                },
+                            ]
+                        },
+                    }
+                })
+            ;
+        </script>
+
     {% endfor %}
 {% endblock %}

@@ -37,18 +37,4 @@ abstract class Database {
         return $this->database;
     }
 
-
-    protected function changeUserToSelect(){
-        $this->getConnection()->change_user("dbuser", "BACIT2020", "ergotests");
-    }
-
-    protected function changeUser(){
-        $this->getConnection()->change_user("dbuser", "BACIT2020", "ergotests");
-    }
-
-    protected function changeUserToDDL(){
-        $this->getConnection()->change_user("dbuser", "BACIT2020", "ergotests");
-    }
-
-
 }
