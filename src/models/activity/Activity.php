@@ -35,13 +35,13 @@ class Activity extends Database {
         return (int)$result['SUM'];
     }
 
-    public function addActivity($title, $startTime, $endTime, $description, $memberID, $maxAttendees){
+    public function addActivity($title, $startTime, $endTime, $description, $memberID, $maxAttendees): int {
         $sql = "INSERT INTO activity (title, start_time, end_time, description, fk_member_id, max_attendees) 
                 VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bind_param('ssssii', $title, $startTime, $endTime, $description, $memberID, $maxAttendees);
         $stmt->execute();
-        $result = $stmt->get_result();
+        $result = $stmt->affected_rows;
         $stmt->close();
         return $result;
     }

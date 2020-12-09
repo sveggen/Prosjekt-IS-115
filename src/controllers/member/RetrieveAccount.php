@@ -73,7 +73,7 @@ class RetrieveAccount extends BaseController {
                         You can log in <a href='http://localhost:8081/login'>here</a> and change
                         your password.</p><br> 
                         Best Regards <br>
-                        Neo Youtclub";
+                        Neo Youth Club";
             $emailSender = new EmailSender();
             $emailSender->sendEmail($email, $subject, $content);
         }

@@ -25,7 +25,8 @@ class AddMember extends BaseController {
             return $this->methodNotAllowed();
         }
 
-        // data from all the fields in the "add member-form
+        // get data from all the fields in the "add member-form
+        // from the POST-request.
         $memberData = [
             'firstName' => $this->request->get('first-name'),
             'lastName' => $this->request->get('last-name'),
@@ -40,31 +41,15 @@ class AddMember extends BaseController {
             'roles' => (array)$this->request->get('roles'),
         ];
 
-        $validator = new Validate();
-
-
-        //validate all the fields from the form
-        $validator->validateFirstName($memberData['firstName']);
-        $validator->validateLastName($memberData['lastName']);
-        $validator->validateEmailInUse($memberData['email']);
-        $validator->validatePhoneNumber($memberData['phoneNumber']);
-        $validator->validateFormerDate($memberData['birthDate']);
-        $validator->validateGender($memberData['gender']);
-        $validator->validateAddress($memberData['streetAddress']);
-        $validator->validateZipCode($memberData['zipCode']);
-        $validator->validateInterests($memberData['interests']);
-        $validator->validatePaymentStatus($memberData['paymentStatus']);
-        $validator->validateRoles($memberData['roles']);
-
-
-        // get the list of error messages
-        $errorMessages = $validator->getErrorMessages();
-
         $session = new Session();
+
+        // validates all the members of the memberData array.
+        $errorMessages = $this->validateFields($memberData);
 
         // checks if the list of error messages is not empty
         if (!empty($errorMessages)) {
 
+            // adds each error message as a flash message to the session object
             foreach ($errorMessages as $message) {
                 $session->getFlashBag()->add('addMemberError', $message);
             }
@@ -74,6 +59,7 @@ class AddMember extends BaseController {
         $memberModel = new Member();
         $addMember = $memberModel->adminRegisterMember($memberData);
 
+        // adds the member to the youth club.
         if ($addMember) {
             $session->getFlashBag()->add('addMemberSuccess', 'Member was successfully added');
         } else {
@@ -82,7 +68,13 @@ class AddMember extends BaseController {
         return $this->renderAddMemberPage();
     }
 
+    /**
+     * Renders the "Add Member" page.
+     *
+     * @return Response
+     */
     public function renderAddMemberPage(): Response {
+        // only leaders have access to this function
         if ($this->hasLeaderPrivileges() == false) {
             return $this->methodNotAllowed();
         }
@@ -98,6 +90,39 @@ class AddMember extends BaseController {
                 ['interests' => $interests,
                     'roles' => $roles])
         );
+    }
+
+    /**
+     * Validates the every field from the "Add member" form.
+     *
+     * @param array $memberData An array containing all the field values.
+     * @return array|false A list of error message,
+     * or false if all tests passed.
+     */
+    private function validateFields(array $memberData){
+        $validator = new Validate();
+
+        //validate all the fields from the form
+        $validator->validateFirstName($memberData['firstName']);
+        $validator->validateLastName($memberData['lastName']);
+        $validator->validateEmailInUse($memberData['email']);
+        $validator->validatePhoneNumber($memberData['phoneNumber']);
+        $validator->validateFormerDate($memberData['birthDate']);
+        $validator->validateGender($memberData['gender']);
+        $validator->validateAddress($memberData['streetAddress']);
+        $validator->validateZipCode($memberData['zipCode']);
+        $validator->validateInterests($memberData['interests']);
+        $validator->validatePaymentStatus($memberData['paymentStatus']);
+        $validator->validateRoles($memberData['roles']);
+
+        // get the list of error messages
+        $errorMessages = $validator->getErrorMessages();
+
+        if (!empty($errorMessages)){
+            return $errorMessages;
+        } else{
+            return false;}
+
     }
 
 }

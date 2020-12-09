@@ -64,17 +64,13 @@ class Validate {
      *
      * @param $futureDate mixed date in the future
      * @return bool true if date is valid and in the future, false if not.
+     * @throws \Exception
      */
-    public function validateFutureDate($futureDate){
-        try {
-            $date = new DateTime($futureDate);
-        } catch (\Exception $e) {
-            return "The date is not valid ";
-        }
-
+    public function validateFutureDate($futureDate) {
+        $date = new DateTime($futureDate);
         $now = new DateTime();
 
-        if ($date > $now){
+        if ($date > $now) {
             return true;
         } else {
             $error = "The date must be in the future";
@@ -82,19 +78,16 @@ class Validate {
         }
     }
 
+
     /**
      * Checks if a given date is in the past.
      *
      * @param $pastDate mixed date that has been
      * @return bool true if date is valid and in the past, false if not.
+     * @throws \Exception
      */
     public function validateFormerDate($pastDate){
-        try {
-            $date = new DateTime($pastDate);
-        } catch (\Exception $e) {
-            return false;
-        }
-
+        $date = new DateTime($pastDate);
         $now = new DateTime();
 
         if ($date < $now){
@@ -130,7 +123,7 @@ class Validate {
         if (strlen($title) > $characters){
             return true;
         } else {
-            $error = "The last name must be longer than $characters characters";
+            $error = "The title must be longer than $characters characters";
             return array_push($this->errorMessages, $error);
         }
     }
@@ -150,7 +143,7 @@ class Validate {
         if (strlen($adress) > $characters){
             return true;
         } else {
-            $error = "The address must be longer than $characters characters";
+            $error = "The street address must be longer than $characters characters";
             return array_push($this->errorMessages, $error);
         }
     }
@@ -186,14 +179,15 @@ class Validate {
         }
     }
 
-    public function validateRoles (array $roles){
-        if (empty($interests)) {
+    public function validateRoles ($roles){
+        if (empty($roles)) {
             $error = "There must be selected at least one role";
             return array_push($this->errorMessages, $error);
         } else {
             return true;
         }
     }
+
 
     /**
      * @return array Containing all the error messages.
@@ -202,5 +196,31 @@ class Validate {
         return $this->errorMessages;
     }
 
+    public function validateActivityDescription($description){
+        if (str_word_count($description) > 4){
+            return true;
+        } else {
+            $error = "The description must contain at least 4 words.";
+            return array_push($this->errorMessages, $error);
+        }
+    }
+
+    public function validatePositiveNumber($number){
+        if ($number > 0) {
+            return true;
+        } else {
+            $error = "The number must be above 1.";
+            return array_push($this->errorMessages, $error);
+        }
+    }
+
+    public function validatePasswordNotEmpty($password) {
+        if (!empty($password)) {
+            return true;
+        } else {
+            $error = "The password cant be empty.";
+            return array_push($this->errorMessages, $error);
+        }
+    }
 
 }

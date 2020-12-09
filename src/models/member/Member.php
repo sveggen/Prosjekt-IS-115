@@ -46,7 +46,6 @@ class Member extends Database {
 
     public function adminRegisterMember($memberData){
         try {
-
             //start transaction
             //$this->getConnection()->autocommit(false);
 
@@ -55,7 +54,6 @@ class Member extends Database {
             $memberID = $this->addMember($memberData['firstName'], $memberData['lastName'],
                 $memberData['email'], $memberData['phoneNumber'], $memberData['paymentStatus'],
                 $addressID, $memberData['gender'], $memberData['birthDate']);
-
 
             (new Role)->addMemberRoles($memberID, $memberData['roles']);
             (new Interest)->addMemberInterests($memberID, $memberData['interests']);
@@ -70,6 +68,11 @@ class Member extends Database {
 
     }
 
+    public function updateMemberInformation(){
+
+        // TO DO
+
+    }
 
 
     /**
@@ -145,7 +148,7 @@ class Member extends Database {
         $stmt->execute();
         $insertId = $this->getConnection()->insert_id;
         $stmt->close();
-        return $insertId;
+        return (int)$insertId;
     }
 
     public function getTotalMembers(): int {

@@ -5,6 +5,7 @@ namespace App\controllers\authentication;
 
 use App\controllers\BaseController;
 
+use App\helpers\Validate;
 use App\models\user\User;
 use App\models\member\Member;
 use App\models\role\Role;
@@ -26,6 +27,12 @@ class Login extends BaseController {
         );
     }
 
+    /**
+     * Logs the member into the system, and assigns them a session based on the
+     * members role + their Member ID.
+     *
+     * @return RedirectResponse|Response
+     */
     public function login() {
         if ($this->hasMemberPrivileges() == true
             and $this->hasLeaderPrivileges() == true) {
@@ -37,31 +44,58 @@ class Login extends BaseController {
         $email = $this->request->get('email');
         $password = $this->request->get('password');
 
-        if ($email && $password) {
-            $userModel = new User();
-            $credentials = $userModel->login($email, $password);
+        // validates if email and password is set. NB: this will only happen
+        // if the user bypasses the JavaScript form validation.
+        $errorMessages = $this->validateLoginForm($email, $password);
 
-            if ($credentials) {
+        // redirects user to home page if user bypasses JavaScript form validation
+        if (!empty($errorMessages)){
+            return new RedirectResponse('/');
+        }
 
-                $this->setUserSession($credentials);
-                return new RedirectResponse('http://localhost:8081');
+        $userModel = new User();
+        // checks if the credentials provided are correct
+        $correctCredentials = $userModel->login($email, $password);
 
-            } else {
-                $session->getFlashBag()->add('loginError', 'Wrong password or username');
-
-                return new Response(
-                    $this->twig->render('/pages/authentication/login.html.twig')
-                );
-            }
+        // sets the user session if the credentials where correct
+        if ($correctCredentials) {
+            $this->setUserSession($correctCredentials);
+            return new RedirectResponse('/');
         } else {
-            $session->getFlashBag()->add('loginError', 'Password or username is missing.');
-
+            $session->getFlashBag()->add('loginError', 'Wrong password or username');
             return new Response(
-                $this->twig->render('/pages/authentication/login.html.twig')
-            );
+                $this->twig->render('/pages/authentication/login.html.twig'));
         }
     }
 
+    /**
+     * Returns true if any of the tests fail
+     *
+     * @param $email
+     * @param $password
+     * @return bool
+     */
+    private function validateLoginForm($email, $password): bool {
+        $validator = new Validate();
+
+        //validate all the fields from the form
+        $validator->validatePasswordNotEmpty($password);
+        $validator->validateEmail($email);
+
+        // get the list of error messages
+        $errorMessages = $validator->getErrorMessages();
+
+        if (!empty($errorMessages)){
+            return true;
+        } else{
+            return false;}
+    }
+
+    /**
+     * Sets variables for the user.
+     *
+     * @param $credentials
+     */
     private function setUserSession($credentials) {
         $session = new Session();
 
@@ -74,15 +108,14 @@ class Login extends BaseController {
 
     /**
      * @param $memberID
-     * @return string The user's role with the highest privilege and
-     * assigns this role to the session object
+     * @return string Gets the user's role with the highest privilege.
      */
     private function getUserRole($memberID): string {
         $roleModel = new Role();
         $userRoles = $roleModel->getSingleMemberRoles($memberID);
 
-        // evaluates the users roles - assigns the users role with
-        // the highest privilege to the session object.
+        // evaluates the users roles - assigns the user's role with
+        // the highest privilege to the Session object.
         $role = "";
         while ($row = $userRoles->fetch_assoc()){
             if ($row['privilege'] == 'leader') {
@@ -96,6 +129,5 @@ class Login extends BaseController {
         }
         return $role;
     }
-
 }
 

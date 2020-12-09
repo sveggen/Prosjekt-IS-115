@@ -5,7 +5,7 @@
 {% block content %}
 
     <section class="ui segment">
-        <form class="ui form" action="" method="post" enctype="multipart/form-data">
+        <form class="ui form" action="" method="post" id="register-form" enctype="multipart/form-data">
             <h4 class="ui dividing header">Register</h4>
             <div class="two fields">
             <div class="field">
@@ -125,9 +125,21 @@
     </section>
 
     <script>
-        // form validation
-        // ---------------------------------------
-
+        $('.ui.form')
+            .form({
+                fields: {
+                    confirmpassword: {
+                        identifier: 'confirm-password',
+                        rules: [
+                            {
+                                type: 'match[password]',
+                                prompt: 'Passwords do not match'
+                            },
+                        ]
+                    },
+                }
+            })
+        ;
     </script>
 
 

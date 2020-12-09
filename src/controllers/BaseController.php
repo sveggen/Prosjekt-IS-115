@@ -3,16 +3,10 @@
 
 namespace App\controllers;
 
-use App\helpers\validation\ContainsAlphanumeric;
-use Symfony\Component\Validator\Constraints as Assert;
-
-use Symfony\Component\Validator\Mapping\ClassMetadata;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Validator\Validation;
 use Twig\Environment;
 use Twig\Extension\CoreExtension;
 use Twig\Loader\FilesystemLoader;
@@ -21,14 +15,12 @@ abstract class BaseController {
 
     protected $request;
     protected $twig;
-    protected $validator;
 
     /**
      * BaseController constructor.
      */
     public function __construct() {
         $this->symfonyHttpFoundationSetup();
-        $this->symfonyValidatorSetup();
         $this->twigSetup();
     }
 
@@ -92,12 +84,6 @@ abstract class BaseController {
             $this->twig->render('pages/errors/405.html.twig'));
     }
 
-    /**
-     * Setup for Symfony Validation.
-     */
-    private function symfonyValidatorSetup() {
-        $this->validator = Validation::createValidator();
-    }
 
 
 }
