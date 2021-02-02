@@ -21,7 +21,6 @@ class Logout extends BaseController {
         $session = new Session();
         // clears all session variables related to the site
         $session->clear();
-        $session->getFlashBag()->add('authentication', 'Successfully logged out');
 
         return new RedirectResponse('http://localhost:8081/login');
     }

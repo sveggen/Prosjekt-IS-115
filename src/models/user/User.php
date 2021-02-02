@@ -33,7 +33,22 @@ class User extends Database {
     }
 
     /**
-     *
+     * Hashes password and calls on addUser()-function.
+     * @param $password
+     * @param $memberID
+     * @return bool true on registration success.
+     */
+    public function registerUser($password, $memberID): bool {
+        $hashedPassword = password_hash($this->pepperPassword($password), PASSWORD_BCRYPT);
+        $user = $this->addUser($hashedPassword, $memberID);
+        if ($user) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      *
      * @param $newPassword
      * @param $memberID
@@ -49,6 +64,11 @@ class User extends Database {
       }
   }
 
+    /**
+     * @param $hashedPassword
+     * @param $memberID
+     * @return int
+     */
   public function changePassword($hashedPassword, $memberID): int {
       $sql = "UPDATE user 
                 SET password = ? 
@@ -60,8 +80,6 @@ class User extends Database {
       $stmt->close();
       return $result;
   }
-
-
 
 
     /**
@@ -83,7 +101,7 @@ class User extends Database {
 
     /**
      * @param $password
-     * @return string with peppered password.
+     * @return string Peppered password.
      */
     private function pepperPassword($password): string {
         return hash_hmac("sha256", $password, $_ENV['HASH_PEPPER']);
@@ -106,22 +124,6 @@ class User extends Database {
 
         if ($createUser) {
             return $temporaryPassword;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Hashes password and calls on addUser()-function.
-     * @param $password
-     * @param $memberID
-     * @return bool true on registration success.
-     */
-    public function registerUser($password, $memberID): bool {
-        $hashedPassword = password_hash($this->pepperPassword($password), PASSWORD_BCRYPT);
-        $user = $this->addUser($hashedPassword, $memberID);
-        if ($user) {
-            return true;
         } else {
             return false;
         }

@@ -84,7 +84,6 @@ abstract class BaseController {
         } else {
             return false;
         }
-
     }
 
     /**

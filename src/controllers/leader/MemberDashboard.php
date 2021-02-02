@@ -28,7 +28,7 @@ class MemberDashboard extends BaseController {
      *
      * @return Response
      */
-    public function sendEmailToSelected(): Response {
+    public function sendEmailToMarked(): Response {
         if ($this->hasLeaderPrivileges() == false) {
             return $this->methodNotAllowed();
         }

@@ -27,7 +27,7 @@ class Login extends BaseController {
     }
 
     /**
-     * Logs the member into the system, and assigns them a session based on the
+     * Logs the member into the system, and assigns them a session ID based on the
      * members role + their Member ID.
      *
      * @return RedirectResponse|Response
@@ -96,7 +96,6 @@ class Login extends BaseController {
         $session = new Session();
 
         $session->set('memberID', $credentials['fk_member_id']);
-        $session->set('username', $credentials['username']);
 
         $role = $this->getUserRole($credentials['fk_member_id']);
         $session->set('role', $role);

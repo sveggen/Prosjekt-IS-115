@@ -45,7 +45,6 @@ class Profile extends BaseController {
             }
         }
         return $this->methodNotAllowed();
-
     }
 
     /**
@@ -137,11 +136,11 @@ class Profile extends BaseController {
 
         $memberModel = new Member();
         // updates the member info in the database.
-        $memberModel->updateMemberInformation($memberData);
-
+        if ($memberModel->updateMemberInformation($memberData)){
+            $session->getFlashBag()->add('profileUpdateSuccess', 'Profile successfully updated');
+        }
         // renders the profile regardless of success/error.
         return $this->renderMemberProfile($requestParameters);
-
     }
 
     /**
